@@ -10,7 +10,11 @@ export interface Transaction {
   referenceNumber?: string;
   transactionType?: string; // e.g. UPI, IMPS, POS
   notes?: string;
-  source: 'manual' | 'sms';
+  source: 'manual' | 'sms' | 'notification' | 'merged';
+  sources?: string[]; // e.g. ["Notification", "SMS"]
+  smsHash?: string;
+  originalSms?: string;
+  needsVerification?: boolean;
   createdAt: string;
   updatedAt: string;
 }

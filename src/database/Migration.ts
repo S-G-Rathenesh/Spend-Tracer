@@ -15,6 +15,56 @@ export class Migration {
           tx.executeSql(Schema.scamHistory);
           tx.executeSql(Schema.settings);
           tx.executeSql(Schema.incomingSMS);
+          tx.executeSql(Schema.merchantCategoryMapping);
+
+          // Add needsVerification, sources, smsHash column to Transactions if it doesn't exist
+          tx.executeSql('PRAGMA table_info(Transactions)', [], (_, result) => {
+            let hasNeedsVerification = false;
+            let hasSources = false;
+            let hasSmsHash = false;
+            let hasOriginalSms = false;
+            for (let i = 0; i < result.rows.length; i++) {
+              const colName = result.rows.item(i).name;
+              if (colName === 'needsVerification') hasNeedsVerification = true;
+              if (colName === 'sources') hasSources = true;
+              if (colName === 'smsHash') hasSmsHash = true;
+              if (colName === 'originalSms') hasOriginalSms = true;
+            }
+            if (!hasNeedsVerification) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN needsVerification INTEGER DEFAULT 0');
+            }
+            if (!hasSources) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN sources TEXT');
+            }
+            if (!hasSmsHash) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN smsHash TEXT');
+            }
+            if (!hasOriginalSms) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN originalSms TEXT');
+            }
+          });
+
+          // Add classification columns to IncomingSMS if it doesn't exist
+          tx.executeSql('PRAGMA table_info(IncomingSMS)', [], (_, result) => {
+            let hasPredictedClass = false;
+            let hasConfidence = false;
+            let hasReasons = false;
+            for (let i = 0; i < result.rows.length; i++) {
+              const colName = result.rows.item(i).name;
+              if (colName === 'predictedClass') hasPredictedClass = true;
+              if (colName === 'confidence') hasConfidence = true;
+              if (colName === 'reasons') hasReasons = true;
+            }
+            if (!hasPredictedClass) {
+              tx.executeSql('ALTER TABLE IncomingSMS ADD COLUMN predictedClass TEXT');
+            }
+            if (!hasConfidence) {
+              tx.executeSql('ALTER TABLE IncomingSMS ADD COLUMN confidence REAL');
+            }
+            if (!hasReasons) {
+              tx.executeSql('ALTER TABLE IncomingSMS ADD COLUMN reasons TEXT');
+            }
+          });
 
           // Create Indexes
           Indexes.forEach(index => {

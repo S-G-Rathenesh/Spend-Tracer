@@ -8,3 +8,7 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+
+# Fix react-native-html-to-pdf crash in release builds
+-keep class com.htmltopdf.** { *; }
+-keep class com.tom_roush.pdfbox.** { *; }

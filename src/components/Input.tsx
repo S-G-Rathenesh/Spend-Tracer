@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TextInput, TextInputProps, StyleSheet } from 'react-native';
-import { theme } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 interface InputProps extends TextInputProps {
   // Custom props can be added here
 }
 
 export const Input = (props: InputProps) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   return (
     <TextInput
       style={[styles.input, props.style]}
@@ -16,7 +19,7 @@ export const Input = (props: InputProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   input: {
     backgroundColor: theme.colors.surface,
     color: theme.colors.text,

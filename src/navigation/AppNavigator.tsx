@@ -13,7 +13,12 @@ import { TransactionsScreen } from '../screens/TransactionsScreen';
 import { AnalyticsScreen } from '../screens/AnalyticsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { AddTransactionScreen } from '../screens/AddTransactionScreen';
+import { TransactionDetailsScreen } from '../screens/TransactionDetailsScreen';
 import { SplashScreen } from '../screens/SplashScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
+import { ForgotPasswordScreen } from '../screens/ForgotPasswordScreen';
+import { PendingVerificationScreen } from '../screens/PendingVerificationScreen';
 import { SmsDebugScreen } from '../screens/SmsDebugScreen';
 
 const Tab = createBottomTabNavigator();
@@ -81,10 +86,18 @@ export const AppNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
       <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="Main" component={MainTabs} />
       <Stack.Screen 
         name="AddTransaction" 
         component={AddTransactionScreen} 
+        options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+      />
+      <Stack.Screen 
+        name="TransactionDetails" 
+        component={TransactionDetailsScreen} 
         options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
       />
       <Stack.Screen 

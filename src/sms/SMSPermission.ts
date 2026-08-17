@@ -28,7 +28,7 @@ export class SMSPermission {
       if (!allGranted) {
         Alert.alert(
           'Permissions Required',
-          'SpendGuard needs SMS and Notification permissions to automatically read and process your banking transactions in the background.',
+          'Spend Tracer needs SMS and Notification permissions to automatically read and process your banking transactions in the background.',
           [{ text: 'OK' }]
         );
       }

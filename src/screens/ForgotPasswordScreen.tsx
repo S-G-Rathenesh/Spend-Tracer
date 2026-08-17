@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { theme } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 import { FirebaseAuthService } from '../services/FirebaseAuthService';
 
 export const ForgotPasswordScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
 
   const handleReset = async () => {
     if (!email) {
@@ -54,7 +57,7 @@ export const ForgotPasswordScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   link: {
-    color: theme.colors.secondary,
+    color: theme.colors.accentLight,
     textAlign: 'center',
     marginBottom: theme.spacing.md,
   },

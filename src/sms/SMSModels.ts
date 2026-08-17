@@ -1,3 +1,5 @@
+import { ClassificationResult } from '../ai/SMSClassifier';
+
 export enum SMSStatus {
   PENDING = 'Pending',
   PROCESSING = 'Processing',
@@ -15,6 +17,9 @@ export interface IncomingSMS {
   bank: string | null;
   isProcessed: boolean;
   processingStatus: SMSStatus;
+  predictedClass?: string;
+  confidence?: number;
+  reasons?: string[];
   createdAt: string;
   updatedAt: string;
 }

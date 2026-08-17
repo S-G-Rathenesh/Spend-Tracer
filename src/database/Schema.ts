@@ -22,6 +22,10 @@ export const Schema = {
       transactionType TEXT,
       notes TEXT,
       source TEXT NOT NULL,
+      needsVerification INTEGER DEFAULT 0,
+      sources TEXT,
+      smsHash TEXT UNIQUE,
+      originalSms TEXT,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL,
       FOREIGN KEY(merchantId) REFERENCES MerchantCache(id),
@@ -78,6 +82,19 @@ export const Schema = {
       bank TEXT,
       isProcessed INTEGER DEFAULT 0,
       processingStatus TEXT NOT NULL,
+      predictedClass TEXT,
+      confidence REAL,
+      reasons TEXT,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL
+    );
+  `,
+  merchantCategoryMapping: `
+    CREATE TABLE IF NOT EXISTS MerchantCategoryMapping (
+      id TEXT PRIMARY KEY,
+      merchant_name TEXT NOT NULL,
+      normalized_name TEXT NOT NULL,
+      category TEXT NOT NULL,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
     );
@@ -85,8 +102,12 @@ export const Schema = {
 };
 
 export const Indexes = [
-  `CREATE INDEX IF NOT EXISTS idx_transactions_date ON Transactions(date);`,
+  'CREATE INDEX IF NOT EXISTS idx_transactions_date ON Transactions(date);',
+  'CREATE INDEX IF NOT EXISTS idx_transactions_type ON Transactions(type);',
+  'CREATE INDEX IF NOT EXISTS idx_transactions_category ON Transactions(categoryId);',
+  'CREATE UNIQUE INDEX IF NOT EXISTS idx_transactions_smshash ON Transactions(smsHash);',
   `CREATE INDEX IF NOT EXISTS idx_transactions_merchant ON Transactions(merchantId);`,
   `CREATE INDEX IF NOT EXISTS idx_scamhistory_date ON ScamHistory(date);`,
-  `CREATE INDEX IF NOT EXISTS idx_incomingsms_status ON IncomingSMS(processingStatus);`
+  `CREATE INDEX IF NOT EXISTS idx_incomingsms_status ON IncomingSMS(processingStatus);`,
+  `CREATE INDEX IF NOT EXISTS idx_merchantmapping_norm ON MerchantCategoryMapping(normalized_name);`
 ];

@@ -1,236 +1,138 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, StyleSheet, ScrollView, RefreshControl, DeviceEventEmitter } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAnalyticsStore } from '../hooks/useAnalyticsStore';
-import { colors, spacing, borderRadius, typography, shadows } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 import { EmptyStateCard } from '../components';
 
+import { AnalyticsFilter } from '../components/analytics/AnalyticsFilter';
+import { FinancialSummary } from '../components/analytics/FinancialSummary';
+import { ExpenseTrendChart } from '../components/analytics/ExpenseTrendChart';
+import { CategoryBreakdown } from '../components/analytics/CategoryBreakdown';
+import { WeeklySpending } from '../components/analytics/WeeklySpending';
+import { AIInsightsCard } from '../components/analytics/AIInsightsCard';
+import { SmsIntelligence } from '../components/analytics/SmsIntelligence/SmsIntelligence';
+
 export const AnalyticsScreen = () => {
-  const { categoryDistribution, weeklySpending, monthlyTrend, fetchAnalytics } = useAnalyticsStore();
-  const { width } = useWindowDimensions();
+  const { 
+    categoryDistribution, 
+    weeklySpending, 
+    monthlyTrend, 
+    topMerchants, 
+    totalIncome, 
+    totalExpense, 
+    messageDistribution,
+    fetchAnalytics, 
+    selectedMonth, 
+    selectedYear, 
+    setSelectedMonth, 
+    setSelectedYear 
+  } = useAnalyticsStore();
+  
+  const [refreshing, setRefreshing] = useState(false);
+  const theme = useAppTheme();
   const insets = useSafeAreaInsets();
-  const isLandscape = width > 600;
+  const styles = useMemo(() => makeStyles(theme), [theme]);
 
   useEffect(() => {
     fetchAnalytics();
-  }, []);
+    const txSub = DeviceEventEmitter.addListener('TransactionUpdated', fetchAnalytics);
+    return () => txSub.remove();
+  }, [selectedMonth, selectedYear]);
 
-  const hasData = categoryDistribution.length > 0 || weeklySpending.length > 0 || monthlyTrend.length > 0;
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchAnalytics();
+    setRefreshing(false);
+  };
 
-  // Find max values for relative sizing
-  const maxWeekly = Math.max(...weeklySpending.map(w => w.value), 1);
+  const hasData = categoryDistribution.length > 0 || weeklySpending.length > 0 || monthlyTrend.length > 0 || totalIncome > 0 || totalExpense > 0 || (messageDistribution && messageDistribution.total > 0);
   
+  const sortedCategories = [...categoryDistribution].sort((a, b) => b.value - a.value);
+  const highestCategory = sortedCategories.length > 0 ? sortedCategories[0] : undefined;
+  const topMerchant = topMerchants.length > 0 ? topMerchants[0] : undefined;
+
+  let periodLabel = 'this month';
+  if (selectedMonth === 'All Time') {
+    periodLabel = selectedYear ? `in ${selectedYear}` : 'overall';
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.headerTitle}>Analytics</Text>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <AnalyticsFilter 
+        theme={theme}
+        selectedMonth={selectedMonth}
+        selectedYear={selectedYear}
+        onMonthSelect={setSelectedMonth}
+        onYearSelect={setSelectedYear}
+      />
       
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 100 }]} 
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.primary} />}
+      >
         {!hasData ? (
-          <EmptyStateCard 
-            emoji="📊"
-            title="No analytics available"
-            subtitle="Add transactions to generate beautiful insights and charts."
-          />
+          <View style={{ marginTop: 40, paddingHorizontal: theme.spacing.xl }}>
+            <EmptyStateCard 
+              emoji="📊"
+              title="No spending data yet"
+              subtitle="Add your first transaction to see beautiful analytics."
+            />
+          </View>
         ) : (
-          <>
-            {/* Category Breakdown (Progress Bars) */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Category Breakdown</Text>
-              {categoryDistribution.length > 0 ? (
-                <View style={styles.categoriesContainer}>
-                  {categoryDistribution.map((cat, index) => {
-                    const total = categoryDistribution.reduce((acc, curr) => acc + curr.value, 0);
-                    const percentage = total > 0 ? (cat.value / total) * 100 : 0;
-                    
-                    return (
-                      <View key={index} style={styles.categoryRow}>
-                        <View style={styles.categoryHeader}>
-                          <View style={styles.categoryLabelRow}>
-                            <View style={[styles.categoryDot, { backgroundColor: cat.color }]} />
-                            <Text style={styles.categoryLabel}>{cat.label}</Text>
-                          </View>
-                          <Text style={styles.categoryValue}>₹{cat.value.toFixed(0)}</Text>
-                        </View>
-                        <View style={styles.progressBarBg}>
-                          <View style={[styles.progressBarFill, { width: `${percentage}%`, backgroundColor: cat.color }]} />
-                        </View>
-                      </View>
-                    );
-                  })}
-                </View>
-              ) : (
-                <Text style={styles.emptyText}>No data for this month.</Text>
-              )}
-            </View>
+          <View style={styles.contentWrapper}>
+            <FinancialSummary 
+              theme={theme} 
+              totalIncome={totalIncome} 
+              totalExpense={totalExpense} 
+            />
 
-            {/* Weekly Spending (Bar Chart) */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Weekly Spending</Text>
-              {weeklySpending.length > 0 ? (
-                <View style={styles.barChartContainer}>
-                  {weeklySpending.map((day, index) => {
-                    const heightPercent = (day.value / maxWeekly) * 100;
-                    return (
-                      <View key={index} style={styles.barColumn}>
-                        <View style={styles.barBg}>
-                          <View style={[styles.barFill, { height: `${heightPercent}%` }]} />
-                        </View>
-                        <Text style={styles.barLabel}>{day.label}</Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              ) : (
-                <Text style={styles.emptyText}>No data for this week.</Text>
-              )}
-            </View>
+            <SmsIntelligence
+              theme={theme}
+              data={messageDistribution}
+            />
 
-            {/* Monthly Trend (Simple List for now) */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Monthly Trend</Text>
-              {monthlyTrend.length > 0 ? (
-                <View style={styles.trendContainer}>
-                  {monthlyTrend.map((month, index) => (
-                    <View key={index} style={styles.trendRow}>
-                      <Text style={styles.trendLabel}>{month.label}</Text>
-                      <Text style={styles.trendValue}>₹{month.value.toFixed(0)}</Text>
-                    </View>
-                  ))}
-                </View>
-              ) : (
-                <Text style={styles.emptyText}>No trend data available.</Text>
-              )}
-            </View>
-          </>
+            <ExpenseTrendChart 
+              data={monthlyTrend} 
+              theme={theme} 
+            />
+
+            <CategoryBreakdown 
+              data={sortedCategories} 
+              theme={theme} 
+              totalExpense={totalExpense} 
+            />
+
+            <WeeklySpending 
+              data={weeklySpending} 
+              theme={theme} 
+            />
+
+            <AIInsightsCard 
+              theme={theme} 
+              highestCategory={highestCategory} 
+              topMerchant={topMerchant} 
+              periodLabel={periodLabel}
+            />
+          </View>
         )}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-  headerTitle: {
-    ...typography.h1,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
+    backgroundColor: theme.colors.background,
   },
   scrollContent: {
-    paddingHorizontal: spacing.xl,
-    paddingBottom: 100, // Bottom tab clearance
+    paddingTop: theme.spacing.sm,
   },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.xl,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
-    ...shadows.sm,
-  },
-  cardTitle: {
-    ...typography.h3,
-    marginBottom: spacing.md,
-  },
-  emptyText: {
-    ...typography.body,
-    color: colors.textSecondary,
-    paddingVertical: spacing.xxl,
-    textAlign: 'center',
-  },
-  
-  // Categories (Progress Bars)
-  categoriesContainer: {
-    marginTop: spacing.xs,
-  },
-  categoryRow: {
-    marginBottom: spacing.md,
-  },
-  categoryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.xs,
-  },
-  categoryLabelRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  categoryDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: spacing.sm,
-  },
-  categoryLabel: {
-    ...typography.body,
-    fontWeight: '500',
-  },
-  categoryValue: {
-    ...typography.labelSm,
-    color: colors.textSecondary,
-  },
-  progressBarBg: {
-    height: 6,
-    backgroundColor: colors.surfaceLight,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 3,
-  },
-  
-  // Weekly Spending (Bar Chart)
-  barChartContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    height: 180,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xs,
-  },
-  barColumn: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  barBg: {
-    height: 140,
-    width: 24,
-    backgroundColor: colors.surfaceLight,
-    borderRadius: borderRadius.sm,
-    justifyContent: 'flex-end',
-    overflow: 'hidden',
-  },
-  barFill: {
+  contentWrapper: {
+    // We removed paddingHorizontal here and moved it to the individual components (lg instead of xl)
+    // to give charts more room to breathe and reduce the "boxy" feel.
     width: '100%',
-    backgroundColor: colors.accent,
-    borderRadius: borderRadius.sm,
-  },
-  barLabel: {
-    ...typography.caption,
-    marginTop: spacing.sm,
-  },
-  
-  // Monthly Trend
-  trendContainer: {
-    marginTop: spacing.xs,
-  },
-  trendRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  trendLabel: {
-    ...typography.body,
-    color: colors.textSecondary,
-  },
-  trendValue: {
-    ...typography.bodyLg,
-    fontWeight: '600',
   }
 });

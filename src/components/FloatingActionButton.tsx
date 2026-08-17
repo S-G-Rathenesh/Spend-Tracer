@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, shadows } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 interface Props {
   onPress: () => void;
@@ -11,6 +11,8 @@ interface Props {
 
 export const FloatingActionButton: React.FC<Props> = ({ onPress, icon = 'plus' }) => {
   const insets = useSafeAreaInsets();
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   
   return (
     <TouchableOpacity 
@@ -24,21 +26,21 @@ export const FloatingActionButton: React.FC<Props> = ({ onPress, icon = 'plus' }
       onPress={onPress} 
       activeOpacity={0.9}
     >
-      <Icon name={icon} size={32} color={colors.white} />
+      <Icon name={icon} size={32} color={theme.colors.white} />
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   fab: {
     position: 'absolute',
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.accent,
+    backgroundColor: theme.colors.accent,
     justifyContent: 'center',
     alignItems: 'center',
-    ...shadows.lg,
-    shadowColor: colors.accent,
+    ...theme.shadows.lg,
+    shadowColor: theme.colors.accent,
   }
 });

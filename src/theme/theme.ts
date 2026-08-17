@@ -1,7 +1,8 @@
-// SpendGuard Premium Design System
-// 8-point spacing grid | Semantic colors | CRED-inspired dark theme
+// Spend Tracer Premium Design System
+// 8-point spacing grid | Semantic colors
 
 import { Dimensions, PixelRatio } from 'react-native';
+import { useSettingsStore } from '../hooks/useSettingsStore';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const [shortDimension] = SCREEN_WIDTH < SCREEN_HEIGHT 
@@ -17,64 +18,74 @@ export const rfs = (size: number) => {
   return Math.round(PixelRatio.roundToNearestPixel(newSize));
 };
 
-export const colors = {
-  // Core backgrounds
-  background: '#0D0D0D',
-  surface: '#1A1A1A',
-  surfaceLight: '#242424',
-  surfaceElevated: '#2A2A2A',
-
-  // Accent (purple — used sparingly)
+export const darkColors = {
+  background: '#000000',
+  surface: '#18181B',
+  surfaceLight: '#27272A',
+  surfaceElevated: '#27272A',
   accent: '#7C3AED',
+  primary: '#7C3AED',
   accentLight: '#8B5CF6',
   accentMuted: 'rgba(124, 58, 237, 0.15)',
   accentGlow: 'rgba(124, 58, 237, 0.3)',
-
-  // Semantic
-  income: '#4ADE80',
-  incomeMuted: 'rgba(74, 222, 128, 0.12)',
-  expense: '#F87171',
-  expenseMuted: 'rgba(248, 113, 113, 0.12)',
-  warning: '#FBBF24',
-  warningMuted: 'rgba(251, 191, 36, 0.12)',
-
-  // Text
+  income: '#10B981',
+  incomeMuted: 'rgba(16, 185, 129, 0.15)',
+  expense: '#EF4444',
+  expenseMuted: 'rgba(239, 68, 68, 0.15)',
+  warning: '#F59E0B',
+  warningMuted: 'rgba(245, 158, 11, 0.15)',
+  info: '#06B6D4',
+  infoMuted: 'rgba(6, 182, 212, 0.15)',
   text: '#FFFFFF',
+  textPrimary: '#FFFFFF',
   textSecondary: '#A1A1AA',
   textMuted: '#71717A',
   textDisabled: '#52525B',
-
-  // Borders
   border: '#27272A',
   borderLight: '#3F3F46',
-
-  // Misc
-  card: '#1A1A1A',
-  overlay: 'rgba(0, 0, 0, 0.6)',
+  card: '#18181B',
+  overlay: 'rgba(0, 0, 0, 0.7)',
   white: '#FFFFFF',
   error: '#EF4444',
-  success: '#22C55E',
+  success: '#10B981',
 };
 
-export const gradients = {
-  balanceCard: ['#7C3AED', '#4C1D95'],
-  balanceCardSubtle: ['#1E1145', '#0D0D0D'],
-  accentSubtle: ['rgba(124, 58, 237, 0.2)', 'rgba(124, 58, 237, 0.05)'],
+export const lightColors = {
+  background: '#F4F4F5',
+  surface: '#FFFFFF',
+  surfaceLight: '#F4F4F5',
+  surfaceElevated: '#FFFFFF',
+  accent: '#7C3AED',
+  primary: '#7C3AED',
+  accentLight: '#8B5CF6',
+  accentMuted: 'rgba(124, 58, 237, 0.1)',
+  accentGlow: 'rgba(124, 58, 237, 0.2)',
+  income: '#10B981',
+  incomeMuted: 'rgba(16, 185, 129, 0.1)',
+  expense: '#EF4444',
+  expenseMuted: 'rgba(239, 68, 68, 0.1)',
+  warning: '#F59E0B',
+  warningMuted: 'rgba(245, 158, 11, 0.1)',
+  info: '#06B6D4',
+  infoMuted: 'rgba(6, 182, 212, 0.1)',
+  text: '#09090B',
+  textPrimary: '#09090B',
+  textSecondary: '#52525B',
+  textMuted: '#71717A',
+  textDisabled: '#A1A1AA',
+  border: '#E4E4E7',
+  borderLight: '#D4D4D8',
+  card: '#FFFFFF',
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  white: '#FFFFFF',
+  error: '#EF4444',
+  success: '#10B981',
 };
 
-export const typography = {
-  display: { fontSize: rfs(36), fontWeight: '700' as const, color: colors.text, letterSpacing: -0.5 },
-  h1: { fontSize: rfs(28), fontWeight: '700' as const, color: colors.text, letterSpacing: -0.3 },
-  h2: { fontSize: rfs(22), fontWeight: '600' as const, color: colors.text },
-  h3: { fontSize: rfs(18), fontWeight: '600' as const, color: colors.text },
-  bodyLg: { fontSize: rfs(16), fontWeight: '400' as const, color: colors.text },
-  body: { fontSize: rfs(14), fontWeight: '400' as const, color: colors.text },
-  bodySm: { fontSize: rfs(13), fontWeight: '400' as const, color: colors.textSecondary },
-  label: { fontSize: rfs(14), fontWeight: '600' as const, color: colors.textSecondary },
-  labelSm: { fontSize: rfs(12), fontWeight: '500' as const, color: colors.textSecondary },
-  caption: { fontSize: rfs(11), fontWeight: '400' as const, color: colors.textMuted },
-  overline: { fontSize: rfs(10), fontWeight: '700' as const, color: colors.textMuted, letterSpacing: 1.5, textTransform: 'uppercase' as const },
-};
+export type ThemeColors = typeof darkColors;
+
+// Legacy export for files not yet migrated
+export const colors = darkColors;
 
 export const spacing = {
   xxs: moderateScale(2),
@@ -99,42 +110,52 @@ export const borderRadius = {
   full: 9999,
 };
 
-export const shadows = {
-  sm: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  md: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  lg: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    elevation: 10,
-  },
-  glow: {
-    shadowColor: colors.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 8,
-  },
+export const getTypography = (c: ThemeColors) => ({
+  display: { fontSize: rfs(36), fontWeight: '700' as const, color: c.text, letterSpacing: -0.5 },
+  h1: { fontSize: rfs(28), fontWeight: '700' as const, color: c.text, letterSpacing: -0.3 },
+  h2: { fontSize: rfs(22), fontWeight: '600' as const, color: c.text },
+  h3: { fontSize: rfs(18), fontWeight: '600' as const, color: c.text },
+  bodyLg: { fontSize: rfs(16), fontWeight: '400' as const, color: c.text },
+  body: { fontSize: rfs(14), fontWeight: '400' as const, color: c.text },
+  bodySm: { fontSize: rfs(13), fontWeight: '400' as const, color: c.textSecondary },
+  label: { fontSize: rfs(14), fontWeight: '600' as const, color: c.textSecondary },
+  labelSm: { fontSize: rfs(12), fontWeight: '500' as const, color: c.textSecondary },
+  caption: { fontSize: rfs(11), fontWeight: '400' as const, color: c.textMuted },
+  overline: { fontSize: rfs(10), fontWeight: '700' as const, color: c.textMuted, letterSpacing: 1.5, textTransform: 'uppercase' as const },
+});
+
+export const typography = getTypography(darkColors); // Legacy
+
+export const getShadows = (c: ThemeColors) => ({
+  sm: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4, elevation: 3 },
+  md: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 6 },
+  lg: { shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.25, shadowRadius: 16, elevation: 10 },
+  glow: { shadowColor: c.accent, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.35, shadowRadius: 12, elevation: 8 },
+});
+
+export const shadows = getShadows(darkColors); // Legacy
+
+export const getGradients = (isDark: boolean) => ({
+  balanceCard: ['#7C3AED', '#4C1D95'],
+  balanceCardSubtle: isDark ? ['#1E1145', '#0D0D0D'] : ['#EDE9FE', '#F9FAFB'],
+  accentSubtle: isDark ? ['rgba(124, 58, 237, 0.2)', 'rgba(124, 58, 237, 0.05)'] : ['rgba(124, 58, 237, 0.15)', 'rgba(124, 58, 237, 0.05)'],
+});
+
+export const gradients = getGradients(true); // Legacy
+
+export const useAppTheme = () => {
+  const { isDarkMode } = useSettingsStore();
+  const currentColors = isDarkMode ? darkColors : lightColors;
+  return {
+    colors: currentColors,
+    typography: getTypography(currentColors),
+    spacing,
+    borderRadius,
+    shadows: getShadows(currentColors),
+    gradients: getGradients(isDarkMode),
+    isDarkMode
+  };
 };
 
-export const theme = {
-  colors,
-  gradients,
-  typography,
-  spacing,
-  borderRadius,
-  shadows,
-};
+export type AppTheme = ReturnType<typeof useAppTheme>;
+

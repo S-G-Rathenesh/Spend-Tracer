@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTransactionStore } from '../hooks/useTransactionStore';
@@ -6,7 +6,7 @@ import { TransactionCard, EmptyStateCard } from '../components';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, spacing, borderRadius, typography } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 type RootStackParamList = {
   Transactions: undefined;
@@ -23,6 +23,9 @@ export const TransactionsScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<'All'|'Income'|'Expense'>('All');
 
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   useEffect(() => {
     fetchTransactions();
   }, []);
@@ -32,8 +35,9 @@ export const TransactionsScreen = () => {
     fetchTransactions({ searchQuery: text });
   };
 
-  const handleTransactionPress = (tx: any) => {
-    navigation.navigate('AddTransaction', { transactionId: tx.id });
+  const handleTransactionPress = (transaction: any) => {
+    // Open the new details screen instead of the editor
+    navigation.navigate('TransactionDetails', { transactionId: transaction.id });
   };
 
   const filteredTransactions = transactions.filter(t => {
@@ -49,17 +53,17 @@ export const TransactionsScreen = () => {
       </View>
 
       <View style={styles.searchContainer}>
-        <Icon name="magnify" size={20} color={colors.textSecondary} style={styles.searchIcon} />
+        <Icon name="magnify" size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
         <TextInput 
           style={styles.searchInput}
           placeholder="Search by merchant, bank or notes..."
-          placeholderTextColor={colors.textMuted}
+          placeholderTextColor={theme.colors.textMuted}
           value={searchQuery}
           onChangeText={handleSearch}
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity onPress={() => handleSearch('')}>
-            <Icon name="close-circle" size={20} color={colors.textMuted} />
+            <Icon name="close-circle" size={20} color={theme.colors.textMuted} />
           </TouchableOpacity>
         )}
       </View>
@@ -79,15 +83,15 @@ export const TransactionsScreen = () => {
       <FlatList 
         data={filteredTransactions}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <TransactionCard transaction={item} onPress={handleTransactionPress} />
+        renderItem={({ item, index }) => (
+          <TransactionCard transaction={item} onPress={handleTransactionPress} index={index} />
         )}
         contentContainerStyle={styles.listContent}
         refreshing={isLoading}
         onRefresh={() => fetchTransactions({ searchQuery })}
         ListEmptyComponent={() => (
           <EmptyStateCard 
-            emoji="🧾"
+            emoji={searchQuery ? "🔍🙈" : "🧾"}
             title="No transactions found"
             subtitle={searchQuery ? "Try a different search term" : "Your transaction history is empty."}
           />
@@ -97,67 +101,67 @@ export const TransactionsScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: theme.colors.background,
   },
   header: {
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
+    paddingHorizontal: theme.spacing.xl,
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.sm,
   },
   headerTitle: {
-    ...typography.h1,
+    ...theme.typography.h1,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    marginHorizontal: spacing.xl,
-    marginVertical: spacing.md,
-    borderRadius: borderRadius.lg,
-    paddingHorizontal: spacing.md,
+    backgroundColor: theme.colors.surface,
+    marginHorizontal: theme.spacing.xl,
+    marginVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing.md,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: theme.colors.border,
   },
   searchIcon: {
-    marginRight: spacing.sm,
+    marginRight: theme.spacing.sm,
   },
   searchInput: {
     flex: 1,
-    color: colors.text,
+    color: theme.colors.text,
     height: 48,
-    ...typography.body,
+    ...theme.typography.body,
   },
   filterRow: {
     flexDirection: 'row',
-    paddingHorizontal: spacing.xl,
-    marginBottom: spacing.md,
+    paddingHorizontal: theme.spacing.xl,
+    marginBottom: theme.spacing.md,
   },
   filterChip: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.full,
-    backgroundColor: colors.surface,
-    marginRight: spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.surface,
+    marginRight: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: theme.colors.border,
   },
   filterChipActive: {
-    backgroundColor: colors.accentMuted,
-    borderColor: colors.accent,
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   filterText: {
-    ...typography.labelSm,
-    color: colors.textSecondary,
+    ...theme.typography.labelSm,
+    color: theme.colors.textSecondary,
   },
   filterTextActive: {
-    color: colors.accentLight,
+    color: theme.colors.white,
     fontWeight: '600',
   },
   listContent: {
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: theme.spacing.xl,
     paddingBottom: 100, // Room for bottom tab
   }
 });

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TouchableOpacity, Text, StyleSheet, TouchableOpacityProps, ActivityIndicator } from 'react-native';
-import { theme } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -8,6 +8,9 @@ interface ButtonProps extends TouchableOpacityProps {
 }
 
 export const Button = ({ title, loading, style, ...props }: ButtonProps) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   return (
     <TouchableOpacity 
       style={[styles.button, style]} 
@@ -23,7 +26,7 @@ export const Button = ({ title, loading, style, ...props }: ButtonProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   button: {
     backgroundColor: theme.colors.primary,
     padding: theme.spacing.md,

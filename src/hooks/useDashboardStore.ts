@@ -10,6 +10,7 @@ interface DashboardState {
   monthlyIncome: number;
   netBalance: number;
   recentTransactions: Transaction[];
+  pendingVerificationTransactions: Transaction[];
   isLoading: boolean;
   error: string | null;
   fetchDashboardData: () => Promise<void>;
@@ -22,6 +23,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   monthlyIncome: 0,
   netBalance: 0,
   recentTransactions: [],
+  pendingVerificationTransactions: [],
   isLoading: false,
   error: null,
   
@@ -57,6 +59,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
 
       const netBalance = monthlyIncome - monthlySpending;
       const recentTransactions = await TransactionRepository.getTransactions({ limit: 5 });
+      const pendingVerificationTransactions = await TransactionRepository.getTransactions({ needsVerification: true, limit: 10 });
 
       set({
         todaySpending,
@@ -65,6 +68,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
         monthlyIncome,
         netBalance,
         recentTransactions,
+        pendingVerificationTransactions,
         isLoading: false
       });
     } catch (error: any) {

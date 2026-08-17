@@ -8,16 +8,60 @@ export class SMSRepository {
     return new Promise((resolve, reject) => {
       db.transaction(tx => {
         tx.executeSql(
-          `INSERT INTO IncomingSMS (id, sender, message, receivedAt, normalizedText, bank, isProcessed, processingStatus, createdAt, updatedAt) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO IncomingSMS (id, sender, message, receivedAt, normalizedText, bank, isProcessed, processingStatus, predictedClass, confidence, reasons, createdAt, updatedAt) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             sms.id, sms.sender, sms.message, sms.receivedAt, sms.normalizedText, sms.bank,
-            sms.isProcessed ? 1 : 0, sms.processingStatus, sms.createdAt, sms.updatedAt
+            sms.isProcessed ? 1 : 0, sms.processingStatus, 
+            sms.predictedClass || null, sms.confidence || null, sms.reasons ? JSON.stringify(sms.reasons) : null,
+            sms.createdAt, sms.updatedAt
           ],
           () => resolve(),
           (error) => { reject(error); return false; }
         );
       });
+    });
+  }
+
+  static async getAllKeys(): Promise<Set<string>> {
+    const db = DatabaseService.getDB();
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          `SELECT sender, message, receivedAt FROM IncomingSMS`,
+          [],
+          (_, results) => {
+            const keys = new Set<string>();
+            for (let i = 0; i < results.rows.length; i++) {
+              const row = results.rows.item(i);
+              keys.add(`${row.sender}|${row.message}|${row.receivedAt}`);
+            }
+            resolve(keys);
+          },
+          (error) => { reject(error); return false; }
+        );
+      });
+    });
+  }
+
+  static async insertBatch(smsList: IncomingSMS[]): Promise<void> {
+    if (smsList.length === 0) return;
+    const db = DatabaseService.getDB();
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        for (const sms of smsList) {
+          tx.executeSql(
+            `INSERT INTO IncomingSMS (id, sender, message, receivedAt, normalizedText, bank, isProcessed, processingStatus, predictedClass, confidence, reasons, createdAt, updatedAt) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              sms.id, sms.sender, sms.message, sms.receivedAt, sms.normalizedText, sms.bank,
+              sms.isProcessed ? 1 : 0, sms.processingStatus,
+              sms.predictedClass || null, sms.confidence || null, sms.reasons ? JSON.stringify(sms.reasons) : null,
+              sms.createdAt, sms.updatedAt
+            ]
+          );
+        }
+      }, (error) => { reject(error); return false; }, () => resolve());
     });
   }
 
@@ -49,7 +93,8 @@ export class SMSRepository {
               const row = results.rows.item(i);
               data.push({
                 ...row,
-                isProcessed: row.isProcessed === 1
+                isProcessed: row.isProcessed === 1,
+                reasons: row.reasons ? JSON.parse(row.reasons) : undefined
               });
             }
             resolve(data);

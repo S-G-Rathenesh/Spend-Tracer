@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors, spacing, typography } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 interface Props {
   title: string;
@@ -9,6 +9,9 @@ interface Props {
 }
 
 export const SectionHeader: React.FC<Props> = ({ title, actionText, onActionPress }) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
@@ -21,19 +24,19 @@ export const SectionHeader: React.FC<Props> = ({ title, actionText, onActionPres
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: spacing.lg,
-    paddingHorizontal: spacing.xs,
+    marginVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xs,
   },
   title: {
-    ...typography.h3,
+    ...theme.typography.h3,
   },
   action: {
-    ...typography.label,
-    color: colors.accentLight,
+    ...theme.typography.label,
+    color: theme.colors.accentLight,
   }
 });

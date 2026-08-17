@@ -1,22 +1,33 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Transaction } from '../types/Transaction';
 import { CurrencyUtils } from '../utils/CurrencyUtils';
 import { DateUtils } from '../utils/DateUtils';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, spacing, borderRadius, typography, moderateScale } from '../theme/theme';
+import { useAppTheme, AppTheme, moderateScale } from '../theme/theme';
+
+import { AnimatedEmoji } from './AnimatedEmoji';
 
 interface Props {
   transaction: Transaction;
   onPress?: (transaction: Transaction) => void;
+  index?: number;
 }
 
-export const TransactionCard: React.FC<Props> = ({ transaction, onPress }) => {
+export const TransactionCard: React.FC<Props> = ({ transaction, onPress, index = 0 }) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   const t = transaction as any;
   const isDebit = t.type === 'Debit';
-  const amountColor = isDebit ? colors.expense : colors.income;
+  const amountColor = isDebit ? theme.colors.expense : theme.colors.income;
   const amountPrefix = isDebit ? '-' : '+';
-  const bg = isDebit ? colors.expenseMuted : colors.incomeMuted;
+  const bg = isDebit ? theme.colors.expenseMuted : theme.colors.incomeMuted;
+  
+  const emoji = isDebit ? '🧾' : '💰';
+  const delay = index * 100; // stagger
+
+  console.log(`[DATE_PIPELINE] 6. Value received by UI: ${t.date} for transaction ${t.id}`);
 
   return (
     <TouchableOpacity 
@@ -39,69 +50,82 @@ export const TransactionCard: React.FC<Props> = ({ transaction, onPress }) => {
       </View>
 
       <View style={styles.amountContainer}>
-        <Text style={[styles.amount, { color: amountColor }]}>
-          {amountPrefix}{CurrencyUtils.format(t.amount)}
-        </Text>
-        {t.source === 'sms' && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+          <AnimatedEmoji emoji={emoji} type="fade" delay={delay} size={14} style={{ marginRight: 4 }} />
+          <Text style={[styles.amount, { color: amountColor, marginBottom: 0 }]}>
+            {amountPrefix}{CurrencyUtils.format(t.amount)}
+          </Text>
+        </View>
+        {t.sources && t.sources.length > 1 ? (
           <View style={styles.badge}>
-            <Icon name="message-text-outline" size={10} color={colors.textMuted} />
+            <Icon name="vector-link" size={10} color={theme.colors.textMuted} />
+            <Text style={styles.badgeText}>{t.sources.map((s: string) => s === 'sms' ? 'SMS' : 'App').join(' + ')}</Text>
+          </View>
+        ) : (t.source === 'sms' || t.sources?.includes('sms')) ? (
+          <View style={[styles.badge, { flexDirection: 'row', alignItems: 'center' }]}>
+            <AnimatedEmoji emoji="📩" type="pulse" delay={delay + 300} size={10} style={{ marginRight: 2 }} />
             <Text style={styles.badgeText}>SMS</Text>
           </View>
-        )}
+        ) : (t.source === 'notification' || t.sources?.includes('notification')) ? (
+          <View style={styles.badge}>
+            <Icon name="bell-outline" size={10} color={theme.colors.textMuted} />
+            <Text style={styles.badgeText}>App</Text>
+          </View>
+        ) : null}
       </View>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.lg,
-    marginVertical: spacing.xs,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    marginVertical: theme.spacing.xs,
   },
   iconContainer: {
     width: moderateScale(48),
     height: moderateScale(48),
-    borderRadius: borderRadius.full,
+    borderRadius: theme.borderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: spacing.md,
+    marginRight: theme.spacing.md,
   },
   detailsContainer: {
     flex: 1,
     justifyContent: 'center',
   },
   merchantName: {
-    ...typography.bodyLg,
+    ...theme.typography.bodyLg,
     fontWeight: '600',
     marginBottom: 4,
   },
   categoryName: {
-    ...typography.caption,
+    ...theme.typography.caption,
   },
   amountContainer: {
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
   amount: {
-    ...typography.bodyLg,
+    ...theme.typography.bodyLg,
     fontWeight: '700',
     marginBottom: 4,
   },
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surfaceLight,
+    backgroundColor: theme.colors.surfaceLight,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    borderRadius: borderRadius.sm,
+    borderRadius: theme.borderRadius.sm,
   },
   badgeText: {
-    ...typography.overline,
+    ...theme.typography.overline,
     marginLeft: 4,
   }
 });

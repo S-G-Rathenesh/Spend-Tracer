@@ -76,3 +76,12 @@ yarn-error.log
 # Env files
 .env
 .env.*
+# User specified ignores
+google-services.json
+GoogleService-Info.plist
+*.db
+*.log
+app_log.txt
+crash_log.txt
+*_log.txt
+

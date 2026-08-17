@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { theme } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 import { FirebaseAuthService } from '../services/FirebaseAuthService';
 
 export const RegisterScreen = ({ navigation }: any) => {
@@ -9,6 +9,9 @@ export const RegisterScreen = ({ navigation }: any) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
 
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword) {
@@ -25,8 +28,9 @@ export const RegisterScreen = ({ navigation }: any) => {
     const res = await FirebaseAuthService.register(email, password);
     if (!res.success) {
       setError(res.error || 'Registration failed');
+    } else {
+      navigation.replace('Main');
     }
-    // If successful, the onAuthStateChanged listener in App.tsx will navigate to Main
     setLoading(false);
   };
 
@@ -73,7 +77,7 @@ export const RegisterScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   link: {
-    color: theme.colors.secondary,
+    color: theme.colors.accentLight,
     textAlign: 'center',
     marginBottom: theme.spacing.md,
   },

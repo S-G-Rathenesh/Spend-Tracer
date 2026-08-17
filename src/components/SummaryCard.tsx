@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CurrencyUtils } from '../utils/CurrencyUtils';
-import { colors, spacing, borderRadius, typography, shadows, rfs } from '../theme/theme';
+import { useAppTheme, AppTheme, rfs } from '../theme/theme';
 
 interface Props {
   title: string;
@@ -11,20 +11,24 @@ interface Props {
   icon?: string;
   iconColor?: string;
   subtitle?: string;
+  suffix?: React.ReactNode;
 }
 
 export const SummaryCard: React.FC<Props> = ({
-  title, amount, type = 'neutral', icon, iconColor, subtitle
+  title, amount, type = 'neutral', icon, iconColor, subtitle, suffix
 }) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   const amountColor =
-    type === 'positive' ? colors.income :
-    type === 'negative' ? colors.expense :
-    colors.text;
+    type === 'positive' ? theme.colors.income :
+    type === 'negative' ? theme.colors.expense :
+    theme.colors.text;
 
   const iconBg =
-    type === 'positive' ? colors.incomeMuted :
-    type === 'negative' ? colors.expenseMuted :
-    colors.surfaceLight;
+    type === 'positive' ? theme.colors.incomeMuted :
+    type === 'negative' ? theme.colors.expenseMuted :
+    theme.colors.surfaceLight;
 
   return (
     <View style={styles.container}>
@@ -34,41 +38,44 @@ export const SummaryCard: React.FC<Props> = ({
         </View>
       )}
       <Text style={styles.title}>{title}</Text>
-      <Text style={[styles.amount, { color: amountColor }]}>
-        {CurrencyUtils.format(amount)}
-      </Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={[styles.amount, { color: amountColor }]}>
+          {CurrencyUtils.format(amount)}
+        </Text>
+        {suffix && <View style={{ marginLeft: 6 }}>{suffix}</View>}
+      </View>
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.xl,
-    padding: spacing.xl,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing.xl,
     flex: 1,
-    ...shadows.sm,
+    ...theme.shadows.sm,
   },
   iconCircle: {
     width: 36,
     height: 36,
-    borderRadius: borderRadius.md,
+    borderRadius: theme.borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: spacing.md,
+    marginBottom: theme.spacing.md,
   },
   title: {
-    ...typography.labelSm,
-    color: colors.textMuted,
-    marginBottom: spacing.xs,
+    ...theme.typography.labelSm,
+    color: theme.colors.textMuted,
+    marginBottom: theme.spacing.xs,
   },
   amount: {
     fontSize: rfs(20),
     fontWeight: '700',
   },
   subtitle: {
-    ...typography.caption,
-    marginTop: spacing.xs,
+    ...theme.typography.caption,
+    marginTop: theme.spacing.xs,
   },
 });

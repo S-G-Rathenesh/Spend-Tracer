@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, useWindowDimensions } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTransactionStore } from '../hooks/useTransactionStore';
@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CategoryRepository } from '../repositories/CategoryRepository';
 import { Category } from '../types/Category';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, spacing, borderRadius, typography, shadows } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 type RootStackParamList = {
   Transactions: undefined;
@@ -22,6 +22,9 @@ export const AddTransactionScreen = () => {
   const isLandscape = width > 600;
   const { addTransaction, updateTransaction, transactions, deleteTransaction } = useTransactionStore();
   
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   const transactionId = route.params?.transactionId;
   const isEditing = !!transactionId;
 
@@ -61,8 +64,9 @@ export const AddTransactionScreen = () => {
     }
     
     const now = new Date();
-    const txData = {
-      id: isEditing ? transactionId : Math.random().toString(36).substr(2, 9),
+    
+    let txData: any = {
+      id: Math.random().toString(36).substr(2, 9),
       amount: Number(amount),
       merchantId: merchant, 
       bank: null,
@@ -77,9 +81,21 @@ export const AddTransactionScreen = () => {
     };
 
     if (isEditing) {
-      await updateTransaction(txData as any);
+      const existingTx = transactions.find(t => t.id === transactionId);
+      if (existingTx) {
+        txData = {
+          ...existingTx,
+          amount: Number(amount),
+          merchantId: merchant,
+          categoryId: selectedCategory,
+          type,
+          notes,
+          updatedAt: now.toISOString(),
+        };
+      }
+      await updateTransaction(txData);
     } else {
-      await addTransaction(txData as any);
+      await addTransaction(txData);
     }
     navigation.goBack();
   };
@@ -98,12 +114,12 @@ export const AddTransactionScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Icon name="close" size={24} color={colors.text} />
+          <Icon name="close" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{isEditing ? 'Edit Transaction' : 'New Transaction'}</Text>
         {isEditing ? (
           <TouchableOpacity onPress={handleDelete} style={styles.backBtn}>
-            <Icon name="delete" size={24} color={colors.expense} />
+            <Icon name="delete" size={24} color={theme.colors.expense} />
           </TouchableOpacity>
         ) : <View style={{ width: 40 }} />}
       </View>
@@ -128,12 +144,12 @@ export const AddTransactionScreen = () => {
         </View>
 
         <View style={styles.amountContainer}>
-          <Text style={[styles.currencyPrefix, { color: type === 'Debit' ? colors.expense : colors.income }]}>₹</Text>
+          <Text style={[styles.currencyPrefix, { color: type === 'Debit' ? theme.colors.expense : theme.colors.income }]}>₹</Text>
           <TextInput
-            style={[styles.amountInput, { color: type === 'Debit' ? colors.expense : colors.income }]}
+            style={[styles.amountInput, { color: type === 'Debit' ? theme.colors.expense : theme.colors.income }]}
             keyboardType="numeric"
             placeholder="0.00"
-            placeholderTextColor={colors.textMuted}
+            placeholderTextColor={theme.colors.textMuted}
             value={amount}
             onChangeText={setAmount}
             autoFocus={!isEditing}
@@ -142,11 +158,11 @@ export const AddTransactionScreen = () => {
 
         <Text style={styles.label}>Merchant / Title</Text>
         <View style={styles.inputWrapper}>
-          <Icon name="storefront-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+          <Icon name="storefront-outline" size={20} color={theme.colors.textSecondary} style={styles.inputIcon} />
           <TextInput
             style={styles.input}
             placeholder="e.g. Starbucks, Amazon"
-            placeholderTextColor={colors.textMuted}
+            placeholderTextColor={theme.colors.textMuted}
             value={merchant}
             onChangeText={setMerchant}
           />
@@ -166,7 +182,7 @@ export const AddTransactionScreen = () => {
                 onPress={() => setSelectedCategory(cat.id)}
                 activeOpacity={0.7}
               >
-                <Icon name={cat.icon} size={18} color={isSelected ? cat.color : colors.textSecondary} />
+                <Icon name={cat.icon} size={18} color={isSelected ? cat.color : theme.colors.textSecondary} />
                 <Text style={[styles.categoryText, isSelected && { color: cat.color, fontWeight: '600' }]}>
                   {cat.name}
                 </Text>
@@ -177,11 +193,11 @@ export const AddTransactionScreen = () => {
 
         <Text style={styles.label}>Notes (Optional)</Text>
         <View style={[styles.inputWrapper, { alignItems: 'flex-start' }]}>
-          <Icon name="text" size={20} color={colors.textSecondary} style={[styles.inputIcon, { marginTop: 12 }]} />
+          <Icon name="text" size={20} color={theme.colors.textSecondary} style={[styles.inputIcon, { marginTop: 12 }]} />
           <TextInput
             style={[styles.input, { height: 80, textAlignVertical: 'top', paddingTop: 12 }]}
             placeholder="Add details..."
-            placeholderTextColor={colors.textMuted}
+            placeholderTextColor={theme.colors.textMuted}
             multiline
             value={notes}
             onChangeText={setNotes}
@@ -198,63 +214,63 @@ export const AddTransactionScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: theme.colors.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: spacing.lg,
+    padding: theme.spacing.lg,
   },
   backBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.surface,
+    backgroundColor: theme.colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerTitle: {
-    ...typography.h3,
+    ...theme.typography.h3,
   },
   form: {
-    paddingHorizontal: spacing.xl,
+    paddingHorizontal: theme.spacing.xl,
   },
   typeSelector: {
     flexDirection: 'row',
-    marginVertical: spacing.lg,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
+    marginVertical: theme.spacing.lg,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.md,
     padding: 4,
   },
   typeButton: {
     flex: 1,
     paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: borderRadius.sm,
+    borderRadius: theme.borderRadius.sm,
   },
   typeButtonActiveDebit: {
-    backgroundColor: colors.expenseMuted,
+    backgroundColor: theme.colors.expenseMuted,
   },
   typeButtonActiveCredit: {
-    backgroundColor: colors.incomeMuted,
+    backgroundColor: theme.colors.incomeMuted,
   },
   typeText: {
-    ...typography.labelSm,
-    color: colors.textSecondary,
+    ...theme.typography.labelSm,
+    color: theme.colors.textSecondary,
   },
   typeTextActive: {
-    color: colors.text,
+    color: theme.colors.text,
     fontWeight: '700',
   },
   amountContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: spacing.xxl,
+    marginVertical: theme.spacing.xxl,
   },
   currencyPrefix: {
     fontSize: 40,
@@ -267,61 +283,61 @@ const styles = StyleSheet.create({
     minWidth: 100,
   },
   label: {
-    ...typography.labelSm,
-    color: colors.textSecondary,
-    marginBottom: spacing.sm,
-    marginTop: spacing.lg,
+    ...theme.typography.labelSm,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.sm,
+    marginTop: theme.spacing.lg,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.md,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.md,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: theme.colors.border,
   },
   inputIcon: {
-    paddingLeft: spacing.md,
+    paddingLeft: theme.spacing.md,
   },
   input: {
     flex: 1,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-    ...typography.bodyLg,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.md,
+    ...theme.typography.bodyLg,
   },
   categoryScroll: {
     flexDirection: 'row',
-    marginBottom: spacing.xs,
+    marginBottom: theme.spacing.xs,
   },
   categoryChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.full,
-    marginRight: spacing.sm,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
+    marginRight: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: theme.colors.border,
   },
   categoryText: {
-    ...typography.body,
-    color: colors.textSecondary,
-    marginLeft: spacing.xs,
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
+    marginLeft: theme.spacing.xs,
   },
   saveButton: {
-    backgroundColor: colors.accent,
-    borderRadius: borderRadius.md,
-    paddingVertical: spacing.lg,
+    backgroundColor: theme.colors.accent,
+    borderRadius: theme.borderRadius.md,
+    paddingVertical: theme.spacing.lg,
     alignItems: 'center',
-    marginTop: spacing.xxxl,
-    ...shadows.glow,
+    marginTop: theme.spacing.xxxl,
+    ...theme.shadows.glow,
   },
   saveButtonText: {
-    ...typography.label,
-    color: colors.white,
+    ...theme.typography.label,
+    color: theme.colors.white,
     fontSize: 16,
   }
 });

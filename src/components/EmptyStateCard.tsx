@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors, spacing, borderRadius, typography } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
+
+import { AnimatedEmoji } from './AnimatedEmoji';
 
 interface Props {
   emoji: string;
@@ -11,9 +13,12 @@ interface Props {
 }
 
 export const EmptyStateCard: React.FC<Props> = ({ emoji, title, subtitle, buttonText, onButtonPress }) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>{emoji}</Text>
+      <AnimatedEmoji emoji={emoji} type="float" size={48} style={{ marginBottom: 16 }} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
       {buttonText && onButtonPress && (
@@ -25,38 +30,34 @@ export const EmptyStateCard: React.FC<Props> = ({ emoji, title, subtitle, button
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: spacing.section,
-    paddingHorizontal: spacing.xxl,
-    backgroundColor: colors.surface,
-    borderRadius: borderRadius.xl,
-    marginVertical: spacing.sm,
-  },
-  emoji: {
-    fontSize: 48,
-    marginBottom: spacing.lg,
+    paddingVertical: theme.spacing.section,
+    paddingHorizontal: theme.spacing.xxl,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    marginVertical: theme.spacing.sm,
   },
   title: {
-    ...typography.h3,
-    marginBottom: spacing.sm,
+    ...theme.typography.h3,
+    marginBottom: theme.spacing.sm,
     textAlign: 'center',
   },
   subtitle: {
-    ...typography.bodySm,
+    ...theme.typography.bodySm,
     textAlign: 'center',
     lineHeight: 20,
   },
   button: {
-    marginTop: spacing.xxl,
-    backgroundColor: colors.accent,
-    paddingHorizontal: spacing.xxl,
-    paddingVertical: spacing.md,
-    borderRadius: borderRadius.full,
+    marginTop: theme.spacing.xxl,
+    backgroundColor: theme.colors.accent,
+    paddingHorizontal: theme.spacing.xxl,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.full,
   },
   buttonText: {
-    ...typography.label,
-    color: colors.white,
+    ...theme.typography.label,
+    color: theme.colors.white,
   },
 });

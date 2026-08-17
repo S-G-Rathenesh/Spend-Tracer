@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { DeviceEventEmitter } from 'react-native';
 import { Transaction } from '../types/Transaction';
 import { TransactionRepository, TransactionFilter } from '../repositories/TransactionRepository';
 import { Logger } from '../utils/Logger';
@@ -34,6 +35,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     try {
       await TransactionRepository.insert(transaction);
       await get().fetchTransactions(); // Re-fetch to update list
+      DeviceEventEmitter.emit('TransactionUpdated');
     } catch (error: any) {
       Logger.error('TransactionStore', 'Failed to add transaction', error);
       set({ error: error.message, isLoading: false });
@@ -45,6 +47,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     try {
       await TransactionRepository.update(transaction);
       await get().fetchTransactions();
+      DeviceEventEmitter.emit('TransactionUpdated');
     } catch (error: any) {
       Logger.error('TransactionStore', 'Failed to update transaction', error);
       set({ error: error.message, isLoading: false });
@@ -56,6 +59,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
     try {
       await TransactionRepository.delete(id);
       await get().fetchTransactions();
+      DeviceEventEmitter.emit('TransactionUpdated');
     } catch (error: any) {
       Logger.error('TransactionStore', 'Failed to delete transaction', error);
       set({ error: error.message, isLoading: false });

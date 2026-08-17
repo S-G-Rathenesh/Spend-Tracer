@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SMSRepository } from '../sms/SMSRepository';
 import { IncomingSMS, SMSStatus } from '../sms/SMSModels';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 export const SmsDebugScreen = () => {
   const [messages, setMessages] = useState<IncomingSMS[]>([]);
@@ -12,6 +13,9 @@ export const SmsDebugScreen = () => {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const isLandscape = width > 600;
+
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
 
   useEffect(() => {
     loadMessages();
@@ -24,11 +28,11 @@ export const SmsDebugScreen = () => {
 
   const getStatusColor = (status: SMSStatus) => {
     switch(status) {
-      case SMSStatus.PENDING: return '#FF9800'; // Orange
-      case SMSStatus.COMPLETED: return '#4CAF50'; // Green
-      case SMSStatus.FAILED: return '#F44336'; // Red
-      case SMSStatus.IGNORED: return '#9E9E9E'; // Grey
-      default: return '#FFF';
+      case SMSStatus.PENDING: return theme.colors.warning; // Orange
+      case SMSStatus.COMPLETED: return theme.colors.success; // Green
+      case SMSStatus.FAILED: return theme.colors.error; // Red
+      case SMSStatus.IGNORED: return theme.colors.textDisabled; // Grey
+      default: return theme.colors.text;
     }
   };
 
@@ -36,11 +40,11 @@ export const SmsDebugScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={24} color="#FFF" />
+          <Icon name="arrow-left" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>SMS Debug (Internal)</Text>
         <TouchableOpacity onPress={loadMessages}>
-          <Icon name="refresh" size={24} color="#FFF" />
+          <Icon name="refresh" size={24} color={theme.colors.text} />
         </TouchableOpacity>
       </View>
 
@@ -62,7 +66,7 @@ export const SmsDebugScreen = () => {
               <View style={[styles.badge, { backgroundColor: getStatusColor(item.processingStatus) }]}>
                 <Text style={styles.badgeText}>{item.processingStatus}</Text>
               </View>
-              {item.isProcessed && <Icon name="check-circle" size={16} color="#4CAF50" />}
+              {item.isProcessed && <Icon name="check-circle" size={16} color={theme.colors.success} />}
             </View>
           </View>
         )}
@@ -71,18 +75,18 @@ export const SmsDebugScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', padding: 16, alignItems: 'center' },
-  headerTitle: { fontSize: 20, color: '#FFF', fontWeight: 'bold' },
-  list: { padding: 16 },
-  empty: { color: '#B3B3B3', textAlign: 'center', marginTop: 40 },
-  card: { backgroundColor: '#1E1E1E', padding: 16, borderRadius: 12, marginBottom: 12 },
-  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  sender: { color: '#FFF', fontWeight: 'bold', fontSize: 16 },
-  date: { color: '#B3B3B3', fontSize: 12 },
-  bank: { color: '#03DAC6', fontSize: 14, marginBottom: 8 },
-  message: { color: '#B3B3B3', fontSize: 14, marginBottom: 12 },
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: theme.colors.background },
+  header: { flexDirection: 'row', justifyContent: 'space-between', padding: theme.spacing.lg, alignItems: 'center' },
+  headerTitle: { ...theme.typography.h2, color: theme.colors.text, fontWeight: 'bold' },
+  list: { padding: theme.spacing.lg },
+  empty: { ...theme.typography.body, color: theme.colors.textMuted, textAlign: 'center', marginTop: 40 },
+  card: { backgroundColor: theme.colors.surface, padding: theme.spacing.lg, borderRadius: theme.borderRadius.md, marginBottom: theme.spacing.md },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: theme.spacing.sm },
+  sender: { color: theme.colors.text, fontWeight: 'bold', fontSize: 16 },
+  date: { color: theme.colors.textMuted, fontSize: 12 },
+  bank: { color: theme.colors.accent, fontSize: 14, marginBottom: theme.spacing.sm },
+  message: { color: theme.colors.textSecondary, fontSize: 14, marginBottom: theme.spacing.md },
   footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   badge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12 },
   badgeText: { color: '#FFF', fontSize: 12, fontWeight: 'bold' },

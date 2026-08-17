@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Image } from 'react-native';
-import { theme } from '../theme/theme';
+import { useAppTheme, AppTheme } from '../theme/theme';
 import { FirebaseAuthService } from '../services/FirebaseAuthService';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -19,6 +23,20 @@ export const LoginScreen = ({ navigation }: any) => {
     const res = await FirebaseAuthService.login(email, password);
     if (!res.success) {
       setError(res.error || 'Login failed');
+    } else {
+      navigation.replace('Main');
+    }
+    setLoading(false);
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+    const res = await FirebaseAuthService.loginWithGoogle();
+    if (!res.success) {
+      setError(res.error || 'Google Sign-In failed');
+    } else {
+      navigation.replace('Main');
     }
     setLoading(false);
   };
@@ -30,7 +48,7 @@ export const LoginScreen = ({ navigation }: any) => {
         style={styles.logo} 
         resizeMode="contain"
       />
-      <Text style={styles.title}>Welcome to SpendGuard</Text>
+      <Text style={styles.title}>Welcome to Spend Tracer</Text>
       
       {error ? <Text style={styles.error}>{error}</Text> : null}
       
@@ -55,6 +73,11 @@ export const LoginScreen = ({ navigation }: any) => {
       <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Login</Text>}
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin} disabled={loading}>
+        <Icon name="google" size={20} color={theme.colors.text} style={styles.googleIcon} />
+        <Text style={styles.googleButtonText}>Continue with Google</Text>
+      </TouchableOpacity>
       
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.link}>Don't have an account? Register</Text>
@@ -67,7 +90,7 @@ export const LoginScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -99,16 +122,34 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
     alignItems: 'center',
-    marginTop: theme.spacing.md,
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.md,
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
+  googleButton: {
+    backgroundColor: theme.colors.surface,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.xl,
+    borderColor: theme.colors.border,
+    borderWidth: 1,
+  },
+  googleIcon: {
+    marginRight: theme.spacing.sm,
+  },
+  googleButtonText: {
+    color: theme.colors.text,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   link: {
-    color: theme.colors.secondary,
+    color: theme.colors.accentLight,
     textAlign: 'center',
     marginBottom: theme.spacing.md,
   },
