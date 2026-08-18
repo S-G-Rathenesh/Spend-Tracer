@@ -1,0 +1,231 @@
+{
+  "export_pipeline": "PyTorch -> ONNX (opset 14) -> TF SavedModel -> TFLite",
+  "export_timestamp": "2026-07-28T15:26:00Z",
+  "input_shape": [
+    1,
+    128
+  ],
+  "models": {
+    "shared_encoder": {
+      "onnx": {
+        "path": "shared_encoder.onnx",
+        "size_mb": 93.886,
+        "sha256": "bf2b00cdf5f0637b4ba2ad3ba3c9bc742a4ae17ccbeaaf9f98c7733cc68fafb4"
+      },
+      "tflite": {
+        "path": "shared_encoder.tflite",
+        "size_mb": 93.684,
+        "sha256": "9e03b35b22eee53b142bfe346684708d925815d36dbd5a838a537a1441e8f274"
+      },
+      "onnx_validation": {
+        "seq_max_diff": 0.0771484375,
+        "pool_max_diff": 0.0771484375,
+        "pass": true
+      },
+      "tflite_validation": {
+        "status": "VALIDATED",
+        "pass": true
+      },
+      "conversion": {
+        "status": "SUCCESS",
+        "size_mb": 93.684,
+        "float16_size_mb": 47.066,
+        "path": "D:\\Projects\\Project Unzip\\Spendly\\SpendGuard\\ai-training\\exported\\tflite\\tflite_models\\shared_encoder.tflite"
+      }
+    },
+    "sms_classifier": {
+      "onnx": {
+        "path": "sms_classifier.onnx",
+        "size_mb": 0.008,
+        "sha256": "e908cb125f6e8ef3dec815b834af1378dc8ff006a0d2f0832b777a44c95d8893"
+      },
+      "tflite": {
+        "path": "sms_classifier.tflite",
+        "size_mb": 0.009,
+        "sha256": "6a51981520e98a69d2d1e71f1df20ea379cb04304893bc61945b338ef233ba28"
+      },
+      "onnx_validation": {
+        "max_diff": 0.0079345703125,
+        "argmax_match": true,
+        "pass": true
+      },
+      "tflite_validation": {
+        "status": "VALIDATED",
+        "max_diff": 0.0008544921875,
+        "pass": true
+      },
+      "conversion": {
+        "status": "SUCCESS",
+        "size_mb": 0.009,
+        "float16_size_mb": 0.005,
+        "path": "D:\\Projects\\Project Unzip\\Spendly\\SpendGuard\\ai-training\\exported\\tflite\\tflite_models\\sms_classifier.tflite"
+      }
+    },
+    "ner_head": {
+      "onnx": {
+        "path": "ner_head.onnx",
+        "size_mb": 0.038,
+        "sha256": "1c8921210a0ebce623b24d36ad57102af2041632fecddf13dfe18da47bb8368b"
+      },
+      "tflite": {
+        "path": "ner_head.tflite",
+        "size_mb": 0.038,
+        "sha256": "9e468539003191fd71ee5a9c3f2045b40fcd50f898230ca55a07093715f2e4e2"
+      },
+      "onnx_validation": {
+        "max_diff": 0.029296875,
+        "argmax_match": true,
+        "pass": true
+      },
+      "tflite_validation": {
+        "status": "VALIDATED",
+        "max_diff": 0.001953125,
+        "pass": true
+      },
+      "conversion": {
+        "status": "SUCCESS",
+        "size_mb": 0.038,
+        "float16_size_mb": 0.02,
+        "path": "D:\\Projects\\Project Unzip\\Spendly\\SpendGuard\\ai-training\\exported\\tflite\\tflite_models\\ner_head.tflite"
+      }
+    },
+    "category_head": {
+      "onnx": {
+        "path": "category_head.onnx",
+        "size_mb": 0.01,
+        "sha256": "24c34102fb90cd786531c9d7d98464db2c1c7458d38e7f27d3515bfff179ec43"
+      },
+      "tflite": {
+        "path": "category_head.tflite",
+        "size_mb": 0.011,
+        "sha256": "f7cf8ec0ac30a257f35ca1b6d8fdbe890ddb31ec50e94d6cf639e1e824f386d2"
+      },
+      "onnx_validation": {
+        "max_diff": 0.010498046875,
+        "argmax_match": true,
+        "pass": true
+      },
+      "tflite_validation": {
+        "status": "VALIDATED",
+        "max_diff": 0.0013427734375,
+        "pass": true
+      },
+      "conversion": {
+        "status": "SUCCESS",
+        "size_mb": 0.011,
+        "float16_size_mb": 0.006,
+        "path": "D:\\Projects\\Project Unzip\\Spendly\\SpendGuard\\ai-training\\exported\\tflite\\tflite_models\\category_head.tflite"
+      }
+    }
+  },
+  "label_configs": {
+    "classification_labels.json": {
+      "labels": [
+        "Transaction",
+        "Personal",
+        "Promotion",
+        "Scam"
+      ],
+      "label_to_id": {
+        "Transaction": 0,
+        "Personal": 1,
+        "Promotion": 2,
+        "Scam": 3
+      },
+      "id_to_label": {
+        "0": "Transaction",
+        "1": "Personal",
+        "2": "Promotion",
+        "3": "Scam"
+      }
+    },
+    "ner_labels.json": {
+      "labels": [
+        "O",
+        "B-AMOUNT",
+        "I-AMOUNT",
+        "B-CURRENCY",
+        "I-CURRENCY",
+        "B-BANK",
+        "I-BANK",
+        "B-MERCHANT",
+        "I-MERCHANT",
+        "B-TRANSACTION_TYPE",
+        "I-TRANSACTION_TYPE",
+        "B-MODE",
+        "I-MODE",
+        "B-DATE",
+        "I-DATE",
+        "B-REFERENCE",
+        "I-REFERENCE",
+        "B-ACCOUNT_SUFFIX",
+        "I-ACCOUNT_SUFFIX"
+      ],
+      "label_to_id": {
+        "O": 0,
+        "B-AMOUNT": 1,
+        "I-AMOUNT": 2,
+        "B-CURRENCY": 3,
+        "I-CURRENCY": 4,
+        "B-BANK": 5,
+        "I-BANK": 6,
+        "B-MERCHANT": 7,
+        "I-MERCHANT": 8,
+        "B-TRANSACTION_TYPE": 9,
+        "I-TRANSACTION_TYPE": 10,
+        "B-MODE": 11,
+        "I-MODE": 12,
+        "B-DATE": 13,
+        "I-DATE": 14,
+        "B-REFERENCE": 15,
+        "I-REFERENCE": 16,
+        "B-ACCOUNT_SUFFIX": 17,
+        "I-ACCOUNT_SUFFIX": 18
+      },
+      "id_to_label": {
+        "0": "O",
+        "1": "B-AMOUNT",
+        "2": "I-AMOUNT",
+        "3": "B-CURRENCY",
+        "4": "I-CURRENCY",
+        "5": "B-BANK",
+        "6": "I-BANK",
+        "7": "B-MERCHANT",
+        "8": "I-MERCHANT",
+        "9": "B-TRANSACTION_TYPE",
+        "10": "I-TRANSACTION_TYPE",
+        "11": "B-MODE",
+        "12": "I-MODE",
+        "13": "B-DATE",
+        "14": "I-DATE",
+        "15": "B-REFERENCE",
+        "16": "I-REFERENCE",
+        "17": "B-ACCOUNT_SUFFIX",
+        "18": "I-ACCOUNT_SUFFIX"
+      }
+    },
+    "expense_labels.json": {
+      "labels": [
+        "EMI",
+        "Food",
+        "Investment",
+        "Shopping",
+        "Travel"
+      ],
+      "label_to_id": {
+        "EMI": 0,
+        "Food": 1,
+        "Investment": 2,
+        "Shopping": 3,
+        "Travel": 4
+      },
+      "id_to_label": {
+        "0": "EMI",
+        "1": "Food",
+        "2": "Investment",
+        "3": "Shopping",
+        "4": "Travel"
+      }
+    }
+  }
+}

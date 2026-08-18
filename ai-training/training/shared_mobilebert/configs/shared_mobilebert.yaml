@@ -1,0 +1,16 @@
+model_name: "google/mobilebert-uncased"
+max_sequence_length: 128
+batch_size: 16
+epochs: 8
+learning_rate: 2e-5
+weight_decay: 0.01
+dropout: 0.1
+warmup_ratio: 0.15
+gradient_clipping: 1.0
+early_stopping_patience: 3
+checkpoint_frequency: 1
+random_seed: 42
+optimizer: "AdamW"
+scheduler: "linear"
+labels_config_classification: "configs/classification_labels.json"
+labels_config_ner: "configs/ner_labels.json"

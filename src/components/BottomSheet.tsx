@@ -16,12 +16,14 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   title?: string;
-  options: BottomSheetOption[];
+  options?: BottomSheetOption[];
+  children?: React.ReactNode;
+  height?: string | number;
 }
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-export const BottomSheet: React.FC<Props> = ({ visible, onClose, title, options }) => {
+export const BottomSheet: React.FC<Props> = ({ visible, onClose, title, options, children, height }) => {
   const theme = useAppTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
@@ -67,11 +69,13 @@ export const BottomSheet: React.FC<Props> = ({ visible, onClose, title, options 
         <Animated.View style={[styles.backdrop, { opacity: backdropAnim }]} />
       </TouchableWithoutFeedback>
 
-      <Animated.View style={[styles.sheet, { transform: [{ translateY: slideAnim }] }]}>
+      <Animated.View style={[styles.sheet, height ? { height } : undefined, { transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.handle} />
         {title && <Text style={styles.title}>{title}</Text>}
 
-        {options.map((opt, idx) => (
+        {children}
+
+        {options && options.map((opt, idx) => (
           <TouchableOpacity
             key={idx}
             style={styles.option}
@@ -85,9 +89,11 @@ export const BottomSheet: React.FC<Props> = ({ visible, onClose, title, options 
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.cancelButton} onPress={onClose} activeOpacity={0.7}>
-          <Text style={styles.cancelText}>Cancel</Text>
-        </TouchableOpacity>
+        {!children && (
+          <TouchableOpacity style={styles.cancelButton} onPress={onClose} activeOpacity={0.7}>
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+        )}
       </Animated.View>
     </Modal>
   );

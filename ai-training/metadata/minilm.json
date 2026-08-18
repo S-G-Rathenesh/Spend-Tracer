@@ -1,0 +1,14 @@
+{
+  "model_name": "Shared MiniLM",
+  "version": "1.0.0-draft",
+  "backbone": "microsoft/MiniLM-L6-H384-uncased",
+  "parameter_count": "22.7M",
+  "framework": "PyTorch",
+  "author": "SpendGuard",
+  "supported_tasks": [
+    "SMS Classification",
+    "Financial NER"
+  ],
+  "training_status": "Planned expansion",
+  "current_best_experiment": null
+}

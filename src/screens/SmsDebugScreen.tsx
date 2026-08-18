@@ -89,5 +89,5 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   message: { color: theme.colors.textSecondary, fontSize: 14, marginBottom: theme.spacing.md },
   footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   badge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12 },
-  badgeText: { color: '#FFF', fontSize: 12, fontWeight: 'bold' },
+  badgeText: { color: theme.colors.onPrimary, fontSize: 12, fontWeight: 'bold' },
 });

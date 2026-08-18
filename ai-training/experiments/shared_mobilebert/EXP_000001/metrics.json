@@ -1,0 +1,9 @@
+{
+  "classification_accuracy": 0.984,
+  "classification_precision": 0.982,
+  "classification_recall": 0.986,
+  "classification_f1": 0.983,
+  "ner_entity_f1": 0.965,
+  "ner_precision": 0.969,
+  "ner_recall": 0.961
+}

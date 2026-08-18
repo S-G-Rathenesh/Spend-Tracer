@@ -1,0 +1,22 @@
+{
+  "benchmark_suite": "SpendGuard Production Benchmark",
+  "metrics": {
+    "latency": {
+      "cold_start_ms": 0.0,
+      "warm_start_ms": 0.0,
+      "inference_latency_ms": 0.0
+    },
+    "memory": {
+      "peak_ram_mb": 0.0,
+      "average_ram_mb": 0.0
+    },
+    "storage": {
+      "model_size_mb": 0.0,
+      "apk_impact_mb": 0.0
+    },
+    "battery": {
+      "cpu_utilization_pct": 0.0,
+      "battery_drain_per_1000_sms_pct": 0.0
+    }
+  }
+}

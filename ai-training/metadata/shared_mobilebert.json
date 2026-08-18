@@ -1,0 +1,62 @@
+{
+  "model_name": "Shared MobileBERT",
+  "version": "1.0.0",
+  "backbone": "google/mobilebert-uncased",
+  "parameter_count": "24.6M",
+  "framework": "PyTorch",
+  "author": "SpendGuard",
+  "supported_tasks": [
+    "SMS Classification",
+    "Financial NER",
+    "Expense Category Classification"
+  ],
+  "supported_labels": {
+    "classification": [
+      "Transaction",
+      "Personal",
+      "Promotion",
+      "Scam"
+    ],
+    "ner": [
+      "O",
+      "B-AMOUNT",
+      "I-AMOUNT",
+      "B-CURRENCY",
+      "I-CURRENCY",
+      "B-BANK",
+      "I-BANK",
+      "B-MERCHANT",
+      "I-MERCHANT",
+      "B-TRANSACTION_TYPE",
+      "I-TRANSACTION_TYPE",
+      "B-MODE",
+      "I-MODE",
+      "B-DATE",
+      "I-DATE",
+      "B-REFERENCE",
+      "I-REFERENCE",
+      "B-ACCOUNT_SUFFIX",
+      "I-ACCOUNT_SUFFIX"
+    ],
+    "expense_category": [
+      "EMI",
+      "Food",
+      "Investment",
+      "Shopping",
+      "Travel"
+    ]
+  },
+  "stage_1_status": "production_ready",
+  "stage_1_frozen": true,
+  "current_best_experiment": "EXP_000007",
+  "production_checkpoints": {
+    "shared_encoder": "checkpoints/shared_encoder/best.pt",
+    "classification_head": "checkpoints/classification_head/best.pt",
+    "ner_head": "checkpoints/ner_head/best.pt",
+    "category_head": "checkpoints/category_head/best.pt"
+  },
+  "stage_2_status": "PASSED",
+  "latest_ner_experiment": "EXP_000009",
+  "stage_3_status": "PASSED",
+  "latest_expense_experiment": "EXP_000010"
+}

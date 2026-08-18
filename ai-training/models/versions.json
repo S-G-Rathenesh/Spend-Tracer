@@ -1,0 +1,14 @@
+{
+  "v1.0.0": {
+    "experiment_classification": "EXP_000007",
+    "experiment_ner": "EXP_000009",
+    "dataset": "v2.0",
+    "encoder_checkpoint": "checkpoints/shared_encoder/best.pt",
+    "classification_checkpoint": "checkpoints/classification_head/best.pt",
+    "ner_checkpoint": "checkpoints/ner_head/best.pt",
+    "status": "production_ready",
+    "stage_1_status": "frozen",
+    "stage_2_status": "passed_and_frozen",
+    "release_date": "2026-07-27T22:58:00Z"
+  }
+}

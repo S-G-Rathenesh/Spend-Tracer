@@ -1,0 +1,8 @@
+{
+  "target_platform": "Web",
+  "supported_framework": "ONNX Runtime Web / TensorFlow.js",
+  "runtime": "WebAssembly (WASM) / WebGL",
+  "supported_model_format": ".onnx",
+  "minimum_os_version": "Modern Evergreen Browsers (Chrome 90+, Safari 14+, Firefox 88+)",
+  "hardware_acceleration": ["WebGPU", "WebGL"]
+}

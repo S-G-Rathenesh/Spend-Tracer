@@ -147,7 +147,7 @@ export const DashboardScreen = () => {
     { icon: 'plus', label: 'Add Expense', color: theme.colors.accent, onPress: () => navigation.navigate('AddTransaction') },
     { icon: 'chart-pie', label: 'Analytics', color: theme.colors.income, onPress: () => navigation.navigate('Analytics') },
     { icon: 'format-list-bulleted', label: 'History', color: theme.colors.warning, onPress: () => navigation.navigate('Transactions') },
-    { icon: 'message-text', label: 'SMS Sync', color: '#00BCD4', onPress: triggerAutoSync },
+    { icon: 'message-text', label: 'SMS Sync', color: theme.colors.primary, onPress: triggerAutoSync },
   ];
 
   return (
@@ -205,7 +205,12 @@ export const DashboardScreen = () => {
 
         {pendingVerificationTransactions.length > 0 && (
           <TouchableOpacity 
-            style={[styles.pendingCard, { backgroundColor: theme.colors.primary + '10', borderColor: theme.colors.primary, borderWidth: 1 }]}
+            style={[styles.pendingCard, { 
+              backgroundColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.05)' : theme.colors.primary + '10', 
+              borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.08)' : theme.colors.primary, 
+              borderWidth: 1,
+              elevation: 0,
+            }]}
             onPress={() => navigation.navigate('PendingVerification' as any)}
             activeOpacity={0.8}
           >
@@ -216,7 +221,7 @@ export const DashboardScreen = () => {
               <Text style={{ color: theme.colors.textSecondary, fontSize: 13 }}>Tap here to review and improve AI accuracy.</Text>
             </View>
             <View style={{ backgroundColor: theme.colors.primary, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}>
-              <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 12 }}>Review Now</Text>
+              <Text style={{ color: theme.colors.onPrimary, fontWeight: 'bold', fontSize: 12 }}>Review Now</Text>
             </View>
           </TouchableOpacity>
         )}

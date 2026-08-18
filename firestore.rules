@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if the document belongs to the requesting user
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Global Categories (Readable by all authenticated users, writable only by admins if we add claims)
+    match /categories/{categoryId} {
+      allow read: if isAuthenticated();
+      // Only allow write if it's an initial seed from admin SDK, so we deny it from client SDK
+      allow write: if false; 
+    }
+
+    // User Profile Document
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+      
+      // Transactions Subcollection
+      match /transactions/{transactionId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // ScamHistory Subcollection
+      match /scamHistory/{historyId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // Settings Subcollection
+      match /settings/{settingId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // IncomingSMS Subcollection
+      match /incomingSMS/{smsId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // MerchantCache Subcollection
+      match /merchantCache/{merchantId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+model_type: "lightweight_nn"
+input_features: 6
+hidden_dim: 64
+num_classes: 6
+batch_size: 64
+epochs: 10
+learning_rate: 1e-3
+weight_decay: 1e-4
+dropout: 0.2
+gradient_clipping: 1.0
+early_stopping_patience: 3
+checkpoint_frequency: 1
+random_seed: 42
+optimizer: "Adam"
+labels_config_expense: "configs/expense_labels.json"

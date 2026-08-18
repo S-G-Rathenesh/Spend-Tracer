@@ -1,0 +1,23 @@
+{
+  "labels": [
+    "EMI",
+    "Food",
+    "Investment",
+    "Shopping",
+    "Travel"
+  ],
+  "label_to_id": {
+    "EMI": 0,
+    "Food": 1,
+    "Investment": 2,
+    "Shopping": 3,
+    "Travel": 4
+  },
+  "id_to_label": {
+    "0": "EMI",
+    "1": "Food",
+    "2": "Investment",
+    "3": "Shopping",
+    "4": "Travel"
+  }
+}

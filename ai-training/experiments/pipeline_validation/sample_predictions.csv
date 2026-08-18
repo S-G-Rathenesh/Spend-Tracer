@@ -1,0 +1,51 @@
+id,sms,gt_classification,pred_classification,cls_confidence,gt_category,pred_category,amount,currency,merchant,bank,mode,reference,latency_ms,status
+1,"Dear Customer, AED 450.00 was debited from your account *4921 for Zomato dinner bill. Ref: 912b2d15",Transaction,Transaction,0.9997,Food,Food,4921,N/A,zomato,dinner bill,ae,912b,173.72,PASS
+2,"Dear Customer, AED 1200.00 was debited from your account *9123 for Swiggy order payment. Ref: 3ace629e",Transaction,Transaction,1.0000,Food,Food,N/A,order,swiggy,payment,ae,3ace6,155.80,PASS
+3,"Dear Customer, AED 1450.00 was debited from your account *3819 for McDonald's meal payment. Ref: fd9ee982",Transaction,Transaction,0.9994,Food,Food,00,N/A,mcdonald' s,N/A,meal,fd,98.13,PASS
+4,"Dear Customer, AED 2800.00 was debited from your account *9128 for Restaurant dining at. Ref: e0cd9bf9",Transaction,Transaction,1.0000,Food,Food,280,N/A,0,restaurant dining,for,e0cd9,123.43,PASS
+5,"Dear Customer, AED 350.00 was debited from your account *1029 for Dominos pizza order. Ref: fbe55c13",Transaction,Transaction,1.0000,Food,Food,9,N/A,dominos,pizza,N/A,fbe55c,110.49,PASS
+6,"Dear Customer, AED 650.00 was debited from your account *4819 for Grocery purchase at Big Bazaar. Ref: 8e957224",Transaction,Transaction,0.9999,Food,Food,00,grocery,big bazaar,purchase,N/A,8e9,229.81,PASS
+7,"Dear Customer, AED 1850.00 was debited from your account *1029 for Zomato dinner bill. Ref: dbbdfacb",Transaction,Transaction,1.0000,Food,Food,9,N/A,zomato,dinner bill,aed,dbbdf,343.64,PASS
+8,"Dear Customer, AED 950.00 was debited from your account *3819 for Swiggy order payment. Ref: 3ace629f",Transaction,Transaction,1.0000,Food,Food,00,order,swiggy,N/A,ae,3ace6,78.12,PASS
+9,"Dear Customer, AED 420.00 was debited from your account *1029 for McDonald's meal payment. Ref: e3483aec",Transaction,Transaction,1.0000,Food,Food,9,N/A,mcdonald' s,payment,meal,e348,106.48,PASS
+10,"Dear Customer, AED 1100.00 was debited from your account *4819 for Dominos pizza order. Ref: fbe55c14",Transaction,Transaction,1.0000,Food,Food,00,N/A,dominos,pizza,ae,fbe55c,102.97,PASS
+11,"Dear Customer, AED 3500.00 was debited from your account *8391 for Flipkart electronics purchase. Ref: 54ffa906",Transaction,Transaction,1.0000,Shopping,Shopping,350,N/A,flipkart electronics,N/A,ae,54,161.56,PASS
+12,"Dear Customer, AED 2100.00 was debited from your account *1029 for Myntra clothing order. Ref: 897a02cf",Transaction,Transaction,0.9901,Shopping,Shopping,89,N/A,myntra,N/A,ae,7,167.38,PASS
+13,"Dear Customer, AED 8999.00 was debited from your account *9182 for IKEA furniture shopping. Ref: 12e6c5dd",Transaction,Transaction,1.0000,Shopping,Shopping,00,N/A,ikea furniture shopping,N/A,ae,12,263.17,PASS
+14,"Dear Customer, AED 4200.00 was debited from your account *2019 for Flipkart electronics purchase. Ref: 54ffa907",Transaction,Transaction,1.0000,Shopping,Shopping,420,N/A,flipkart electronics,N/A,ae,54ffa90,208.94,PASS
+15,"Dear Customer, AED 6200.00 was debited from your account *3819 for Myntra clothing order. Ref: 897a02d0",Transaction,Transaction,0.9352,Shopping,Shopping,00,N/A,myntra,N/A,N/A,897,108.82,PASS
+16,"Dear Customer, AED 1499.00 was debited from your account *9182 for IKEA furniture shopping. Ref: 12e6c5de",Transaction,Transaction,1.0000,Shopping,Shopping,00,N/A,ikea furniture shopping,N/A,ae,12,95.71,PASS
+17,"Dear Customer, AED 3200.00 was debited from your account *1029 for Flipkart electronics purchase. Ref: 54ffa908",Transaction,Transaction,1.0000,Shopping,Shopping,3200,N/A,flipkart electronics,N/A,ae,54ffa,100.75,PASS
+18,"Dear Customer, AED 12999.00 was debited from your account *9182 for Myntra clothing order. Ref: 897a02d1",Transaction,Transaction,0.8859,Shopping,Shopping,00,N/A,myntra,N/A,N/A,N/A,141.92,PASS
+19,"Dear Customer, AED 4500.00 was debited from your account *3819 for IKEA furniture shopping. Ref: 12e6c5df",Transaction,Transaction,1.0000,Shopping,Shopping,N/A,N/A,ikea furniture,00,shopping,12e6,173.32,PASS
+20,"Dear Customer, AED 2400.00 was debited from your account *1029 for Flipkart electronics purchase. Ref: 54ffa909",Transaction,Transaction,1.0000,Shopping,Shopping,0,N/A,flipkart electronics,N/A,ae,54ffa,102.80,PASS
+21,"Dear Customer, AED 800.00 was debited from your account *4819 for MakeMyTrip hotel booking. Ref: f5e5654a",Transaction,Transaction,1.0000,Travel,Travel,800,N/A,makemytrip,N/A,hotel booking,f5e,107.49,PASS
+22,"Dear Customer, AED 2500.00 was debited from your account *8192 for Uber ride payment. Ref: 05df6663",Transaction,Transaction,1.0000,Travel,Travel,2500,N/A,N/A,N/A,uber ride payment,05df666,101.12,PASS
+23,"Dear Customer, AED 680.00 was debited from your account *4918 for IndiGo flight ticket. Ref: f4b3a995",Transaction,Transaction,1.0000,Travel,Travel,00,N/A,N/A,ticket,indigo flight,f4b3a,93.34,PASS
+24,"Dear Customer, AED 8900.00 was debited from your account *1029 for MakeMyTrip hotel booking. Ref: cff702a0",Transaction,Transaction,1.0000,Travel,Travel,00,N/A,makemytrip,N/A,hotel booking,cff,102.87,PASS
+25,"Dear Customer, AED 1850.00 was debited from your account *3819 for Uber ride payment. Ref: 7127f90c",Transaction,Transaction,1.0000,Travel,Travel,9,N/A,N/A,N/A,for uber ride payment,7127f90c,120.51,PASS
+26,"Dear Customer, AED 1250.00 was debited from your account *8192 for IndiGo flight ticket. Ref: f4b3a996",Transaction,Transaction,1.0000,Travel,Travel,125,N/A,0,ticket,indigo flight,f4b,127.79,PASS
+27,"Dear Customer, AED 4500.00 was debited from your account *4918 for MakeMyTrip hotel booking. Ref: f5e5654b",Transaction,Transaction,1.0000,Travel,Travel,0,N/A,makemytrip,00,hotel booking,f5,108.00,PASS
+28,"Dear Customer, AED 5400.00 was debited from your account *3819 for Uber ride payment. Ref: 05df6664",Transaction,Transaction,1.0000,Travel,Travel,9,N/A,N/A,N/A,uber ride payment,05df6664,109.62,PASS
+29,"Dear Customer, AED 650.00 was debited from your account *1029 for IndiGo flight ticket. Ref: f4b3a997",Transaction,Transaction,1.0000,Travel,Travel,650,N/A,N/A,ticket,indigo flight,f4b3a,104.86,PASS
+30,"Dear Customer, AED 2150.00 was debited from your account *4918 for MakeMyTrip hotel booking. Ref: cff702a1",Transaction,Transaction,1.0000,Travel,Travel,00,N/A,makemytrip,N/A,hotel booking,cff,97.60,PASS
+31,"Dear Customer, AED 45000.00 was debited from your account *3819 for PPF contribution. Ref: bde16533",Transaction,Transaction,1.0000,Investment,Investment,N/A,N/A,N/A,contribution,ppf,bde1653,97.27,PASS
+32,"Dear Customer, AED 150000.00 was debited from your account *2910 for PPF contribution. Ref: 00f5d2eb",Transaction,Transaction,1.0000,Investment,Investment,N/A,N/A,N/A,contribution,ppf,00f5d,118.70,PASS
+33,"Dear Customer, AED 10000.00 was debited from your account *4819 for PPF contribution. Ref: bde16534",Transaction,Transaction,1.0000,Investment,Investment,N/A,N/A,10000,contribution,ppf,bde1653,121.43,PASS
+34,"Dear Customer, AED 5000.00 was debited from your account *3819 for PPF contribution. Ref: 00f5d2ec",Transaction,Transaction,1.0000,Investment,Investment,N/A,N/A,N/A,contribution,ppf,00f5d2,184.05,PASS
+35,"Dear Customer, AED 25000.00 was debited from your account *1029 for PPF contribution. Ref: bde16535",Transaction,Transaction,1.0000,Investment,Investment,9,N/A,0,contribution,ppf,bde1653,167.68,PASS
+36,"Dear Customer, AED 18500.00 was debited from your account *1928 for Bajaj Finserv EMI payment. Ref: 95f2af72",Transaction,Transaction,1.0000,EMI,EMI,95,N/A,N/A,bajaj finserv,emi,N/A,120.84,PASS
+37,"Dear Customer, AED 12000.00 was debited from your account *4910 for SBI car loan EMI. Ref: b1d5b3d2",Transaction,Transaction,1.0000,EMI,EMI,N/A,N/A,0,loan,car,b1d,115.76,PASS
+38,"Dear Customer, AED 14200.00 was debited from your account *9182 for Personal loan EMI deduction. Ref: a965f3f2",Transaction,Transaction,1.0000,EMI,EMI,N/A,N/A,N/A,00,personal loan emi deduction,N/A,134.41,PASS
+39,"Dear Customer, AED 8500.00 was debited from your account *3819 for HDFC home loan EMI. Ref: 44a3065d",Transaction,Transaction,1.0000,EMI,EMI,N/A,N/A,fc,loan,home,44a,114.41,PASS
+40,"Dear Customer, AED 25000.00 was debited from your account *4918 for Personal loan EMI deduction. Ref: 5eeb0bb8",Transaction,Transaction,1.0000,EMI,EMI,N/A,N/A,0,00,personal loan emi deduction,5ee,164.28,PASS
+41,Yeah get the unlimited,Personal,Personal,1.0000,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,56.73,PASS
+42,"I am in tirupur da, once you started from office call me.",Personal,Personal,1.0000,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,55.70,PASS
+43,I love ya too but try and budget your money better babe.,Personal,Personal,1.0000,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,39.82,PASS
+44,Exclusive Offer! Get 50% OFF on your next order at Domino's. Use code PIZZA50.,Promotion,Personal,0.8606,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,54.20,FAIL
+45,Flash Sale live now on Amazon! Up to 80% discount on electronics. Shop today!,Promotion,Promotion,0.9998,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,48.68,PASS
+46,URGENT: Your bank account will be blocked! Click http://bit.ly/fake-bank to verify now.,Scam,Scam,1.0000,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,47.10,PASS
+47,Your credit score has dropped. Click http://tinyurl.com/54aikd to fix it instantly and unlock loan offer.,Scam,Scam,1.0000,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,43.55,PASS
+48,Win $1000 cash prize instantly! Call 09050002311 to claim your reward.,Scam,Scam,0.9974,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,47.24,PASS
+49,+123 Congratulations - in this week's competition draw u have won the £1450 prize to claim just call 09050002311.,Promotion,Personal,0.6160,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,48.61,FAIL
+50,Is fujitsu s series lifebook good?,Personal,Personal,0.8815,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,52.90,PASS

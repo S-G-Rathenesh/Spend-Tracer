@@ -1,0 +1,22 @@
+{
+  "entity_precision": 100.0,
+  "entity_recall": 100.0,
+  "entity_f1": 100.0,
+  "token_precision": 100.0,
+  "token_recall": 100.0,
+  "token_f1": 100.0,
+  "test_samples": 100,
+  "best_epoch": 10,
+  "training_time_sec": 856.09,
+  "per_entity_f1": {
+    "AMOUNT": 100.0,
+    "CURRENCY": 100.0,
+    "BANK": 100.0,
+    "MERCHANT": 100.0,
+    "TRANSACTION_TYPE": 100.0,
+    "MODE": 100.0,
+    "DATE": 100.0,
+    "REFERENCE": 100.0,
+    "ACCOUNT_SUFFIX": 100.0
+  }
+}

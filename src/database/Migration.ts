@@ -23,12 +23,23 @@ export class Migration {
             let hasSources = false;
             let hasSmsHash = false;
             let hasOriginalSms = false;
+            let hasAiCategory = false;
+            let hasAiConfidence = false;
+            let hasUserCategory = false;
+            let hasFinalCategory = false;
+            let hasStatus = false;
+            
             for (let i = 0; i < result.rows.length; i++) {
               const colName = result.rows.item(i).name;
               if (colName === 'needsVerification') hasNeedsVerification = true;
               if (colName === 'sources') hasSources = true;
               if (colName === 'smsHash') hasSmsHash = true;
               if (colName === 'originalSms') hasOriginalSms = true;
+              if (colName === 'aiCategory') hasAiCategory = true;
+              if (colName === 'aiConfidence') hasAiConfidence = true;
+              if (colName === 'userCategory') hasUserCategory = true;
+              if (colName === 'finalCategory') hasFinalCategory = true;
+              if (colName === 'status') hasStatus = true;
             }
             if (!hasNeedsVerification) {
               tx.executeSql('ALTER TABLE Transactions ADD COLUMN needsVerification INTEGER DEFAULT 0');
@@ -41,6 +52,21 @@ export class Migration {
             }
             if (!hasOriginalSms) {
               tx.executeSql('ALTER TABLE Transactions ADD COLUMN originalSms TEXT');
+            }
+            if (!hasAiCategory) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN aiCategory TEXT');
+            }
+            if (!hasAiConfidence) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN aiConfidence REAL');
+            }
+            if (!hasUserCategory) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN userCategory TEXT');
+            }
+            if (!hasFinalCategory) {
+              tx.executeSql('ALTER TABLE Transactions ADD COLUMN finalCategory TEXT');
+            }
+            if (!hasStatus) {
+              tx.executeSql("ALTER TABLE Transactions ADD COLUMN status TEXT DEFAULT 'COMPLETED'");
             }
           });
 

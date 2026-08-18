@@ -4,6 +4,7 @@ import { Transaction } from '../types/Transaction';
 export interface TransactionFilter {
   categoryId?: string;
   type?: 'Debit' | 'Credit';
+  status?: 'COMPLETED' | 'PENDING' | 'FAILED' | 'REVERSED' | 'UNKNOWN' | 'ALL';
   startDate?: string;
   endDate?: string;
   minAmount?: number;
@@ -26,6 +27,12 @@ export class TransactionRepository {
       WHERE 1=1
     `;
     const params: any[] = [];
+
+    const targetStatus = filter.status || 'COMPLETED';
+    if (targetStatus !== 'ALL') {
+      query += ` AND t.status = ?`;
+      params.push(targetStatus);
+    }
 
     if (filter.categoryId) {
       query += ` AND t.categoryId = ?`;
@@ -249,13 +256,13 @@ export class TransactionRepository {
       db.transaction(tx => {
         tx.executeSql(
           `INSERT OR IGNORE INTO Transactions (
-            id, amount, merchantId, bank, categoryId, type, date, time, 
-            referenceNumber, transactionType, notes, source, needsVerification, sources, smsHash, originalSms, createdAt, updatedAt
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            id, amount, merchantId, bank, categoryId, type, status, date, time, 
+            referenceNumber, transactionType, notes, source, needsVerification, sources, smsHash, originalSms, aiCategory, aiConfidence, userCategory, finalCategory, createdAt, updatedAt
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             t.id, t.amount, t.merchantId || null, t.bank || null, t.categoryId || null,
-            t.type, t.date, t.time, t.referenceNumber || null, t.transactionType || null,
-            t.notes || null, t.source, t.needsVerification ? 1 : 0, t.sources ? JSON.stringify(t.sources) : null, t.smsHash || null, t.originalSms || null, t.createdAt, t.updatedAt
+            t.type, t.status || 'COMPLETED', t.date, t.time, t.referenceNumber || null, t.transactionType || null,
+            t.notes || null, t.source, t.needsVerification ? 1 : 0, t.sources ? JSON.stringify(t.sources) : null, t.smsHash || null, t.originalSms || null, t.aiCategory || null, t.aiConfidence || null, t.userCategory || null, t.finalCategory || null, t.createdAt, t.updatedAt
           ],
           (_, results) => {
             if (results.rowsAffected && results.rowsAffected > 0) {
@@ -277,14 +284,14 @@ export class TransactionRepository {
       db.transaction(tx => {
         tx.executeSql(
           `UPDATE Transactions SET 
-            amount = ?, merchantId = ?, bank = ?, categoryId = ?, type = ?, 
+            amount = ?, merchantId = ?, bank = ?, categoryId = ?, type = ?, status = ?,
             date = ?, time = ?, referenceNumber = ?, transactionType = ?, 
-            notes = ?, source = ?, needsVerification = ?, sources = ?, smsHash = ?, originalSms = ?, updatedAt = ?
+            notes = ?, source = ?, needsVerification = ?, sources = ?, smsHash = ?, originalSms = ?, aiCategory = ?, aiConfidence = ?, userCategory = ?, finalCategory = ?, updatedAt = ?
            WHERE id = ?`,
           [
             t.amount, t.merchantId || null, t.bank || null, t.categoryId || null,
-            t.type, t.date, t.time, t.referenceNumber || null, t.transactionType || null,
-            t.notes || null, t.source, t.needsVerification ? 1 : 0, t.sources ? JSON.stringify(t.sources) : null, t.smsHash || null, t.originalSms || null, t.updatedAt, t.id
+            t.type, t.status || 'COMPLETED', t.date, t.time, t.referenceNumber || null, t.transactionType || null,
+            t.notes || null, t.source, t.needsVerification ? 1 : 0, t.sources ? JSON.stringify(t.sources) : null, t.smsHash || null, t.originalSms || null, t.aiCategory || null, t.aiConfidence || null, t.userCategory || null, t.finalCategory || null, t.updatedAt, t.id
           ],
           () => resolve(),
           (error) => { reject(error); return false; }
@@ -375,6 +382,63 @@ export class TransactionRepository {
               transactions.push(row);
             }
             resolve(transactions);
+          },
+          (error) => { reject(error); return false; }
+        );
+      });
+    });
+  }
+
+  static async cleanupHistoricalFailedTransactions(): Promise<void> {
+    const db = DatabaseService.getDB();
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        // Fetch all transactions that might be failed
+        tx.executeSql(
+          `SELECT * FROM Transactions WHERE originalSms IS NOT NULL AND status = 'COMPLETED'`,
+          [],
+          (_, results) => {
+            const updates: string[] = [];
+            for (let i = 0; i < results.rows.length; i++) {
+              const row = results.rows.item(i);
+              const smsText = (row.originalSms || '').toLowerCase();
+              
+              const failureKeywords = [
+                'declined', 'decline', 'failed', 'failure', 'unsuccessful',
+                'rejected', 'incorrect pin', 'wrong pin', 'insufficient funds',
+                'could not be completed', 'unable to process', 'not authorized'
+              ];
+              
+              if (failureKeywords.some(kw => smsText.includes(kw))) {
+                // Determine if it was actually reversed (refunded)
+                if (smsText.includes('reversed') || smsText.includes('refunded')) {
+                  updates.push(`UPDATE Transactions SET status = 'REVERSED', needsVerification = 0 WHERE id = '${row.id}';`);
+                } else {
+                  updates.push(`UPDATE Transactions SET status = 'FAILED', needsVerification = 0 WHERE id = '${row.id}';`);
+                }
+              }
+            }
+
+            if (updates.length > 0) {
+              console.log(`[CLEANUP] Found ${updates.length} historical failed/reversed transactions.`);
+              // Execute all updates
+              const nextUpdate = (index: number) => {
+                if (index >= updates.length) {
+                  resolve();
+                  return;
+                }
+                tx.executeSql(updates[index], [], () => {
+                  nextUpdate(index + 1);
+                }, (err) => {
+                  console.error('Error updating historical transaction', err);
+                  nextUpdate(index + 1); // continue on error
+                  return false;
+                });
+              };
+              nextUpdate(0);
+            } else {
+              resolve();
+            }
           },
           (error) => { reject(error); return false; }
         );

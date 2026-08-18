@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, shadows, borderRadius } from '../theme/theme';
+import { useAppTheme } from '../theme/theme';
 
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -26,6 +26,7 @@ const Stack = createNativeStackNavigator();
 
 const MainTabs = () => {
   const insets = useSafeAreaInsets();
+  const { colors, shadows } = useAppTheme();
   
   return (
   <Tab.Navigator
@@ -103,6 +104,11 @@ export const AppNavigator = () => {
       <Stack.Screen 
         name="SmsDebug" 
         component={SmsDebugScreen} 
+      />
+      <Stack.Screen 
+        name="PendingVerification" 
+        component={PendingVerificationScreen} 
+        options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
       />
     </Stack.Navigator>
   );

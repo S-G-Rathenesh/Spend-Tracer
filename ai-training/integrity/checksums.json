@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-07-26T18:01:16.927735Z",
+  "files": {
+    "configs/classification_labels.json": "3feb88b17c988b808ab9a8ca0ed078a290ca93b03a29a77431197e1c2b36a6d2",
+    "configs/expense_labels.json": "0b68ca739f491d6f0f91402c1d08b237e0b9408e44bf95b89fd2ca72f7f0be46",
+    "configs/ner_labels.json": "91875f519d2e8e8eed08d4f79e4aec5cff2eee09abaecd7d106e466b3bd74154",
+    "metadata/distilbert.json": "151a6f2712121d1eef9aa8c0807e941dde560b1f379d2d8a3126922d4c966f1b",
+    "metadata/expense_classifier.json": "e13b08efcbba2e0540bd15e881f2df01a3df056a4bdc62a467236bb1155c1c28",
+    "metadata/minilm.json": "6d136fa59d0b0b3a71764e92e582c2863c859173bc5041659017bd3e02012279",
+    "metadata/shared_mobilebert.json": "7e3f111e3427f3136be129d1cf4f546a51ba7d30a26a17bdbd6034a511b83e60",
+    "metadata/tinybert.json": "fefbcd3f5d81bc7330525aa75d9f60b5337582368559e2ba51e24ba949790a48",
+    "datasets/processed/expense_category/expense_category.csv": "41cc5cdced2997ce849622d54d80d0125d48c8970c655de9ec4dd261b678c064",
+    "datasets/processed/ner/dataset.bio": "c998ce24aabdb194847decf6e2ae402da26d116d1a8abae35238707801bfd21f",
+    "datasets/processed/ner/dataset.iob2": "c998ce24aabdb194847decf6e2ae402da26d116d1a8abae35238707801bfd21f",
+    "datasets/processed/ner/huggingface_format.json": "5252555322d1aeda347297fc4de1deb27d67355e7afdb41922e93e4d0c5e18cb",
+    "datasets/processed/ner/spacy_format.json": "144c8ce0cce6079f0fd79941b4d312d471291aec507f7170409f1c38fca6dffb",
+    "datasets/processed/ner/validated_ner.json": "c9df54ef827f19dea7698148375dfada92a8177bc4e00d0ee0f53836db16b8cb",
+    "datasets/processed/sms_classification/bank_transactions.csv": "9f8f1ab9fb5ed95b09e141962f68ca1cb35bee61d66cab1ab2d2c2a5eeaa28ef",
+    "datasets/processed/sms_classification/classification.csv": "427c0727cb7e91ef72cbf8ab235e6afef3957fa67da5d666318cfec5c50eda7e",
+    "datasets/processed/sms_classification/personal_messages.csv": "1f936986c956ca7b426c92b738c3ff4cbfde1df85b4693a642b9c6fe15a77036",
+    "datasets/processed/sms_classification/scam_messages.csv": "e0c72315dda06e0fd15c47ea92f6c4c784b2127032949e80c7ecb3fa602994de",
+    "datasets/raw/expense_category/financial_transaction_test.csv": "c33ff574f426ec472a4ec1ea672f39006f7f8397ff128fa1b1a4762af82a57e7",
+    "datasets/raw/expense_category/financial_transaction_train.csv": "e690a5bb88b42aa34eefbb46615c0cc6dabd2a533e8af4d61dd4715b37705633",
+    "datasets/raw/ner/ner_transaction_sms_v2.csv": "196548b4579c79d2604c11b4feacced73a7d72698c1f61219623b14f4cbf5e97",
+    "datasets/raw/sms_classification/combined_dataset.csv": "32a81217ce59d0f73e75c9f3f2d838cab61f905553a04065d0939173a14792a4",
+    "datasets/raw/sms_classification/scam_dataset.csv": "eea7d526f7330a2860a8057e5577247116e4994af9bf1b23c9bf49db70757a41",
+    "datasets/raw/sms_classification/spam.csv": "440e6ea9fa825578abfdd7b7932ef8393d72ef86c0c33f64676705ce40b1dfc2"
+  }
+}

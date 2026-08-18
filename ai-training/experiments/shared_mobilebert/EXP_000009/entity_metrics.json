@@ -1,0 +1,61 @@
+{
+  "overall_precision": 100.0,
+  "overall_recall": 100.0,
+  "overall_f1": 100.0,
+  "per_type": {
+    "AMOUNT": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 97
+    },
+    "CURRENCY": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 71
+    },
+    "BANK": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 167
+    },
+    "MERCHANT": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 196
+    },
+    "TRANSACTION_TYPE": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 162
+    },
+    "MODE": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 168
+    },
+    "DATE": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 100
+    },
+    "REFERENCE": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 567
+    },
+    "ACCOUNT_SUFFIX": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 396
+    }
+  }
+}

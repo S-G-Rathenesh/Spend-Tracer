@@ -4,7 +4,7 @@ export class MerchantAnalytics {
   static async getTopMerchants(limit: number = 5, month?: string, year?: string): Promise<{ name: string, amount: number }[]> {
     const db = DatabaseService.getDB();
     
-    let query = `SELECT m.name, SUM(t.amount) as total FROM Transactions t JOIN MerchantCache m ON t.merchantId = m.id WHERE t.type = 'Debit'`;
+    let query = `SELECT m.name, SUM(t.amount) as total FROM Transactions t JOIN MerchantCache m ON t.merchantId = m.id WHERE t.type = 'Debit' AND t.status = 'COMPLETED'`;
     const params: any[] = [];
     
     if (year && month && month !== 'All Time') {

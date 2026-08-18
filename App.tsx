@@ -10,8 +10,13 @@ GoogleSignin.configure({
   webClientId: '74712875997-llgi8ud4a4nu879b6ps670ktpuk7pi24.apps.googleusercontent.com',
 });
 
+import { StatusBar } from 'react-native';
+import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { useAppTheme } from './src/theme/theme';
+
 const App = () => {
   const { setUser, setLoading } = useAuthStore();
+  const theme = useAppTheme();
 
   useEffect(() => {
     // Check Firebase authentication state
@@ -27,9 +32,25 @@ const App = () => {
     return () => unsubscribe();
   }, [setUser, setLoading]);
 
+  const navigationTheme = {
+    ...(theme.isDarkMode ? DarkTheme : DefaultTheme),
+    colors: {
+      ...(theme.isDarkMode ? DarkTheme.colors : DefaultTheme.colors),
+      background: theme.colors.background,
+      card: theme.colors.surface,
+      text: theme.colors.text,
+      border: theme.colors.border,
+      primary: theme.colors.primary,
+    },
+  };
+
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
+      <StatusBar 
+        barStyle={theme.isDarkMode ? 'light-content' : 'dark-content'} 
+        backgroundColor={theme.colors.background} 
+      />
+      <NavigationContainer theme={navigationTheme}>
         <AppNavigator />
       </NavigationContainer>
     </SafeAreaProvider>

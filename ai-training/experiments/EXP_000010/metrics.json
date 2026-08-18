@@ -1,0 +1,48 @@
+{
+  "experiment_id": "EXP_000010",
+  "timestamp": "2026-07-27T18:56:13Z",
+  "stage": "Stage 3 - Expense Category Classification",
+  "best_epoch": 2,
+  "training_duration_sec": 3018.6118149757385,
+  "test_loss": 0.0,
+  "test_accuracy": 100.0,
+  "precision_macro": 100.0,
+  "recall_macro": 100.0,
+  "macro_f1": 100.0,
+  "precision_weighted": 100.0,
+  "recall_weighted": 100.0,
+  "weighted_f1": 100.0,
+  "per_category_metrics": {
+    "EMI": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 216
+    },
+    "Food": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 219
+    },
+    "Investment": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 225
+    },
+    "Shopping": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 222
+    },
+    "Travel": {
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 218
+    }
+  },
+  "acceptance_status": "PASSED"
+}

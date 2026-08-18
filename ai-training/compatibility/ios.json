@@ -1,0 +1,8 @@
+{
+  "target_platform": "iOS",
+  "supported_framework": "CoreML / ONNX Runtime",
+  "runtime": "CoreML Framework",
+  "supported_model_format": ".mlmodel",
+  "minimum_os_version": "iOS 14.0",
+  "hardware_acceleration": ["Apple Neural Engine", "Metal GPU"]
+}

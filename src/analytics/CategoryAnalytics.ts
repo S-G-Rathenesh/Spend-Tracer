@@ -4,7 +4,7 @@ export class CategoryAnalytics {
   static async getCategoryDistribution(month?: string, year?: string): Promise<{ label: string, value: number, color: string }[]> {
     const db = DatabaseService.getDB();
     
-    let query = `SELECT COALESCE(c.name, 'Uncategorized') as name, COALESCE(c.color, '#A1A1AA') as color, SUM(t.amount) as total FROM Transactions t LEFT JOIN Categories c ON t.categoryId = c.id WHERE t.type = 'Debit'`;
+    let query = `SELECT COALESCE(c.name, 'Uncategorized') as name, COALESCE(c.color, '#A1A1AA') as color, SUM(t.amount) as total FROM Transactions t LEFT JOIN Categories c ON t.categoryId = c.id WHERE t.type = 'Debit' AND t.status = 'COMPLETED'`;
     const params: any[] = [];
     
     if (year && month && month !== 'All Time') {

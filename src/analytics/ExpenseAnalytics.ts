@@ -29,7 +29,7 @@ export class ExpenseAnalytics {
     
     return new Promise((resolve, reject) => {
       db.transaction(tx => {
-        let query = `SELECT date, SUM(amount) as total FROM Transactions WHERE type = 'Debit'`;
+        let query = `SELECT date, SUM(amount) as total FROM Transactions WHERE type = 'Debit' AND status = 'COMPLETED'`;
         const params: any[] = [];
         
         if (startDate) {
@@ -80,7 +80,7 @@ export class ExpenseAnalytics {
   static async getMonthlyTrend(month?: string, year?: string): Promise<{ label: string, value: number }[]> {
     const db = DatabaseService.getDB();
     
-    let query = `SELECT substr(date, 1, 7) as month, SUM(amount) as total FROM Transactions WHERE type = 'Debit'`;
+    let query = `SELECT substr(date, 1, 7) as month, SUM(amount) as total FROM Transactions WHERE type = 'Debit' AND status = 'COMPLETED'`;
     const params: any[] = [];
     
     if (year) {
@@ -118,7 +118,7 @@ export class ExpenseAnalytics {
 
   static async getSummaryMetrics(month?: string, year?: string): Promise<{ income: number; expense: number }> {
     const db = DatabaseService.getDB();
-    let query = `SELECT type, SUM(amount) as total FROM Transactions WHERE 1=1`;
+    let query = `SELECT type, SUM(amount) as total FROM Transactions WHERE status = 'COMPLETED'`;
     const params: any[] = [];
     
     if (year && month && month !== 'All Time') {

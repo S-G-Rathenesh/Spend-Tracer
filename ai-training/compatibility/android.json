@@ -1,0 +1,8 @@
+{
+  "target_platform": "Android",
+  "supported_framework": "TensorFlow Lite / ONNX Runtime Mobile",
+  "runtime": "TFLite Interpreter / ONNX C++ API",
+  "supported_model_format": ".tflite",
+  "minimum_os_version": "Android 8.0 (API Level 26)",
+  "hardware_acceleration": ["NNAPI", "GPU Delegate", "Hexagon DSP"]
+}

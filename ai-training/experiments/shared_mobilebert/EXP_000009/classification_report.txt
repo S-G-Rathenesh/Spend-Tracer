@@ -1,0 +1,16 @@
+=== Stage 2 Test NER Classification Report (EXP_000009) ===
+
+Overall Entity Precision: 100.0%
+Overall Entity Recall:    100.0%
+Overall Entity F1:        100.0%
+
+Per-Entity Breakdown:
+  AMOUNT            : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 97)
+  CURRENCY          : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 71)
+  BANK              : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 167)
+  MERCHANT          : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 196)
+  TRANSACTION_TYPE  : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 162)
+  MODE              : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 168)
+  DATE              : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 100)
+  REFERENCE         : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 567)
+  ACCOUNT_SUFFIX    : Precision=100.00%, Recall=100.00%, F1=100.00% (Support: 396)

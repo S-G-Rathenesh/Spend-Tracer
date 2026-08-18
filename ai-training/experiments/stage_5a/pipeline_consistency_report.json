@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-07-28T14:46:13Z",
+  "total_verified_samples": 120,
+  "consistency_matches": 120,
+  "consistency_rate_percent": 100.0,
+  "evaluation_vs_production_match": true,
+  "ner_audit_issue_count": 0,
+  "ner_audit_errors": []
+}

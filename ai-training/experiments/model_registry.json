@@ -1,0 +1,30 @@
+{
+  "classification": {
+    "status": "production_ready",
+    "best_experiment": "EXP_000007",
+    "accuracy": 97.45,
+    "precision": 97.43,
+    "recall": 97.45,
+    "f1": 97.44,
+    "checkpoint": "checkpoints/classification_head/best.pt",
+    "encoder_checkpoint": "checkpoints/shared_encoder/best.pt",
+    "frozen_stage": "Stage 1 Complete"
+  },
+  "ner": {
+    "status": "production_ready",
+    "best_experiment": "EXP_000009",
+    "entity_f1": 100.0,
+    "precision": 100.0,
+    "recall": 100.0,
+    "checkpoint": "checkpoints/ner_head/best.pt"
+  },
+  "expense": {
+    "status": "production_ready",
+    "best_experiment": "EXP_000010",
+    "accuracy": 100.0,
+    "macro_f1": 100.0,
+    "weighted_f1": 100.0,
+    "checkpoint": "checkpoints/category_head/best.pt",
+    "encoder_checkpoint": "checkpoints/shared_encoder/best.pt"
+  }
+}

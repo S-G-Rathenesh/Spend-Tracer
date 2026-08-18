@@ -79,7 +79,8 @@ export class SMSService {
         notes: `Extracted via Spend Tracer AI (Confidence: ${(finalConfidence * 100).toFixed(0)}%)`,
         smsHash: HashUtils.createCanonicalSmsIdentity(taskData.sender, taskData.body, taskData.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined),
         originalSms: aiResult.originalSMS,
-        needsVerification: needsVerification
+        needsVerification: needsVerification,
+        status: aiResult.status || 'COMPLETED'
       };
       
       console.log(`[SMS_DATE_PIPELINE]`);

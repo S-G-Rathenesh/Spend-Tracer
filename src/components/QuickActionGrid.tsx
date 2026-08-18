@@ -16,7 +16,7 @@ interface Props {
   actions: QuickAction[];
 }
 
-const QuickActionItem = ({ action, styles }: { action: QuickAction, styles: any }) => {
+const QuickActionItem = ({ action, styles, theme }: { action: QuickAction, styles: any, theme: AppTheme }) => {
   const emojiRef = React.useRef<AnimatedEmojiRef>(null);
 
   const handlePress = () => {
@@ -33,7 +33,11 @@ const QuickActionItem = ({ action, styles }: { action: QuickAction, styles: any 
 
   return (
     <TouchableOpacity style={styles.item} onPress={handlePress} activeOpacity={0.7}>
-      <View style={[styles.iconCircle, { backgroundColor: `${action.color}18` }]}>
+      <View style={[
+        styles.iconCircle, 
+        { backgroundColor: `${action.color}18` },
+        theme.isDarkMode && { borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' }
+      ]}>
         <Icon name={action.icon} size={22} color={action.color} />
         <View style={{ position: 'absolute', top: -15, right: -10 }}>
           <AnimatedEmoji ref={emojiRef} emoji={getBurstEmoji(action.label)} type="bounce" trigger="manual" size={16} duration={400} />
@@ -51,7 +55,7 @@ export const QuickActionGrid: React.FC<Props> = ({ actions }) => {
   return (
     <View style={styles.container}>
       {actions.map((action, idx) => (
-        <QuickActionItem key={idx} action={action} styles={styles} />
+        <QuickActionItem key={idx} action={action} styles={styles} theme={theme} />
       ))}
     </View>
   );

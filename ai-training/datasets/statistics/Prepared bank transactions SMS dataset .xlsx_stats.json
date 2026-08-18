@@ -1,0 +1,23 @@
+{
+    "filename": "Prepared bank transactions SMS dataset .xlsx",
+    "number_of_rows": 1894,
+    "columns": [
+        "ID",
+        "Cardholders",
+        "Label",
+        "Unnamed: 3",
+        "Date",
+        "SMS"
+    ],
+    "missing_values": {
+        "ID": 0,
+        "Cardholders": 0,
+        "Label": 1894,
+        "Unnamed: 3": 0,
+        "Date": 0,
+        "SMS": 0
+    },
+    "duplicate_rows": 0,
+    "unique_labels": [],
+    "average_message_length": 109.55
+}

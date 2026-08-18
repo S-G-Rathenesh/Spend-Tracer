@@ -1,0 +1,12 @@
+{
+  "release": "v1.0.0",
+  "model": "Shared MobileBERT",
+  "classification_head": "classification_head.pt",
+  "ner_head": "ner_head.pt",
+  "expense_classifier": "expense_classifier.pt",
+  "dataset_version": "v2.1",
+  "training_experiment": "EXP_000001",
+  "export_format": "TFLite",
+  "target_platform": "Android",
+  "minimum_android_sdk": 26
+}

@@ -51,11 +51,13 @@ export const SummaryCard: React.FC<Props> = ({
 
 const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.08)' : theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing.xl,
     flex: 1,
-    ...theme.shadows.sm,
+    borderWidth: theme.isDarkMode ? 1 : 0,
+    borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+    ...(theme.isDarkMode ? { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 0 } : theme.shadows.sm),
   },
   iconCircle: {
     width: 36,

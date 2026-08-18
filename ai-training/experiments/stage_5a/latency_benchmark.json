@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-07-28T14:46:13Z",
+  "cold_start_latency_ms": 33017.570800031535,
+  "warm_inference_mean_ms": 100.00261666767376,
+  "p95_latency_ms": 155.4115700069815,
+  "peak_ram_mb": 136.33312320709229,
+  "cpu_utilization_percent": 15.0,
+  "total_model_size_mb": 847.3869819641113,
+  "checkpoint_sizes": {
+    "shared_encoder": "282.41 MB",
+    "classification_head": "188.33 MB",
+    "ner_head": "188.36 MB",
+    "category_head": "188.28 MB"
+  }
+}

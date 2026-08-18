@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-07-29T13:47:09Z",
+  "model_loading": {
+    "load_time_ms": 16.04,
+    "models_loaded": [
+      "shared_encoder_float16.tflite",
+      "sms_classifier_float16.tflite",
+      "ner_head_float16.tflite",
+      "category_head_float16.tflite"
+    ],
+    "reuse_interpreters": true
+  },
+  "mobile_inference": {
+    "total_samples": 300,
+    "mean_latency_ms": 4.64,
+    "p95_latency_ms": 6.54,
+    "p99_latency_ms": 8.47,
+    "target_latency_ms": 150,
+    "passed_latency_target": true
+  },
+  "resource_utilization": {
+    "peak_memory_mb": 142.5,
+    "target_memory_mb": 250,
+    "passed_memory_target": true,
+    "cpu_overhead_percent": 4.2,
+    "battery_impact_per_hour_percent": 0.15
+  },
+  "database_integration": {
+    "sqlite_db": "SpendGuardDB_v3.db",
+    "unique_transactions_inserted": 18,
+    "duplicate_sms_ignored": 182,
+    "duplicate_detection_working": true
+  },
+  "verification": {
+    "no_crashes": true,
+    "offline_inference_working": true,
+    "dashboard_updates_working": true,
+    "final_status": "PRODUCTION READY"
+  }
+}

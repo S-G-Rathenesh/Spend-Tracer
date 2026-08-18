@@ -1,0 +1,12 @@
+=== Stage 1 Test Classification Report (EXP_000006) ===
+
+              precision    recall  f1-score   support
+
+ Transaction       1.00      0.99      1.00       186
+    Personal       0.99      0.98      0.98       801
+   Promotion       0.89      0.95      0.92       196
+        Scam       0.96      0.97      0.97       112
+
+    accuracy                           0.97      1295
+   macro avg       0.96      0.97      0.97      1295
+weighted avg       0.97      0.97      0.97      1295

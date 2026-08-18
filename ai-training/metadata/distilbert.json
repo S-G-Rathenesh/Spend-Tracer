@@ -1,0 +1,14 @@
+{
+  "model_name": "Shared DistilBERT",
+  "version": "1.0.0-draft",
+  "backbone": "distilbert-base-uncased",
+  "parameter_count": "66M",
+  "framework": "PyTorch",
+  "author": "SpendGuard",
+  "supported_tasks": [
+    "SMS Classification",
+    "Financial NER"
+  ],
+  "training_status": "Planned expansion",
+  "current_best_experiment": null
+}

@@ -83,9 +83,12 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     alignItems: 'center',
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.05)' : theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
     marginVertical: theme.spacing.xs,
+    borderWidth: theme.isDarkMode ? 1 : 0,
+    borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+    ...(theme.isDarkMode ? { elevation: 0 } : {}),
   },
   iconContainer: {
     width: moderateScale(48),

@@ -5,6 +5,7 @@ export interface Transaction {
   bank?: string;
   categoryId?: string;
   type: 'Debit' | 'Credit';
+  status?: 'COMPLETED' | 'PENDING' | 'FAILED' | 'REVERSED' | 'UNKNOWN';
   date: string;
   time: string;
   referenceNumber?: string;
@@ -15,6 +16,10 @@ export interface Transaction {
   smsHash?: string;
   originalSms?: string;
   needsVerification?: boolean;
+  aiCategory?: string;
+  aiConfidence?: number;
+  userCategory?: string;
+  finalCategory?: string;
   createdAt: string;
   updatedAt: string;
 }

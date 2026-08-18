@@ -87,7 +87,7 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     marginBottom: theme.spacing.xl,
   },
   buttonText: {
-    color: '#fff',
+    color: theme.colors.onPrimary,
     fontWeight: 'bold',
     fontSize: 16,
   },

@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Animated, Text, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useAppTheme, AppTheme } from '../theme/theme';
 
 interface ToastProps {
   visible: boolean;
@@ -11,6 +12,8 @@ interface ToastProps {
 }
 
 export const Toast: React.FC<ToastProps> = ({ visible, message, icon = 'information-outline', onDismiss, duration = 3000 }) => {
+  const theme = useAppTheme();
+  const styles = useMemo(() => makeStyles(theme), [theme]);
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(20)).current;
 
@@ -60,25 +63,25 @@ export const Toast: React.FC<ToastProps> = ({ visible, message, icon = 'informat
 
   return (
     <Animated.View style={[styles.container, { opacity, transform: [{ translateY }] }]}>
-      <Icon name={icon} size={20} color="#fff" style={styles.icon} />
+      <Icon name={icon} size={20} color={theme.colors.onPrimary} style={styles.icon} />
       <Text style={styles.message}>{message}</Text>
     </Animated.View>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     position: 'absolute',
     top: 50,
     alignSelf: 'center',
-    backgroundColor: '#333',
+    backgroundColor: theme.colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 24,
     flexDirection: 'row',
     alignItems: 'center',
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: theme.colors.shadow || '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   message: {
-    color: '#fff',
+    color: theme.colors.onPrimary,
     fontSize: 14,
     fontWeight: '600',
   }

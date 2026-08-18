@@ -1,0 +1,21 @@
+{
+  "experiment_id": "EXP_000006",
+  "model": "google/mobilebert-uncased",
+  "dataset_version": "v2.0",
+  "backbone": "google/mobilebert-uncased",
+  "learning_rate": "3e-5",
+  "batch_size": 32,
+  "epochs": 5,
+  "seed": 42,
+  "created_at": "2026-07-26T18:28:36.202589Z",
+  "status": "Completed",
+  "environment": {
+    "git_commit_hash": "cfff19068847dca479a07926e062f1775936cdb9",
+    "python_version": "3.12.10",
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "pytorch_version": "2.6.0+cpu",
+    "transformers_version": "4.49.0"
+  },
+  "completed_at": "2026-07-26T19:46:00.209409Z",
+  "best_checkpoint": "D:\\Projects\\Project Unzip\\Spendly\\SpendGuard\\ai-training\\checkpoints\\classification_head\\best.pt"
+}

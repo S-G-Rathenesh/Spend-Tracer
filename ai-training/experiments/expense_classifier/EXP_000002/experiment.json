@@ -1,0 +1,21 @@
+{
+  "experiment_id": "EXP_000002",
+  "model": "expense_mlp",
+  "dataset_version": "v2.0",
+  "backbone": "expense_mlp",
+  "learning_rate": 0.001,
+  "batch_size": 64,
+  "epochs": 10,
+  "seed": 42,
+  "created_at": "2026-07-26T18:01:22.438894Z",
+  "status": "Completed",
+  "environment": {
+    "git_commit_hash": "cfff19068847dca479a07926e062f1775936cdb9",
+    "python_version": "3.12.10",
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "pytorch_version": "2.6.0+cpu",
+    "transformers_version": "4.49.0"
+  },
+  "completed_at": "2026-07-26T18:01:22.479893Z",
+  "best_checkpoint": null
+}

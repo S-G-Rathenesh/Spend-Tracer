@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { DatabaseService } from '../database/DatabaseService';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { useSettingsStore } from '../hooks/useSettingsStore';
 import { useAppTheme, AppTheme } from '../theme/theme';
 
 type NavigationProp = NativeStackNavigationProp<any, 'Splash'>;
@@ -31,12 +32,15 @@ export const SplashScreen = () => {
   const initApp = async () => {
     try {
       // Add timeout safety so splash screen never hangs
-      const initPromise = DatabaseService.initDB();
+      const initPromise = async () => {
+        await DatabaseService.initDB();
+        await useSettingsStore.getState().loadSettings();
+      };
       const timeoutPromise = new Promise((_, reject) => 
         setTimeout(() => reject(new Error('DB Init Timeout')), 5000)
       );
       
-      await Promise.race([initPromise, timeoutPromise]);
+      await Promise.race([initPromise(), timeoutPromise]);
     } catch (e) {
       console.error("DB Initialization failed or timed out:", e);
     } finally {

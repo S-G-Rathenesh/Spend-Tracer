@@ -1,6 +1,7 @@
 import SQLite from 'react-native-sqlite-storage';
 import { Migration } from './Migration';
 import { Logger } from '../utils/Logger';
+import { TransactionRepository } from '../repositories/TransactionRepository';
 
 SQLite.enablePromise(true);
 
@@ -19,6 +20,10 @@ export class DatabaseService {
       
       await Migration.run(this.instance);
       Logger.info('DatabaseService', 'Database migrations applied successfully');
+
+      // Cleanup historical transactions
+      await TransactionRepository.cleanupHistoricalFailedTransactions();
+      Logger.info('DatabaseService', 'Historical failed transactions cleanup completed');
       
       return this.instance;
     } catch (error) {

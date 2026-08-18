@@ -1,0 +1,21 @@
+{
+  "model_name": "Expense Classifier MLP",
+  "version": "1.0.0",
+  "backbone": "Multi-Layer Perceptron (Dense)",
+  "parameter_count": "~10K",
+  "framework": "PyTorch",
+  "author": "SpendGuard",
+  "supported_tasks": [
+    "Expense Category Classification"
+  ],
+  "supported_labels": [
+    "Food",
+    "Shopping",
+    "Travel",
+    "Bills",
+    "Investment",
+    "Others"
+  ],
+  "training_status": "Ready for training",
+  "current_best_experiment": null
+}

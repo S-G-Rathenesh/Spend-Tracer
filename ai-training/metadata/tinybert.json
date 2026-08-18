@@ -1,0 +1,14 @@
+{
+  "model_name": "Shared TinyBERT",
+  "version": "1.0.0-draft",
+  "backbone": "huawei-noah/TinyBERT_General_4L_312D",
+  "parameter_count": "14.5M",
+  "framework": "PyTorch",
+  "author": "SpendGuard",
+  "supported_tasks": [
+    "SMS Classification",
+    "Financial NER"
+  ],
+  "training_status": "Planned expansion",
+  "current_best_experiment": null
+}

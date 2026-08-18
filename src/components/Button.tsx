@@ -18,7 +18,7 @@ export const Button = ({ title, loading, style, ...props }: ButtonProps) => {
       {...props}
     >
       {loading ? (
-        <ActivityIndicator color="#fff" />
+        <ActivityIndicator color={theme.colors.onPrimary} />
       ) : (
         <Text style={styles.buttonText}>{title}</Text>
       )}
@@ -36,7 +36,7 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   buttonText: {
-    color: '#fff',
+    color: theme.colors.onPrimary,
     fontWeight: 'bold',
     fontSize: 16,
   },

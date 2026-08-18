@@ -1,0 +1,24 @@
+{
+    "filename": "spam.csv",
+    "number_of_rows": 5572,
+    "columns": [
+        "v1",
+        "v2",
+        "Unnamed: 2",
+        "Unnamed: 3",
+        "Unnamed: 4"
+    ],
+    "missing_values": {
+        "v1": 0,
+        "v2": 0,
+        "Unnamed: 2": 5522,
+        "Unnamed: 3": 5560,
+        "Unnamed: 4": 5566
+    },
+    "duplicate_rows": 403,
+    "unique_labels": [
+        "ham",
+        "spam"
+    ],
+    "average_message_length": 80.12
+}

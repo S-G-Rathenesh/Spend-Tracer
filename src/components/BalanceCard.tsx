@@ -24,7 +24,7 @@ export const BalanceCard: React.FC<Props> = ({ balance, income, expense }) => {
     );
   };
 
-  let balanceColor = '#FFFFFF';
+  let balanceColor = theme.isDarkMode ? '#FFFFFF' : theme.colors.textPrimary;
   let formattedBalance = CurrencyUtils.format(balance);
   let emoji = null;
   let emojiType = 'fade';
@@ -47,7 +47,7 @@ export const BalanceCard: React.FC<Props> = ({ balance, income, expense }) => {
       <View style={styles.topSection}>
         <TouchableOpacity style={styles.titleRow} onPress={showInfo} activeOpacity={0.7}>
           <Text style={styles.balanceLabel}>Net Cash Flow</Text>
-          <Icon name="information-outline" size={16} color="rgba(255,255,255,0.7)" style={{ marginLeft: 6 }} />
+          <Icon name="information-outline" size={16} color={theme.isDarkMode ? 'rgba(255,255,255,0.7)' : theme.colors.textSecondary} style={{ marginLeft: 6 }} />
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[styles.balanceAmount, { color: balanceColor }]}>{formattedBalance}</Text>
@@ -86,12 +86,12 @@ export const BalanceCard: React.FC<Props> = ({ balance, income, expense }) => {
 
 const makeStyles = (theme: AppTheme) => StyleSheet.create({
   card: {
-    backgroundColor: theme.isDarkMode ? '#1C1033' : theme.colors.accent,
+    backgroundColor: theme.isDarkMode ? 'rgba(124, 58, 237, 0.15)' : theme.colors.surfaceElevated,
     borderRadius: theme.borderRadius.xxl,
     padding: theme.spacing.xxl,
     borderWidth: 1,
-    borderColor: 'rgba(124, 58, 237, 0.25)',
-    ...theme.shadows.glow,
+    borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.15)' : theme.colors.border,
+    ...(theme.isDarkMode ? { shadowColor: 'rgba(124, 58, 237, 0.5)', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 0 } : theme.shadows.md),
   },
   topSection: {
     alignItems: 'center',
@@ -104,17 +104,16 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   },
   balanceLabel: {
     ...theme.typography.labelSm,
-    color: 'rgba(255,255,255,0.7)',
+    color: theme.isDarkMode ? 'rgba(255,255,255,0.7)' : theme.colors.textSecondary,
   },
   balanceAmount: {
     fontSize: rfs(34),
     fontWeight: '700',
-    color: '#FFFFFF',
     letterSpacing: -0.5,
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: theme.isDarkMode ? 'rgba(255,255,255,0.2)' : theme.colors.border,
     marginBottom: theme.spacing.xl,
   },
   bottomRow: {
@@ -139,7 +138,7 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   },
   metricLabel: {
     ...theme.typography.caption,
-    color: 'rgba(255,255,255,0.7)',
+    color: theme.isDarkMode ? 'rgba(255,255,255,0.7)' : theme.colors.textSecondary,
   },
   metricValue: {
     fontSize: rfs(18),
@@ -148,6 +147,6 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   verticalDivider: {
     width: 1,
     height: 36,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-  },
+    backgroundColor: theme.isDarkMode ? 'rgba(255,255,255,0.2)' : theme.colors.border,
+  }
 });

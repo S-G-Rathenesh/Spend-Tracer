@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-07-28T14:18:58Z",
+  "total_sms_evaluated": 50,
+  "stage_1_accuracy": 96.0,
+  "stage_2_entity_f1": 100.0,
+  "stage_3_category_accuracy": 100.0,
+  "overall_pipeline_accuracy": 96.0,
+  "end_to_end_success_rate": 96.0,
+  "average_inference_time_ms": 108.40974998427555,
+  "average_pipeline_latency_ms": 108.40974998427555,
+  "failure_rate_percent": 4.0,
+  "error_breakdown": {
+    "Stage 1": 2,
+    "Stage 2": 0,
+    "Stage 3": 0,
+    "Data Quality": 0
+  },
+  "production_readiness": "PRODUCTION READY"
+}

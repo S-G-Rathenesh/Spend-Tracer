@@ -1,0 +1,4062 @@
+[
+  {
+    "text": "Dear Customer, \u20b96,600 has been received to your ICICI Bank account XX4851 through ATM on 13/09/2026. Ref No: 611730849583",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX4851",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "13/09/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "611730849583",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, \u20b97,799 has been paid to your Kotak Mahindra account xx4291 through Debit Card on 18-Mar-2026. Ref No: 501588428423",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,799",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "xx4291",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "18-Mar-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "501588428423",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Kotak Mahindra account XXXX5070 was received with INR3,600 at Ola via Debit Card on 08/08/2026. Transaction Ref REF6HCAM4",
+    "entities": [
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX5070",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Ola",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "08/08/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REF6HCAM4",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "deposited: \u20b96,299 using IMPS at Ola. Yes Bank A/c XX2348 Ref No 740790256436. Date: 18-Jun-2026",
+    "entities": [
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,299",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Ola",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Yes Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX2348",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "740790256436",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "18-Jun-2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "INR8,200 deducted from HDFC Bank A/c xx7961 via UPI to Swiggy on 23-Jun-2026. Ref: 1204993111",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,200",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx7961",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "23-Jun-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "1204993111",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your UPI transaction of \u20b97,350 was debited to Starbucks from Canara Bank A/c xx1208 on 13/10/2026. Ref: 3221429971",
+    "entities": [
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Canara Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx1208",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "13/10/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "3221429971",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Credit Card transaction of \u20b92,950 was deposited to IRCTC from Wells Fargo A/c xx1054 on 10-Nov-2026. Ref: 8969083429",
+    "entities": [
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,950",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "IRCTC",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "xx1054",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "10-Nov-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "8969083429",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR899 credited from Bank of America A/c XX2826 via IMPS to BigBasket on 23-Dec-2026. Ref: 4878712497",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "899",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "XX2826",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "BigBasket",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "23-Dec-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "4878712497",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "\u20b96,100 spent from ICICI Bank A/c XXXX1994 via UPI to Myntra on 08-Jun-2026. Ref: 1967696148",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,100",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX1994",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "08-Jun-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "1967696148",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Kotak Mahindra account XX5591 was deducted with INR6,799 at Starbucks via IMPS on Sep 16, 2026. Transaction Ref REF0U3UX3",
+    "entities": [
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "XX5591",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,799",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Sep 16, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REF0U3UX3",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Rs.600 deducted from HDFC Bank A/c xx9669 via Debit Card to Ola on 18/04/2026. Ref: 993911725813",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx9669",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Ola",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "18/04/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "993911725813",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Bank of America account XXXX5899 was paid with \u20b97,299 at Domino's via UPI on 15-Nov-2026. Transaction Ref TXN19151",
+    "entities": [
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX5899",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,299",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "15-Nov-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN19151",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Standard Chartered Alert: Rs.9,400 debited at Swiggy using Net Banking (A/c xx3965) on 19-Dec-2026. Txn Ref 237607269",
+    "entities": [
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "9,400",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "xx3965",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "19-Dec-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "237607269",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: Rs.4,599 paid via NEFT from Chase A/c XX2266 on 07-Feb-2026. Merchant: IRCTC. Ref: TXN18902",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,599",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "XX2266",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "07-Feb-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "IRCTC",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "TXN18902",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "\u20b92,250 spent from PNB A/c xx9404 via ATM to Uber on 10/02/2026. Ref: 752963489",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,250",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "xx9404",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "Uber",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "10/02/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "752963489",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your IMPS transaction of Rs.8,750 was paid to Croma from Standard Chartered A/c XXXX6205 on Aug 22, 2026. Ref: 2383775819",
+    "entities": [
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,750",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Croma",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX6205",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Aug 22, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "2383775819",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Yes Bank Alert: Rs.4,999 credited at Zomato using RTGS (A/c xx1209) on Aug 17, 2026. Txn Ref REFEZH0VD",
+    "entities": [
+      {
+        "text": "Yes Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,999",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Zomato",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "xx1209",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Aug 17, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFEZH0VD",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, Rs.4,150 has been debited to your Axis Bank account XXXX4961 through ATM on Apr 28, 2026. Ref No: TXN87468",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,150",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX4961",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "Apr 28, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN87468",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, \u20b92,850 has been received to your HDFC Bank account XXXX6872 through Debit Card on 18-Feb-2026. Ref No: TXN73513",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,850",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX6872",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "18-Feb-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN73513",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "received: \u20b95,899 using RTGS at BigBasket. ICICI Bank A/c XX9620 Ref No 712979646233. Date: 20/12/2026",
+    "entities": [
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,899",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "BigBasket",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX9620",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "712979646233",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "20/12/2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Your NEFT transaction of Rs.900 was refunded to Jio from HSBC A/c xx3375 on Jan 20, 2026. Ref: REFOBT5XK",
+    "entities": [
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "900",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Jio",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "xx3375",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Jan 20, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFOBT5XK",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Credit Card transaction of Rs.5,099 was deposited to Zomato from PNB A/c xx7263 on 03-May-2026. Ref: 9259316527",
+    "entities": [
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,099",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Zomato",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "xx7263",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "03-May-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "9259316527",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Axis Bank Alert: Rs.100 refunded at Uber using Credit Card (A/c xx6986) on 14/07/2026. Txn Ref 350895281",
+    "entities": [
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "100",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Uber",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "xx6986",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "14/07/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "350895281",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "withdrawn: \u20b95,100 using Credit Card at Croma. Wells Fargo A/c xx5814 Ref No 5510302628. Date: 07/10/2026",
+    "entities": [
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,100",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Croma",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "xx5814",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "5510302628",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "07/10/2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: Rs.6,750 debited via Credit Card from Canara Bank A/c XX8581 on Apr 24, 2026. Merchant: Netflix. Ref: 582248982097",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,750",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Canara Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX8581",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Apr 24, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Netflix",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "582248982097",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Debit Card transaction of Rs.6,950 was paid to Ola from IDBI Bank A/c XXXX4578 on 24-Dec-2026. Ref: 743623707",
+    "entities": [
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,950",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Ola",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "IDBI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX4578",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "24-Dec-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "743623707",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: \u20b93,299 credited via UPI from Canara Bank A/c xx5680 on Oct 22, 2026. Merchant: Reliance Digital. Ref: 126340906861",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,299",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Canara Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx5680",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Oct 22, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "126340906861",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Axis Bank Alert: Rs.4,999 deposited at Uber using ATM (A/c xx5274) on 06-Aug-2026. Txn Ref 411854109",
+    "entities": [
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,999",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Uber",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "xx5274",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "06-Aug-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "411854109",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: Rs.4,350 received via UPI from Bank of America A/c xx3737 on 11/08/2026. Merchant: Domino's. Ref: 234050614512",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "xx3737",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "11/08/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "234050614512",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "HDFC Bank Alert: Rs.600 received at Flipkart using Credit Card (A/c xx1985) on 19/04/2026. Txn Ref 2278056250",
+    "entities": [
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Flipkart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "xx1985",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "19/04/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "2278056250",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "refunded: Rs.3,900 using Credit Card at Myntra. Standard Chartered A/c xx8967 Ref No 375518995887. Date: Jan 10, 2026",
+    "entities": [
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,900",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "xx8967",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "375518995887",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "Jan 10, 2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Standard Chartered Alert: INR2,650 spent at Walmart using ATM (A/c XXXX6199) on 22-Feb-2026. Txn Ref REFSZO9N7",
+    "entities": [
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,650",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Walmart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "XXXX6199",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "22-Feb-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFSZO9N7",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your ATM transaction of Rs.999 was paid to Domino's from Chase A/c xx7323 on 19/11/2026. Ref: 665149980899",
+    "entities": [
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "999",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "xx7323",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "19/11/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "665149980899",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Payment of \u20b9850 to Swiggy was received via Credit Card from PNB A/c xx5702 on 09-May-2026. Reference: 509215478833",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "850",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "xx5702",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "09-May-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "509215478833",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "paid: \u20b94,199 using UPI at Reliance Digital. ICICI Bank A/c xx4908 Ref No 773093697. Date: 21-Jul-2026",
+    "entities": [
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,199",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx4908",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "773093697",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "21-Jul-2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: Rs.4,750 credited via Net Banking from SBI A/c XX7646 on 03-Jan-2026. Merchant: Apple Store. Ref: TXN27989",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,750",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "SBI",
+        "label": "BANK"
+      },
+      {
+        "text": "XX7646",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "03-Jan-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Apple Store",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "TXN27989",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: \u20b9500 spent via Credit Card from Standard Chartered A/c XX9876 on Jul 19, 2026. Merchant: Croma. Ref: REF6HDSIP",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "500",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "XX9876",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Jul 19, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Croma",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "REF6HDSIP",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your UPI transaction of INR1,300 was refunded to Apple Store from Wells Fargo A/c xx7860 on 19/04/2026. Ref: 849464623996",
+    "entities": [
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,300",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Apple Store",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "xx7860",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "19/04/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "849464623996",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "\u20b95,150 received from Chase A/c XX1944 via RTGS to Myntra on 01/08/2026. Ref: 827757601",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,150",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "XX1944",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "01/08/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "827757601",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Canara Bank Alert: INR3,700 debited at Myntra using UPI (A/c XXXX2547) on 03-Mar-2026. Txn Ref 3611664935",
+    "entities": [
+      {
+        "text": "Canara Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,700",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "XXXX2547",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "03-Mar-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "3611664935",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, Rs.6,499 has been deducted to your Standard Chartered account XXXX2943 through Debit Card on Oct 27, 2026. Ref No: 570744764998",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,499",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX2943",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Oct 27, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "570744764998",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Citibank Alert: Rs.2,150 debited at Domino's using IMPS (A/c xx6049) on 01/03/2026. Txn Ref REFDKF51K",
+    "entities": [
+      {
+        "text": "Citibank",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,150",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "xx6049",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "01/03/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFDKF51K",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your RTGS transaction of Rs.350 was withdrawn to Jio from ICICI Bank A/c XXXX9328 on Apr 9, 2026. Ref: 3718061090",
+    "entities": [
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Jio",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX9328",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Apr 9, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "3718061090",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, \u20b97,350 has been debited to your Axis Bank account xx3051 through NEFT on 15-Apr-2026. Ref No: 580390328",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx3051",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "15-Apr-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "580390328",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: INR6,550 refunded via UPI from Standard Chartered A/c XX9255 on 02-Aug-2026. Merchant: Flipkart. Ref: REF8QMR6R",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,550",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "XX9255",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "02-Aug-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Flipkart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "REF8QMR6R",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Rs.4,399 received from PNB A/c XXXX5711 via Net Banking to Starbucks on Mar 18, 2026. Ref: 617048902",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,399",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX5711",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Mar 18, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "617048902",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "deposited: \u20b9199 using Debit Card at Netflix. Bank of America A/c XXXX3951 Ref No REFTKOJY4. Date: 02/12/2026",
+    "entities": [
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "199",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Netflix",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX3951",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "REFTKOJY4",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "02/12/2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: Rs.199 refunded via Debit Card from HSBC A/c XXXX7880 on 05/10/2026. Merchant: BigBasket. Ref: 176989553",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "199",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX7880",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "05/10/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "BigBasket",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "176989553",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, INR599 has been deposited to your Wells Fargo account xx7321 through Debit Card on 21-May-2026. Ref No: TXN58239",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "599",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "xx7321",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "21-May-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN58239",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Debit Card transaction of INR850 was deducted to Airtel from Standard Chartered A/c xx1450 on Sep 5, 2026. Ref: 148717048",
+    "entities": [
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "850",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Airtel",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "xx1450",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Sep 5, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "148717048",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Payment of Rs.3,000 to Airtel was debited via IMPS from Bank of America A/c xx5856 on 12-Jan-2026. Reference: REF14YT2K",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,000",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Airtel",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "xx5856",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "12-Jan-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REF14YT2K",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Net Banking transaction of INR8,800 was credited to BookMyShow from PNB A/c XXXX3010 on 07/03/2026. Ref: 2855191206",
+    "entities": [
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,800",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "BookMyShow",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX3010",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "07/03/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "2855191206",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Credit Card transaction of INR7,399 was credited to Airtel from IDBI Bank A/c XXXX4796 on 26-Jul-2026. Ref: 224254283851",
+    "entities": [
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,399",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Airtel",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "IDBI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX4796",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "26-Jul-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "224254283851",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: \u20b98,399 withdrawn via IMPS from Bank of America A/c xx7383 on Feb 6, 2026. Merchant: Swiggy. Ref: REFN6ZZF7",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,399",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "xx7383",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Feb 6, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "REFN6ZZF7",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Payment of INR799 to Swiggy was credited via NEFT from Wells Fargo A/c XX7814 on 21-Sep-2026. Reference: 847226241",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "799",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "XX7814",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "21-Sep-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "847226241",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, \u20b97,999 has been spent to your Standard Chartered account XX2294 through RTGS on Feb 3, 2026. Ref No: REFIDS5X8",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,999",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "XX2294",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Feb 3, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFIDS5X8",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR4,300 deposited from Chase A/c xx6564 via Credit Card to Starbucks on Mar 6, 2026. Ref: REFBAG3L6",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,300",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "xx6564",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Mar 6, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFBAG3L6",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "\u20b91,999 deposited from Citibank A/c XXXX3704 via ATM to Reliance Digital on Dec 13, 2026. Ref: 5716148798",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,999",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Citibank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX3704",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Dec 13, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "5716148798",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: \u20b95,800 credited via IMPS from Wells Fargo A/c xx8927 on 26-Jul-2026. Merchant: Domino's. Ref: REFENTICG",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,800",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "xx8927",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "26-Jul-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "REFENTICG",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Payment of Rs.2,700 to Apple Store was credited via NEFT from PNB A/c xx8518 on Feb 7, 2026. Reference: 139061468345",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,700",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Apple Store",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "xx8518",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Feb 7, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "139061468345",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, Rs.3,050 has been received to your ICICI Bank account xx6328 through NEFT on 15/08/2026. Ref No: REFMX1SU0",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,050",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx6328",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "15/08/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFMX1SU0",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Chase account XXXX7222 was paid with Rs.7,000 at Croma via Credit Card on 10/10/2026. Transaction Ref 9654284762",
+    "entities": [
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX7222",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "7,000",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Croma",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "10/10/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "9654284762",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Dear Customer, Rs.4,350 has been credited to your HSBC account XX5266 through Debit Card on Jun 11, 2026. Ref No: REF3N4M3Q",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "XX5266",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Jun 11, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REF3N4M3Q",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Credit Card transaction of Rs.8,500 was deducted to Walmart from Yes Bank A/c xx2767 on 02-Mar-2026. Ref: REFQ6P3GX",
+    "entities": [
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,500",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Walmart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Yes Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx2767",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "02-Mar-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFQ6P3GX",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: INR5,250 received via IMPS from Yes Bank A/c XX3512 on 10/02/2026. Merchant: IRCTC. Ref: TXN58189",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,250",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Yes Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX3512",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "10/02/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "IRCTC",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "TXN58189",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "IDBI Bank Alert: INR600 deducted at Amazon using UPI (A/c XXXX1027) on Jun 24, 2026. Txn Ref 117238490444",
+    "entities": [
+      {
+        "text": "IDBI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Amazon",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "XXXX1027",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Jun 24, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "117238490444",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "refunded: Rs.3,900 using UPI at Domino's. HSBC A/c XX5032 Ref No REFA6BTOJ. Date: 28/10/2026",
+    "entities": [
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,900",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "XX5032",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "REFA6BTOJ",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "28/10/2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Chase Alert: Rs.8,800 refunded at Swiggy using Net Banking (A/c xx5917) on 20-Jul-2026. Txn Ref REFBCSLUW",
+    "entities": [
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,800",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "xx5917",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "20-Jul-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFBCSLUW",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Rs.4,399 refunded from Citibank A/c xx8252 via RTGS to Swiggy on Jan 15, 2026. Ref: 232111660337",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,399",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Citibank",
+        "label": "BANK"
+      },
+      {
+        "text": "xx8252",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Swiggy",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Jan 15, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "232111660337",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "paid: Rs.6,950 using Net Banking at Reliance Digital. Kotak Mahindra A/c XXXX7475 Ref No 7009315578. Date: 04-May-2026",
+    "entities": [
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,950",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX7475",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "7009315578",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "04-May-2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "HDFC Bank Alert: INR6,350 spent at Flipkart using Credit Card (A/c xx9607) on 13/05/2026. Txn Ref TXN81548",
+    "entities": [
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Flipkart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "xx9607",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "13/05/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN81548",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your NEFT transaction of Rs.1,900 was withdrawn to Croma from SBI A/c xx5751 on 21-Feb-2026. Ref: REFE1B40A",
+    "entities": [
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,900",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Croma",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "SBI",
+        "label": "BANK"
+      },
+      {
+        "text": "xx5751",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "21-Feb-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFE1B40A",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Payment of INR1,600 to Domino's was credited via RTGS from Kotak Mahindra A/c XX8933 on Mar 2, 2026. Reference: 1911407275",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "XX8933",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Mar 2, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "1911407275",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR1,100 refunded from Kotak Mahindra A/c xx3010 via RTGS to Starbucks on 15/02/2026. Ref: REFAECNLF",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,100",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "xx3010",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "15/02/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFAECNLF",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Yes Bank account XX2552 was withdrawn with Rs.600 at Reliance Digital via NEFT on 02/12/2026. Transaction Ref REF7BG6DZ",
+    "entities": [
+      {
+        "text": "Yes Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX2552",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "02/12/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REF7BG6DZ",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR8,000 debited from Standard Chartered A/c XXXX4439 via RTGS to Uber on 24/06/2026. Ref: REFLY1W1J",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,000",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX4439",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Uber",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "24/06/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFLY1W1J",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Kotak Mahindra account XX3188 was spent with Rs.1,750 at Myntra via Credit Card on 23-Aug-2026. Transaction Ref REFL0FS0Q",
+    "entities": [
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "XX3188",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,750",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "23-Aug-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFL0FS0Q",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Bank of America account XX3385 was deposited with INR4,699 at Reliance Digital via IMPS on 21-Jan-2026. Transaction Ref 1495765701",
+    "entities": [
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "XX3385",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,699",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "21-Jan-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "1495765701",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR8,050 refunded from HDFC Bank A/c XX4312 via ATM to Zomato on 19/02/2026. Ref: 670209923",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,050",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX4312",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "ATM",
+        "label": "MODE"
+      },
+      {
+        "text": "Zomato",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "19/02/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "670209923",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: \u20b91,099 paid via Debit Card from ICICI Bank A/c XX5686 on Sep 2, 2026. Merchant: Flipkart. Ref: TXN81144",
+    "entities": [
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,099",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "ICICI Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX5686",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Sep 2, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Flipkart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "TXN81144",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your NEFT transaction of \u20b91,499 was refunded to Myntra from HSBC A/c XXXX6661 on 15-May-2026. Ref: TXN40377",
+    "entities": [
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,499",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX6661",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "15-May-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN40377",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Axis Bank Alert: \u20b94,900 paid at Reliance Digital using RTGS (A/c XXXX2556) on 06/12/2026. Txn Ref 582190187237",
+    "entities": [
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,900",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "XXXX2556",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "06/12/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "582190187237",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Chase Alert: INR4,050 withdrawn at Amazon using Credit Card (A/c XXXX3509) on 08-May-2026. Txn Ref REFXRW3RI",
+    "entities": [
+      {
+        "text": "Chase",
+        "label": "BANK"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "4,050",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Amazon",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "XXXX3509",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "08-May-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFXRW3RI",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your IMPS transaction of Rs.8,400 was spent to Walmart from Axis Bank A/c XX8133 on May 2, 2026. Ref: 9995461368",
+    "entities": [
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,400",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Walmart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX8133",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "May 2, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "9995461368",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "credited: Rs.8,099 using RTGS at Myntra. Standard Chartered A/c xx3924 Ref No 589857269146. Date: 15-Feb-2026",
+    "entities": [
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,099",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Standard Chartered",
+        "label": "BANK"
+      },
+      {
+        "text": "xx3924",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "589857269146",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "15-Feb-2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "INR6,350 received from Canara Bank A/c XXXX6167 via IMPS to Domino's on 14-Oct-2026. Ref: TXN31992",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Canara Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX6167",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "14-Oct-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN31992",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your Yes Bank account XXXX2617 was refunded with \u20b93,999 at Zomato via Net Banking on 11/06/2026. Transaction Ref 494632792524",
+    "entities": [
+      {
+        "text": "Yes Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX2617",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,999",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Zomato",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "11/06/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "494632792524",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Rs.6,050 deducted from PNB A/c XX7107 via Net Banking to Amazon on 23-Aug-2026. Ref: TXN12620",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,050",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "deducted",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "PNB",
+        "label": "BANK"
+      },
+      {
+        "text": "XX7107",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "Amazon",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "23-Aug-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN12620",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "credited: \u20b91,100 using NEFT at Domino's. HDFC Bank A/c XXXX1989 Ref No 1735289747. Date: Oct 13, 2026",
+    "entities": [
+      {
+        "text": "credited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,100",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "NEFT",
+        "label": "MODE"
+      },
+      {
+        "text": "Domino's",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "HDFC Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX1989",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "1735289747",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "Oct 13, 2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Kotak Mahindra Alert: \u20b98,550 debited at Reliance Digital using Debit Card (A/c xx1536) on 21-Apr-2026. Txn Ref 742767763466",
+    "entities": [
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "8,550",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Reliance Digital",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "xx1536",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "21-Apr-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "742767763466",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: Rs.200 refunded via IMPS from HSBC A/c XXXX5597 on 12-Sep-2026. Merchant: Croma. Ref: TXN95917",
+    "entities": [
+      {
+        "text": "Rs.",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "200",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "IMPS",
+        "label": "MODE"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX5597",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "12-Sep-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Croma",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "TXN95917",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR6,800 spent from Wells Fargo A/c XX6312 via Credit Card to Walmart on 04/01/2026. Ref: 559337586281",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "6,800",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "spent",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Wells Fargo",
+        "label": "BANK"
+      },
+      {
+        "text": "XX6312",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Credit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Walmart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "04/01/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "559337586281",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "INR1,100 paid from SBI A/c xx6912 via Net Banking to Netflix on Mar 10, 2026. Ref: REFO991M8",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,100",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "SBI",
+        "label": "BANK"
+      },
+      {
+        "text": "xx6912",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "Netflix",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Mar 10, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFO991M8",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Your SBI account XX7072 was paid with INR3,299 at Jio via RTGS on Nov 13, 2026. Transaction Ref REFVHSJZE",
+    "entities": [
+      {
+        "text": "SBI",
+        "label": "BANK"
+      },
+      {
+        "text": "XX7072",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "paid",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,299",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Jio",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "Nov 13, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REFVHSJZE",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Alert: INR2,350 debited via RTGS from HSBC A/c xx8716 on 17-Dec-2026. Merchant: Jio. Ref: TXN38021",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "2,350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "RTGS",
+        "label": "MODE"
+      },
+      {
+        "text": "HSBC",
+        "label": "BANK"
+      },
+      {
+        "text": "xx8716",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "17-Dec-2026",
+        "label": "DATE"
+      },
+      {
+        "text": "Jio",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "TXN38021",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "Payment of INR3,050 to Flipkart was debited via Debit Card from Axis Bank A/c XX1313 on Apr 28, 2026. Reference: REF1BS0QF",
+    "entities": [
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "3,050",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Flipkart",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "debited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XX1313",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "Apr 28, 2026",
+        "label": "DATE"
+      },
+      {
+        "text": "REF1BS0QF",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "refunded: \u20b91,600 using UPI at Myntra. Kotak Mahindra A/c XX1126 Ref No 7847865344. Date: 04-Sep-2026",
+    "entities": [
+      {
+        "text": "refunded",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "1,600",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "UPI",
+        "label": "MODE"
+      },
+      {
+        "text": "Myntra",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "XX1126",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "7847865344",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "04-Sep-2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "Your Bank of America account XXXX1385 was deposited with INR9,400 at Ola via Debit Card on 25/10/2026. Transaction Ref TXN48401",
+    "entities": [
+      {
+        "text": "Bank of America",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX1385",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "deposited",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "9,400",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Ola",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "25/10/2026",
+        "label": "DATE"
+      },
+      {
+        "text": "TXN48401",
+        "label": "REFERENCE"
+      }
+    ]
+  },
+  {
+    "text": "received: INR350 using Net Banking at Starbucks. Axis Bank A/c XXXX5135 Ref No 172386109334. Date: 22-May-2026",
+    "entities": [
+      {
+        "text": "received",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "INR",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "350",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Net Banking",
+        "label": "MODE"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Axis Bank",
+        "label": "BANK"
+      },
+      {
+        "text": "XXXX5135",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "172386109334",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "22-May-2026",
+        "label": "DATE"
+      }
+    ]
+  },
+  {
+    "text": "withdrawn: \u20b95,299 using Debit Card at Starbucks. Kotak Mahindra A/c xx1038 Ref No REF9TTWEY. Date: May 16, 2026",
+    "entities": [
+      {
+        "text": "withdrawn",
+        "label": "TRANSACTION_TYPE"
+      },
+      {
+        "text": "\u20b9",
+        "label": "CURRENCY"
+      },
+      {
+        "text": "5,299",
+        "label": "AMOUNT"
+      },
+      {
+        "text": "Debit Card",
+        "label": "MODE"
+      },
+      {
+        "text": "Starbucks",
+        "label": "MERCHANT"
+      },
+      {
+        "text": "Kotak Mahindra",
+        "label": "BANK"
+      },
+      {
+        "text": "xx1038",
+        "label": "ACCOUNT_SUFFIX"
+      },
+      {
+        "text": "REF9TTWEY",
+        "label": "REFERENCE"
+      },
+      {
+        "text": "May 16, 2026",
+        "label": "DATE"
+      }
+    ]
+  }
+]

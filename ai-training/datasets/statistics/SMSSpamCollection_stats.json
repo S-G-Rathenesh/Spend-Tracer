@@ -1,0 +1,18 @@
+{
+    "filename": "SMSSpamCollection",
+    "number_of_rows": 5572,
+    "columns": [
+        "label",
+        "text"
+    ],
+    "missing_values": {
+        "label": 0,
+        "text": 0
+    },
+    "duplicate_rows": 403,
+    "unique_labels": [
+        "ham",
+        "spam"
+    ],
+    "average_message_length": 80.49
+}

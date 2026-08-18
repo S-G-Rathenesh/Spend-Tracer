@@ -1,0 +1,20 @@
+{
+  "labels": [
+    "Transaction",
+    "Personal",
+    "Promotion",
+    "Scam"
+  ],
+  "label_to_id": {
+    "Transaction": 0,
+    "Personal": 1,
+    "Promotion": 2,
+    "Scam": 3
+  },
+  "id_to_label": {
+    "0": "Transaction",
+    "1": "Personal",
+    "2": "Promotion",
+    "3": "Scam"
+  }
+}
