@@ -1,4 +1,4 @@
-import { NativeModules, PermissionsAndroid } from 'react-native';
+import { NativeModules, PermissionsAndroid, DeviceEventEmitter } from 'react-native';
 import { SpendTracerAI } from '../ai/SpendTracerAI';
 import { TransactionRepository } from '../repositories/TransactionRepository';
 import { SettingsRepository } from '../repositories/SettingsRepository';
@@ -94,7 +94,13 @@ export class SmsRecoveryService {
       }
 
       // 3. Load existing IncomingSMS keys for O(1) deduplication
-      const existingKeys = await SMSRepository.getAllKeys();
+      let existingKeys: Set<string>;
+      if (mode === 'full') {
+        await SMSRepository.clearAll();
+        existingKeys = new Set<string>();
+      } else {
+        existingKeys = await SMSRepository.getAllKeys();
+      }
 
       // 4. Process in batches
       const BATCH_SIZE = 100;
@@ -141,25 +147,23 @@ export class SmsRecoveryService {
               break;
           }
 
-          // Persist to IncomingSMS if not already present
-          if (!existingKeys.has(dedupKey)) {
-            existingKeys.add(dedupKey);
-            batchToInsert.push({
-              id: 'sms_' + Math.random().toString(36).substr(2, 9),
-              sender: sender,
-              message: msg.body,
-              receivedAt: receivedAtISO,
-              normalizedText: msg.body.toLowerCase(),
-              bank: sender,
-              isProcessed: true,
-              processingStatus: SMSStatus.COMPLETED,
-              predictedClass: cls.predictedClass,
-              confidence: cls.confidence,
-              reasons: cls.reasons,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            });
-          }
+          // Persist to IncomingSMS using deterministic ID for clean upserts
+          const smsId = 'sms_' + HashUtils.fastHash(dedupKey);
+          batchToInsert.push({
+            id: smsId,
+            sender: sender,
+            message: msg.body,
+            receivedAt: receivedAtISO,
+            normalizedText: msg.body.toLowerCase(),
+            bank: sender,
+            isProcessed: true,
+            processingStatus: SMSStatus.COMPLETED,
+            predictedClass: cls.predictedClass,
+            confidence: cls.confidence,
+            reasons: cls.reasons,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          });
 
           // Process full transaction pipeline
           const aiResult = await ai.processSMS(msg.body, 'REBUILD' as any, sender);
@@ -167,14 +171,15 @@ export class SmsRecoveryService {
           if (aiResult.isTransaction) {
             let finalCategory = aiResult.category || 'Shopping';
             let finalConfidence = aiResult.confidence;
-            let needsVerification = false;
+            let needsVerification = aiResult.needsVerification;
 
-            if (aiResult.merchant) {
-              const learnedCat = await MerchantCategoryRepository.getCategoryForMerchant(aiResult.merchant);
-              if (learnedCat) {
-                finalCategory = learnedCat;
-                finalConfidence = 1.0;
-                needsVerification = false; // User previously mapped it
+            const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body);
+            if (learned) {
+              finalCategory = learned.category;
+              finalConfidence = 1.0;
+              needsVerification = false; // Confirmed user learning
+              if (learned.matchedMerchant && (!aiResult.merchant || aiResult.merchant === 'Unknown Merchant')) {
+                aiResult.merchant = learned.matchedMerchant;
               }
             }
 
@@ -223,6 +228,8 @@ export class SmsRecoveryService {
       if (!this.isCancelled) {
         await SettingsRepository.set('last_sms_recovery_timestamp', highestTimestamp.toString());
         this.emitProgress({ status: 'completed' });
+        // Emit TransactionUpdated so Analytics and Dashboard immediately refresh with newly rebuilt SMS statistics
+        DeviceEventEmitter.emit('TransactionUpdated');
       }
 
     } catch (e) {
@@ -278,21 +285,23 @@ export class SmsRecoveryService {
         const receivedAtISO = new Date(msg.timestamp).toISOString();
         const dedupKey = `${sender}|${msg.body}|${receivedAtISO}`;
 
-        if (!existingKeys.has(dedupKey)) {
-          existingKeys.add(dedupKey);
-          batchToInsert.push({
-            id: 'sms_' + Math.random().toString(36).substr(2, 9),
-            sender: sender,
-            message: msg.body,
-            receivedAt: receivedAtISO,
-            normalizedText: msg.body.toLowerCase(),
-            bank: sender,
-            isProcessed: true,
-            processingStatus: SMSStatus.COMPLETED,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          });
-        }
+        const cls = SMSClassifier.classify(dummyPooled, msg.body);
+        const smsId = 'sms_' + HashUtils.fastHash(dedupKey);
+        batchToInsert.push({
+          id: smsId,
+          sender: sender,
+          message: msg.body,
+          receivedAt: receivedAtISO,
+          normalizedText: msg.body.toLowerCase(),
+          bank: sender,
+          isProcessed: true,
+          processingStatus: SMSStatus.COMPLETED,
+          predictedClass: cls.predictedClass,
+          confidence: cls.confidence,
+          reasons: cls.reasons,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
 
         const aiResult = await ai.processSMS(msg.body, 'LIVE' as any, sender);
         
@@ -301,12 +310,13 @@ export class SmsRecoveryService {
           let finalConfidence = aiResult.confidence;
           let needsVerification = aiResult.needsVerification;
 
-          if (aiResult.merchant) {
-            const learnedCat = await MerchantCategoryRepository.getCategoryForMerchant(aiResult.merchant);
-            if (learnedCat) {
-              finalCategory = learnedCat;
-              finalConfidence = 1.0;
-              needsVerification = false;
+          const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body);
+          if (learned) {
+            finalCategory = learned.category;
+            finalConfidence = 1.0;
+            needsVerification = false;
+            if (learned.matchedMerchant && (!aiResult.merchant || aiResult.merchant === 'Unknown Merchant')) {
+              aiResult.merchant = learned.matchedMerchant;
             }
           }
 
@@ -344,6 +354,10 @@ export class SmsRecoveryService {
 
       await SettingsRepository.set('last_sms_recovery_timestamp', highestTimestamp.toString());
       await SettingsRepository.set('last_auto_sync_time', Date.now().toString());
+
+      if (addedCount > 0 || batchToInsert.length > 0) {
+        DeviceEventEmitter.emit('TransactionUpdated');
+      }
 
       return { syncedCount: addedCount, status: 'success' };
     } catch (e) {

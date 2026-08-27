@@ -25,11 +25,11 @@ export class MessageAnalytics {
     
     if (year && month && month !== 'All Time') {
       const mStr = month.padStart(2, '0');
-      query += ` WHERE receivedAt >= ? AND receivedAt <= ?`;
-      params.push(`${year}-${mStr}-01`, `${year}-${mStr}-31T99:99:99`);
+      query += ` WHERE receivedAt LIKE ?`;
+      params.push(`${year}-${mStr}%`);
     } else if (year) {
-      query += ` WHERE receivedAt >= ? AND receivedAt <= ?`;
-      params.push(`${year}-01-01`, `${year}-12-31T99:99:99`);
+      query += ` WHERE receivedAt LIKE ?`;
+      params.push(`${year}%`);
     }
     
     return new Promise((resolve, reject) => {
@@ -52,7 +52,6 @@ export class MessageAnalytics {
                 case 'Personal': nonTransaction++; break;
                 case 'Promotion': advertisement++; break;
                 default: 
-                  // Fallback for older unprocessed rows if any (should be caught by migration)
                   nonTransaction++;
                   break;
               }
@@ -91,11 +90,11 @@ export class MessageAnalytics {
     
     if (year && month && month !== 'All Time') {
       const mStr = month.padStart(2, '0');
-      querySMS += ` WHERE receivedAt >= ? AND receivedAt <= ?`;
-      paramsSMS.push(`${year}-${mStr}-01`, `${year}-${mStr}-31T99:99:99`);
+      querySMS += ` WHERE receivedAt LIKE ?`;
+      paramsSMS.push(`${year}-${mStr}%`);
     } else if (year) {
-      querySMS += ` WHERE receivedAt >= ? AND receivedAt <= ?`;
-      paramsSMS.push(`${year}-01-01`, `${year}-12-31T99:99:99`);
+      querySMS += ` WHERE receivedAt LIKE ?`;
+      paramsSMS.push(`${year}%`);
     }
     querySMS += ` ORDER BY receivedAt DESC`;
 
@@ -118,15 +117,18 @@ export class MessageAnalytics {
     });
 
     // 2. Fetch Transactions for the same period to map linkages
-    let queryTx = `SELECT t.*, c.name as categoryName, c.icon as categoryIcon, c.color as categoryColor FROM Transactions t LEFT JOIN Categories c ON t.categoryId = c.id WHERE t.status = 'COMPLETED'`;
+    let queryTx = `SELECT t.*, c.name as categoryName, c.icon as categoryIcon, c.color as categoryColor 
+                   FROM Transactions t 
+                   LEFT JOIN Categories c ON t.categoryId = c.id 
+                   WHERE t.status = 'COMPLETED'`;
     const paramsTx: any[] = [];
     if (year && month && month !== 'All Time') {
       const mStr = month.padStart(2, '0');
-      queryTx += ` WHERE t.date >= ? AND t.date <= ?`;
-      paramsTx.push(`${year}-${mStr}-01`, `${year}-${mStr}-31`);
+      queryTx += ` AND t.date LIKE ?`;
+      paramsTx.push(`${year}-${mStr}%`);
     } else if (year) {
-      queryTx += ` WHERE t.date >= ? AND t.date <= ?`;
-      paramsTx.push(`${year}-01-01`, `${year}-12-31`);
+      queryTx += ` AND t.date LIKE ?`;
+      paramsTx.push(`${year}%`);
     }
 
     const transactions = await new Promise<Transaction[]>((resolve, reject) => {
@@ -147,7 +149,6 @@ export class MessageAnalytics {
     });
 
     // Build a map of Original SMS -> Transaction for O(1) linkage check
-    // We also map smsHash if available for better mapping
     const txMapByOriginalSMS = new Map<string, Transaction>();
     const txMapByHash = new Map<string, Transaction>();
     
@@ -164,7 +165,6 @@ export class MessageAnalytics {
     const enrichedMessages: EnrichedSMS[] = [];
 
     for (const sms of messages) {
-      // Use the database-persisted classification
       const predictedClass = sms.predictedClass as any || 'Personal';
       const confidence = sms.confidence || 0.90;
       let reasons: string[] = [];

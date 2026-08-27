@@ -100,6 +100,8 @@ export const Schema = {
       merchant_name TEXT NOT NULL,
       normalized_name TEXT NOT NULL,
       category TEXT NOT NULL,
+      sms_hash TEXT,
+      sender TEXT,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
     );

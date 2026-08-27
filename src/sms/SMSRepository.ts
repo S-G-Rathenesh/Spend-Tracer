@@ -51,7 +51,7 @@ export class SMSRepository {
       db.transaction(tx => {
         for (const sms of smsList) {
           tx.executeSql(
-            `INSERT INTO IncomingSMS (id, sender, message, receivedAt, normalizedText, bank, isProcessed, processingStatus, predictedClass, confidence, reasons, createdAt, updatedAt) 
+            `INSERT OR REPLACE INTO IncomingSMS (id, sender, message, receivedAt, normalizedText, bank, isProcessed, processingStatus, predictedClass, confidence, reasons, createdAt, updatedAt) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
               sms.id, sms.sender, sms.message, sms.receivedAt, sms.normalizedText, sms.bank,

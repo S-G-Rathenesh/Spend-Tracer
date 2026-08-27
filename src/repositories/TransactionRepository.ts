@@ -445,4 +445,75 @@ export class TransactionRepository {
       });
     });
   }
+
+  static async cleanupHistoricalInformationalTransactions(): Promise<void> {
+    const db = DatabaseService.getDB();
+    return new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        // Fetch all transactions that might be informational false positives
+        tx.executeSql(
+          `SELECT id, originalSms, amount, bank FROM Transactions WHERE originalSms IS NOT NULL`,
+          [],
+          (_, results) => {
+            const idsToDelete: string[] = [];
+            
+            const informationalPatterns = [
+              'cooling period', 'cooling-period',
+              'transaction limit', 'daily limit', 'monthly limit', 'per day limit',
+              'upi limit', 'card limit', 'usage limit', 'transfer limit', 'spending limit',
+              'credit limit', 'withdrawal limit', 'maximum limit', 'minimum limit',
+              'allowed limit', 'eligible limit', 'limit is', 'limit for', 'limit of',
+              'limit applies', 'limit has been', 'limit increased', 'limit decreased',
+              'service charge', 'service charges', 'charges applicable', 'annual fee',
+              'rate of interest', 'charges for', 'maintenance charges',
+              'new user registration', 'registration', 'registered successfully',
+              'activation', 'deactivation', 'security notice', 'security advisory',
+              'security alert', 'fraud alert', 'kyc reminder', 'update kyc', 'complete kyc',
+              'terms and conditions', 'terms & conditions', 'terms apply', 'terms and policy',
+              'pack validity', 'validity of', 'balance enquiry', 'available balance is',
+              'otp', 'one time password', 'verification code', 'do not share'
+            ];
+
+            const explicitActionPatterns = [
+              'debited', 'credited', 'paid to', 'spent on', 'withdrawn', 'transferred to', 'transferred successfully', 'refund received', 'refund credited', 'recharge successful'
+            ];
+
+            for (let i = 0; i < results.rows.length; i++) {
+              const row = results.rows.item(i);
+              const smsText = (row.originalSms || '').toLowerCase();
+              
+              const hasInfoPattern = informationalPatterns.some(pat => smsText.includes(pat));
+              if (hasInfoPattern) {
+                const hasExplicitAction = explicitActionPatterns.some(pat => smsText.includes(pat));
+                if (!hasExplicitAction) {
+                  idsToDelete.push(row.id);
+                }
+              }
+            }
+
+            if (idsToDelete.length > 0) {
+              console.log(`[CLEANUP] Found ${idsToDelete.length} historical informational/false transactions to remove.`);
+              const placeholders = idsToDelete.map(() => '?').join(',');
+              tx.executeSql(
+                `DELETE FROM Transactions WHERE id IN (${placeholders})`,
+                idsToDelete,
+                (_, delResult) => {
+                  console.log(`[CLEANUP] Removed ${delResult.rowsAffected} false transactions.`);
+                  resolve();
+                },
+                (err) => {
+                  console.error('Error deleting historical informational transactions', err);
+                  resolve();
+                  return false;
+                }
+              );
+            } else {
+              resolve();
+            }
+          },
+          (error) => { reject(error); return false; }
+        );
+      });
+    });
+  }
 }

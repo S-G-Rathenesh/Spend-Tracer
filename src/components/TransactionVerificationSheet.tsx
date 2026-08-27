@@ -78,10 +78,14 @@ export const TransactionVerificationSheet: React.FC<TransactionVerificationSheet
       
       await TransactionRepository.update(updatedTx);
 
-      // 2. Learn the mapping if merchant is provided
-      if (finalMerchant !== 'Unknown Merchant') {
-        await MerchantCategoryRepository.learnMerchantCategory(finalMerchant, validCategory);
-      }
+      // 2. Persist learned mapping independently (survives transaction deletion and SMS rebuild)
+      await MerchantCategoryRepository.learnCorrection(
+        finalMerchant,
+        validCategory,
+        transaction.originalSms,
+        transaction.smsHash,
+        transaction.bank
+      );
 
       // 3. Update AI Metrics
       const prevCorrections = await SettingsRepository.get('ai_user_corrections') || '0';

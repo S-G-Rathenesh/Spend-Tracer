@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { BlurView } from '@react-native-community/blur';
 import { CurrencyUtils } from '../utils/CurrencyUtils';
 import { useAppTheme, AppTheme, rfs } from '../theme/theme';
 
@@ -31,33 +32,56 @@ export const SummaryCard: React.FC<Props> = ({
     theme.colors.surfaceLight;
 
   return (
-    <View style={styles.container}>
-      {icon && (
-        <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
-          <Icon name={icon} size={18} color={iconColor || amountColor} />
+    <View style={styles.cardShadow}>
+      <View style={styles.container}>
+        {theme.isDarkMode && (
+          <BlurView
+            style={StyleSheet.absoluteFill}
+            blurType="dark"
+            blurAmount={10}
+            reducedTransparencyFallbackColor="rgba(25, 20, 30, 0.95)"
+          />
+        )}
+        {icon && (
+          <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
+            <Icon name={icon} size={18} color={iconColor || amountColor} />
+          </View>
+        )}
+        <Text style={styles.title}>{title}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={[styles.amount, { color: amountColor }]}>
+            {CurrencyUtils.format(amount)}
+          </Text>
+          {suffix && <View style={{ marginLeft: 6 }}>{suffix}</View>}
         </View>
-      )}
-      <Text style={styles.title}>{title}</Text>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={[styles.amount, { color: amountColor }]}>
-          {CurrencyUtils.format(amount)}
-        </Text>
-        {suffix && <View style={{ marginLeft: 6 }}>{suffix}</View>}
+        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
-      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </View>
   );
 };
 
 const makeStyles = (theme: AppTheme) => StyleSheet.create({
+  cardShadow: {
+    flex: 1,
+    borderRadius: theme.borderRadius.xl,
+    ...(theme.isDarkMode 
+      ? {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 6,
+          elevation: 0 // NO elevation to avoid black artifacts on Android
+        } 
+      : theme.shadows.sm),
+  },
   container: {
-    backgroundColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.08)' : theme.colors.surface,
+    backgroundColor: theme.isDarkMode ? 'rgba(30, 25, 40, 0.85)' : theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing.xl,
     flex: 1,
     borderWidth: theme.isDarkMode ? 1 : 0,
     borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-    ...(theme.isDarkMode ? { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, elevation: 0 } : theme.shadows.sm),
+    overflow: 'hidden',
   },
   iconCircle: {
     width: 36,

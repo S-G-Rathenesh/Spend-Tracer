@@ -1,18 +1,46 @@
 export class PromotionTransactionValidator {
   private static readonly DEBIT_INDICATORS = [
-    'debited', 'dr', 'paid', 'payment successful', 'withdrawn', 
+    'debited', 'dr', 'dr.', 'dr:', 'paid', 'payment successful', 'withdrawn', 
     'deducted', 'purchase', 'spent', 'txn successful', 
-    'transaction successful', 'upi payment'
+    'transaction successful', 'upi payment', 'transferred successfully',
+    'transferred to', 'sent to', 'payment to'
   ];
 
   private static readonly CREDIT_INDICATORS = [
-    'credited', 'cr', 'received', 'deposit', 'refund credited', 
-    'salary credited', 'cashback credited'
+    'credited', 'cr', 'cr.', 'cr:', 'received', 'deposit', 'deposited', 'refund credited', 
+    'refund received', 'salary credited', 'cashback credited', 'transferred to your account'
   ];
 
-  private static readonly BANK_INDICATORS = [
-    'available balance', 'a/c', 'account', 'bank', 'upi ref', 
-    'utr', 'reference number', 'transaction id', 'txn id', 'imps', 'neft', 'rtgs'
+  private static readonly FAILED_INDICATORS = [
+    'declined', 'decline', 'failed', 'failure', 'unsuccessful',
+    'rejected', 'incorrect pin', 'wrong pin', 'insufficient funds',
+    'could not be completed', 'unable to process', 'not authorized'
+  ];
+
+  private static readonly REVERSED_INDICATORS = [
+    'reversed', 'refunded'
+  ];
+
+  private static readonly INFORMATIONAL_LIMIT_KEYWORDS = [
+    'cooling period', 'cooling-period', 'transaction limit', 'daily limit', 
+    'monthly limit', 'per day limit', 'upi limit', 'card limit', 'usage limit', 
+    'transfer limit', 'spending limit', 'credit limit', 'withdrawal limit',
+    'maximum limit', 'minimum limit', 'allowed limit', 'eligible limit', 
+    'limit is', 'limit for', 'limit of', 'limit applies', 'limit has been', 
+    'limit increased', 'limit decreased', 'service charge', 'service charges', 
+    'charges applicable', 'annual fee', 'rate of interest', 'charges for', 
+    'maintenance charge', 'new user registration', 'registration', 
+    'registered successfully', 'activation', 'deactivation', 'security notice', 
+    'security advisory', 'kyc reminder', 'update kyc', 
+    'complete kyc', 'terms and conditions', 'terms & conditions', 'terms apply', 
+    'policy', 'pack validity', 'validity of'
+  ];
+
+  private static readonly TELECOM_USAGE_ALERT_KEYWORDS = [
+    'data usage alert', 'data usage', 'daily data used', 'daily quota', 'data alert',
+    'quota exhausted', 'remaining data', 'data balance', 'usage alert', 'data saving tips',
+    '50% of your daily data', '90% of your daily data', '100% of your daily data',
+    '50% of daily data', '90% of daily data', '100% of daily data'
   ];
 
   private static readonly PROMOTIONAL_KEYWORDS = [
@@ -20,7 +48,8 @@ export class PromotionTransactionValidator {
     'cashback offer', 'save up to', 'buy now', 'recharge now', 
     'limited period', 'special offer', 'valid till', 'starting from', 
     'starting at', 'free', 'get', 'plan', 'pack', 'data', 'gb', 'mb', 
-    'ott', 'validity', 'unlimited', 'only rs', 'starts at', 'per day'
+    'ott', 'validity', 'unlimited', 'only rs', 'starts at', 'per day',
+    'welcome back', 'porting out', 'stay on jio', 'we want you back'
   ];
 
   private static readonly TELECOM_KEYWORDS = [
@@ -49,22 +78,55 @@ export class PromotionTransactionValidator {
     const text = smsText.toLowerCase();
     const senderLower = sender.toLowerCase();
 
-    const hasDebit = this.containsKeyword(text, this.DEBIT_INDICATORS);
-    const hasCredit = this.containsKeyword(text, this.CREDIT_INDICATORS);
-    const hasBank = this.containsKeyword(text, this.BANK_INDICATORS);
-    
-    // Explicit Recharge Confirmation
+    // 1. Telecom Data Usage Alert Check (Non-Transaction)
+    const isTelecomUsage = this.containsKeyword(text, this.TELECOM_USAGE_ALERT_KEYWORDS);
+    const hasMonetaryDebitPayment = /\b(debited|debited by|debited for|spent|withdrawn|transferred to|recharge successful)\b/i.test(text) &&
+                                   /(?:inr|rs\.?|₹)\s*[\d,]+/i.test(text);
+
+    if (isTelecomUsage && !hasMonetaryDebitPayment) {
+      return { isValid: false, reason: 'TELECOM_USAGE_ALERT', confidence: 0 };
+    }
+
+    // 2. Telecom Benefit / Pack Credit Check (e.g. "credited with 7 days welcome back 5G pack")
+    const isTelecomPackCredit = /\bcredited with\b.*\b(pack|days|validity|gb|mb|unlimited|welcome|benefit|trial|points|coupon|voucher)\b/i.test(text) ||
+                               /\b(welcome back|porting out|stay on jio|5g unlimited pack|welcome back 5g)\b/i.test(text);
+
+    if (isTelecomPackCredit && !hasMonetaryDebitPayment) {
+      return { isValid: false, reason: 'TELECOM_OFFER', confidence: 0 };
+    }
+
+    // 3. Check Informational / Limit / Policy Notices
+    const hasInfoLimit = this.containsKeyword(text, this.INFORMATIONAL_LIMIT_KEYWORDS);
+    const hasExplicitDebitAction = /\b(debited|debited by|debited with|debited for|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully)\b/i.test(text) ||
+                                  /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                  /\b(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                  /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:debited|dr\.|dr)\b/i.test(text);
+
+    const hasExplicitCreditAction = (/\b(credited|credited to|credited with|was credited|has been credited|received from|deposited into|refund received|refund credited|cashback credited)\b/i.test(text) ||
+                                    /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                    /\b(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                    /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:credited|cr\.|cr)\b/i.test(text)) &&
+                                    !isTelecomPackCredit;
+
+    if (hasInfoLimit && !hasExplicitDebitAction && !hasExplicitCreditAction) {
+      return { isValid: false, reason: 'INFORMATIONAL_LIMIT_NOTICE', confidence: 0 };
+    }
+
+    const hasDebit = this.containsKeyword(text, this.DEBIT_INDICATORS) || hasExplicitDebitAction;
+    const hasCredit = (this.containsKeyword(text, this.CREDIT_INDICATORS) || hasExplicitCreditAction) && !isTelecomPackCredit;
+    const hasReversed = this.containsKeyword(text, this.REVERSED_INDICATORS);
+    const hasFailed = this.containsKeyword(text, this.FAILED_INDICATORS) && /\b(txn|transaction|payment|order|card)\b/i.test(text);
     const hasRechargeConfirm = this.containsKeyword(text, this.RECHARGE_CONFIRMATION);
 
-    const hasTransactionEvidence = hasDebit || hasCredit || hasBank || hasRechargeConfirm;
+    const hasTransactionEvidence = hasDebit || hasCredit || hasReversed || hasFailed || hasRechargeConfirm;
 
-    // Rule 6: Shopping Promotions
+    // 4. Shopping Promotions
     const isShoppingBrand = this.containsKeyword(text, this.SHOPPING_BRANDS) || this.containsKeyword(senderLower, this.SHOPPING_BRANDS);
     if (isShoppingBrand && !hasTransactionEvidence) {
       return { isValid: false, reason: 'ADVERTISEMENT', confidence: 0 };
     }
 
-    // Rule 4: Telecom Promotional Detection
+    // 5. Telecom Promotional Detection
     const isTelecomSender = this.containsKeyword(senderLower, this.TELECOM_SENDERS) || this.containsKeyword(text, this.TELECOM_SENDERS);
     const hasTelecomPromo = this.containsKeyword(text, this.TELECOM_KEYWORDS);
     
@@ -74,25 +136,24 @@ export class PromotionTransactionValidator {
       }
     }
 
-    // Rule 3: Reject Promotional Messages
+    // 6. Reject Promotional Messages
     const hasPromo = this.containsKeyword(text, this.PROMOTIONAL_KEYWORDS);
     if (hasPromo && !hasTransactionEvidence) {
       return { isValid: false, reason: 'PROMOTIONAL_SMS', confidence: 0 };
     }
 
-    // Rule 7 & 2: Require Transaction Evidence
+    // 7. Require Transaction Evidence (Monetary amount alone does not indicate a transaction)
     if (amount !== null && !hasTransactionEvidence) {
-      return { isValid: false, reason: 'NO_TRANSACTION_CONFIRMATION', confidence: 0 };
+      return { isValid: false, reason: 'NO_TRANSACTION_EVIDENCE', confidence: 0 };
     }
 
-    // Money alone DOES NOT indicate a transaction. (e.g. price only)
     if (!hasTransactionEvidence) {
       return { isValid: false, reason: 'PRICE_ONLY', confidence: 0 };
     }
 
     let confidence = 0.5;
-    if (hasDebit || hasCredit) confidence += 0.3;
-    if (hasBank) confidence += 0.2;
+    if (hasDebit || hasCredit) confidence += 0.4;
+    if (hasFailed) confidence += 0.3;
     if (hasRechargeConfirm) confidence = 0.9;
 
     return { isValid: true, reason: '', confidence: Math.min(confidence, 1.0) };
@@ -100,8 +161,8 @@ export class PromotionTransactionValidator {
 
   private static containsKeyword(text: string, keywords: string[]): boolean {
     return keywords.some(kw => {
-      if (kw === 'dr' || kw === 'cr' || kw === 'gb' || kw === 'mb') {
-        return new RegExp(`\\b${kw}\\b`).test(text);
+      if (kw === 'dr' || kw === 'cr' || kw === 'dr.' || kw === 'cr.' || kw === 'gb' || kw === 'mb') {
+        return new RegExp(`\\b${kw.replace('.', '\\.')}\\b`).test(text);
       }
       return text.includes(kw);
     });

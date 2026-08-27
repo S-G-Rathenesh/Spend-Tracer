@@ -1,10 +1,12 @@
 import { MerchantCategoryRepository } from '../repositories/MerchantCategoryRepository';
 
 export interface ExpenseCategoryResult {
-  category: 'EMI' | 'Food' | 'Investment' | 'Shopping' | 'Travel' | 'Others' | 'Unknown';
+  category: string;
   categoryId: number;
   confidence: number;
   logits: number[];
+  isLearned?: boolean;
+  learnedMerchant?: string;
 }
 
 export class ExpenseClassifier {
@@ -32,30 +34,31 @@ export class ExpenseClassifier {
   public static async classify(
     pooledOutput: Float32Array | number[],
     merchant: string | null,
-    originalSMS: string
+    originalSMS: string,
+    smsHash?: string | null
   ): Promise<ExpenseCategoryResult> {
-    // 1. Check Local Feedback Loop First
-    if (merchant) {
-      const userMappedCategory = await MerchantCategoryRepository.getCategoryForMerchant(merchant);
-      if (userMappedCategory) {
-        const categoryId = this.getCategoryId(userMappedCategory);
-        const fakeLogits = [0, 0, 0, 0, 0, 0];
-        fakeLogits[categoryId] = 10.0;
-        console.log(`[AI_LEARNING_LAYER] Found local user mapping: ${merchant} -> ${userMappedCategory}`);
-        
-        return {
-          category: userMappedCategory as any,
-          categoryId,
-          confidence: 1.0, // 100% confidence for user override
-          logits: fakeLogits,
-        };
-      }
+    // 1. Check Local Learned Feedback Loop First (Highest Priority)
+    const learned = await MerchantCategoryRepository.getLearnedCategory(merchant, originalSMS, smsHash);
+    if (learned && learned.category) {
+      const categoryId = this.getCategoryId(learned.category);
+      const fakeLogits = [0, 0, 0, 0, 0, 0];
+      fakeLogits[categoryId] = 10.0;
+      console.log(`[AI_LEARNING_LAYER] Found local user mapping: ${merchant || learned.matchedMerchant} -> ${learned.category}`);
+      
+      return {
+        category: learned.category,
+        categoryId,
+        confidence: 1.0, // 100% confidence for user override
+        logits: fakeLogits,
+        isLearned: true,
+        learnedMerchant: learned.matchedMerchant
+      };
     }
 
     // 2. Fallback to AI / Heuristics
     const textLower = (originalSMS + ' ' + (merchant || '')).toLowerCase();
 
-    let category: 'EMI' | 'Food' | 'Investment' | 'Shopping' | 'Travel' | 'Unknown' = 'Unknown';
+    let category = 'Unknown';
     let categoryId = 5;
     let confidence = 0.50; // Low confidence for unknown
 
@@ -89,6 +92,7 @@ export class ExpenseClassifier {
       categoryId,
       confidence,
       logits: fakeLogits,
+      isLearned: false
     };
   }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, TextInput, ActivityIndicator, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AppTheme } from '../../../theme/theme';
 import { EnrichedSMS, MessageAnalytics } from '../../../analytics/MessageAnalytics';
@@ -20,8 +21,6 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
   const [messages, setMessages] = useState<EnrichedSMS[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // When opened via "View All", category is 'All', but we can still filter inside
   const [activeFilter, setActiveFilter] = useState<FilterType>('All');
   
   const { selectedMonth, selectedYear } = useAnalyticsStore();
@@ -40,10 +39,8 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
     if (!category) return;
     setLoading(true);
     try {
-      // If the modal was opened with a specific category, we can just load that.
-      // But if it was opened with 'All', we load 'All'.
-      // For simplicity, we just load 'All' if the category is 'All', or the specific one.
-      const data = await MessageAnalytics.getDetailedMessagesByCategory(category, selectedMonth, selectedYear);
+      // Always load all messages for the selected time range so user can switch filter tabs seamlessly
+      const data = await MessageAnalytics.getDetailedMessagesByCategory('All', selectedMonth, selectedYear);
       setMessages(data);
     } catch (error) {
       console.error('Failed to load SMS messages', error);
@@ -52,22 +49,42 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
     }
   };
 
+  // Compute category counts from the loaded messages
+  const counts = useMemo(() => {
+    let all = messages.length;
+    let tx = 0;
+    let nonTx = 0;
+    let ads = 0;
+    let spam = 0;
+
+    for (const msg of messages) {
+      switch (msg.classification.predictedClass) {
+        case 'Transaction': tx++; break;
+        case 'Personal': nonTx++; break;
+        case 'Promotion': ads++; break;
+        case 'Scam': spam++; break;
+        default: nonTx++; break;
+      }
+    }
+    return { all, tx, nonTx, ads, spam };
+  }, [messages]);
+
   const filteredMessages = useMemo(() => {
     return messages.filter(sms => {
-      // 1. Text Search
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
+      // 1. Text Search across message, sender, merchant, and category
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
         const matchesText = sms.message.toLowerCase().includes(q);
         const matchesSender = sms.sender.toLowerCase().includes(q);
         const matchesMerchant = sms.linkedTransaction?.merchantId?.toLowerCase().includes(q);
         const matchesCategory = sms.linkedTransaction?.categoryName?.toLowerCase().includes(q);
-        if (!matchesText && !matchesSender && !matchesMerchant && !matchesCategory) {
+        const matchesBank = sms.bank?.toLowerCase().includes(q);
+        if (!matchesText && !matchesSender && !matchesMerchant && !matchesCategory && !matchesBank) {
           return false;
         }
       }
 
-      // 2. Chip Filter (only applies if we loaded 'All' initially, 
-      // or if we allow changing categories inside the modal)
+      // 2. Classification Filter
       if (activeFilter !== 'All') {
         const mappedClass = activeFilter === 'Transactions' ? 'Transaction' :
                             activeFilter === 'Non-Transactions' ? 'Personal' :
@@ -85,35 +102,52 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
 
   const styles = useMemo(() => createStyles(theme), [theme]);
 
-  const renderFilterChips = () => {
-    if (category !== 'All') return null; // Only show category filters if "View All" was pressed
+  const filters: { key: FilterType; label: string; count: number; icon: string }[] = [
+    { key: 'All', label: 'All', count: counts.all, icon: 'email-multiple-outline' },
+    { key: 'Transactions', label: 'Transactions', count: counts.tx, icon: 'credit-card-outline' },
+    { key: 'Non-Transactions', label: 'Non-Txns', count: counts.nonTx, icon: 'message-text-outline' },
+    { key: 'Advertisements', label: 'Ads', count: counts.ads, icon: 'bullhorn-outline' },
+    { key: 'Spam', label: 'Spam', count: counts.spam, icon: 'shield-alert-outline' },
+  ];
 
-    const filters: FilterType[] = ['All', 'Transactions', 'Non-Transactions', 'Advertisements', 'Spam'];
+  const renderFilterChips = () => {
     return (
       <View style={styles.filterScrollWrapper}>
         <FlatList 
           horizontal
           showsHorizontalScrollIndicator={false}
           data={filters}
-          keyExtractor={item => item}
+          keyExtractor={item => item.key}
           contentContainerStyle={styles.filterList}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={[
-                styles.filterChip, 
-                { 
-                  backgroundColor: activeFilter === item ? theme.colors.primary : theme.colors.surface,
-                  borderColor: activeFilter === item ? theme.colors.primary : theme.colors.border
-                }
-              ]}
-              onPress={() => setActiveFilter(item)}
-            >
-              <Text style={[
-                styles.filterText,
-                { color: activeFilter === item ? theme.colors.onPrimary : theme.colors.textSecondary }
-              ]}>{item}</Text>
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => {
+            const isActive = activeFilter === item.key;
+            return (
+              <TouchableOpacity 
+                style={[
+                  styles.filterChip, 
+                  { 
+                    backgroundColor: isActive ? theme.colors.primary : theme.colors.surface,
+                    borderColor: isActive ? theme.colors.primary : theme.colors.border
+                  }
+                ]}
+                onPress={() => setActiveFilter(item.key)}
+                activeOpacity={0.7}
+              >
+                <Icon 
+                  name={item.icon} 
+                  size={14} 
+                  color={isActive ? theme.colors.onPrimary : theme.colors.textSecondary} 
+                  style={{ marginRight: 6 }}
+                />
+                <Text style={[
+                  styles.filterText,
+                  { color: isActive ? theme.colors.onPrimary : theme.colors.textSecondary }
+                ]}>
+                  {item.label} ({item.count})
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
         />
       </View>
     );
@@ -121,47 +155,54 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top', 'bottom']}>
+        <StatusBar barStyle={theme.isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.colors.background} />
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           
-          <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <Icon name="close" size={24} color={theme.colors.textPrimary} />
+          {/* Header Bar */}
+          <View style={[styles.header, { borderBottomColor: theme.colors.border, backgroundColor: theme.colors.surface }]}>
+            <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
+              <Icon name="arrow-left" size={24} color={theme.colors.textPrimary} />
             </TouchableOpacity>
             <View style={styles.titleContainer}>
               <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-                {category === 'All' ? 'All Messages' : category}
+                SMS Intelligence
               </Text>
               <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-                {loading ? 'Analyzing...' : `${filteredMessages.length} messages`}
+                {loading ? 'Analyzing SMS records...' : `${filteredMessages.length} of ${messages.length} messages`}
               </Text>
             </View>
             <View style={{ width: 40 }} />
           </View>
 
+          {/* Search Box */}
           <View style={styles.searchSection}>
             <View style={[styles.searchBox, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-              <Icon name="magnify" size={20} color={theme.colors.textMuted} />
+              <Icon name="magnify" size={20} color={theme.colors.textSecondary} />
               <TextInput
                 style={[styles.searchInput, { color: theme.colors.textPrimary }]}
-                placeholder="Search messages..."
-                placeholderTextColor={theme.colors.textMuted}
+                placeholder="Search by sender, bank, merchant, or text..."
+                placeholderTextColor={theme.colors.textSecondary}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
+                autoCorrect={false}
               />
               {searchQuery.length > 0 && (
-                <TouchableOpacity onPress={() => setSearchQuery('')}>
-                  <Icon name="close-circle" size={16} color={theme.colors.textMuted} />
+                <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                  <Icon name="close-circle" size={18} color={theme.colors.textSecondary} />
                 </TouchableOpacity>
               )}
             </View>
           </View>
 
+          {/* Filter Chips */}
           {renderFilterChips()}
 
+          {/* Messages List or Empty State */}
           {loading ? (
             <View style={styles.centerBox}>
               <ActivityIndicator size="large" color={theme.colors.primary} />
+              <Text style={[styles.loadingText, { color: theme.colors.textSecondary }]}>Loading message analysis...</Text>
             </View>
           ) : (
             <FlatList
@@ -169,18 +210,18 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
               keyExtractor={(item, index) => item.id || index.toString()}
               renderItem={renderItem}
               contentContainerStyle={styles.listContent}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              windowSize={5}
-              removeClippedSubviews={true}
+              initialNumToRender={15}
+              maxToRenderPerBatch={15}
+              windowSize={7}
+              removeClippedSubviews={Platform.OS === 'android'}
               ListEmptyComponent={() => (
                 <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.centerBox}>
-                  <Text style={{ fontSize: 48, marginBottom: 16 }}>🤖</Text>
+                  <Text style={{ fontSize: 44, marginBottom: 12 }}>🔍</Text>
                   <Text style={[styles.emptyTitle, { color: theme.colors.textPrimary }]}>
                     No messages found
                   </Text>
                   <Text style={[styles.emptySub, { color: theme.colors.textSecondary }]}>
-                    Try adjusting your search or filters.
+                    {searchQuery.trim() ? `No SMS matched "${searchQuery}" in ${activeFilter}` : `No messages classified under ${activeFilter}`}
                   </Text>
                 </Animated.View>
               )}
@@ -201,12 +242,12 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: 1,
   },
   closeBtn: {
-    padding: 8,
-    marginLeft: -8,
+    padding: 6,
+    marginLeft: -4,
   },
   titleContainer: {
     flex: 1,
@@ -215,8 +256,7 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   subtitle: {
     fontSize: 12,
@@ -224,32 +264,34 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
   },
   searchSection: {
     paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingTop: 12,
     paddingBottom: 8,
   },
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    height: 44,
+    paddingHorizontal: 14,
+    height: 46,
     borderRadius: 12,
     borderWidth: 1,
   },
   searchInput: {
     flex: 1,
-    height: 44,
+    height: 46,
     marginLeft: 8,
-    fontSize: 15,
+    fontSize: 14,
   },
   filterScrollWrapper: {
-    marginBottom: 8,
+    paddingVertical: 6,
   },
   filterList: {
     paddingHorizontal: 16,
     gap: 8,
   },
   filterChip: {
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
@@ -267,15 +309,21 @@ const createStyles = (theme: AppTheme) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
-    marginTop: 60,
+    marginTop: 40,
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 13,
   },
   emptyTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 4,
   },
   emptySub: {
     fontSize: 13,
     textAlign: 'center',
+    lineHeight: 18,
   }
 });
+

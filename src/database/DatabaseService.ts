@@ -21,9 +21,10 @@ export class DatabaseService {
       await Migration.run(this.instance);
       Logger.info('DatabaseService', 'Database migrations applied successfully');
 
-      // Cleanup historical transactions
+      // Cleanup historical transactions (failed and informational false positives)
       await TransactionRepository.cleanupHistoricalFailedTransactions();
-      Logger.info('DatabaseService', 'Historical failed transactions cleanup completed');
+      await TransactionRepository.cleanupHistoricalInformationalTransactions();
+      Logger.info('DatabaseService', 'Historical transactions cleanup completed');
       
       return this.instance;
     } catch (error) {

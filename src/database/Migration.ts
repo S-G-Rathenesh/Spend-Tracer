@@ -92,6 +92,23 @@ export class Migration {
             }
           });
 
+          // Add sms_hash and sender columns to MerchantCategoryMapping if they don't exist
+          tx.executeSql('PRAGMA table_info(MerchantCategoryMapping)', [], (_, result) => {
+            let hasSmsHash = false;
+            let hasSender = false;
+            for (let i = 0; i < result.rows.length; i++) {
+              const colName = result.rows.item(i).name;
+              if (colName === 'sms_hash') hasSmsHash = true;
+              if (colName === 'sender') hasSender = true;
+            }
+            if (!hasSmsHash) {
+              tx.executeSql('ALTER TABLE MerchantCategoryMapping ADD COLUMN sms_hash TEXT');
+            }
+            if (!hasSender) {
+              tx.executeSql('ALTER TABLE MerchantCategoryMapping ADD COLUMN sender TEXT');
+            }
+          });
+
           // Create Indexes
           Indexes.forEach(index => {
             tx.executeSql(index);

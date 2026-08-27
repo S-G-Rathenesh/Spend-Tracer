@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ToastAndroid, Platform, Alert } from 'react-native';
 import Animated, { 
   useAnimatedStyle, 
   withTiming, 
@@ -27,7 +27,7 @@ export const SmsItemCard = ({ sms, theme }: Props) => {
     const nextState = !expanded;
     setExpanded(nextState);
     expandProgress.value = withTiming(nextState ? 1 : 0, {
-      duration: 300,
+      duration: 250,
       easing: Easing.out(Easing.ease)
     });
   };
@@ -35,106 +35,135 @@ export const SmsItemCard = ({ sms, theme }: Props) => {
   const expandedStyle = useAnimatedStyle(() => {
     return {
       opacity: expandProgress.value,
-      height: interpolate(expandProgress.value, [0, 1], [0, 'auto' as any]),
+      maxHeight: interpolate(expandProgress.value, [0, 1], [0, 800]),
       overflow: 'hidden'
     };
   });
 
   const getCategoryTheme = () => {
     switch (sms.classification.predictedClass) {
-      case 'Transaction': return { icon: '💳', color: theme.colors.income || '#22C55E' };
-      case 'Personal': return { icon: '💬', color: '#3B82F6' };
-      case 'Promotion': return { icon: '📢', color: theme.colors.warning || '#F59E0B' };
-      case 'Scam': return { icon: '🛡️', color: theme.colors.expense || '#EF4444' };
-      default: return { icon: '✉️', color: theme.colors.textSecondary };
+      case 'Transaction': return { icon: 'credit-card', emoji: '💳', color: theme.colors.income || '#22C55E' };
+      case 'Personal': return { icon: 'message-text', emoji: '💬', color: '#3B82F6' };
+      case 'Promotion': return { icon: 'bullhorn', emoji: '📢', color: theme.colors.warning || '#F59E0B' };
+      case 'Scam': return { icon: 'shield-alert', emoji: '🛡️', color: theme.colors.expense || '#EF4444' };
+      default: return { icon: 'email-outline', emoji: '✉️', color: theme.colors.textSecondary };
     }
   };
 
   const formatDate = (isoString: string) => {
     const d = new Date(isoString);
     if (isNaN(d.getTime())) return isoString;
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' • ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' • ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   };
 
-  const { icon, color } = getCategoryTheme();
+  const { emoji, color } = getCategoryTheme();
   const isLinked = !!sms.linkedTransaction;
   const styles = useMemo(() => createStyles(theme), [theme]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
       <TouchableOpacity activeOpacity={0.7} onPress={toggleExpand} style={styles.header}>
         <View style={styles.headerLeft}>
-          <View style={[styles.iconBox, { backgroundColor: color + '15' }]}>
-            <Text style={styles.iconText}>{icon}</Text>
+          <View style={[styles.iconBox, { backgroundColor: color + '18' }]}>
+            <Text style={styles.iconText}>{emoji}</Text>
           </View>
           <View style={styles.headerTextCol}>
-            <Text style={styles.sender} numberOfLines={1}>{sms.sender}</Text>
-            <Text style={styles.preview} numberOfLines={expanded ? undefined : 1}>{sms.message}</Text>
+            <View style={styles.senderRow}>
+              <Text style={[styles.sender, { color: theme.colors.textPrimary }]} numberOfLines={1}>{sms.sender}</Text>
+              <View style={[styles.miniBadge, { backgroundColor: color + '15' }]}>
+                <Text style={[styles.miniBadgeText, { color }]}>{sms.classification.predictedClass}</Text>
+              </View>
+            </View>
+            <Text style={[styles.preview, { color: theme.colors.textSecondary }]} numberOfLines={expanded ? undefined : 2}>
+              {sms.message}
+            </Text>
           </View>
         </View>
-        <Text style={styles.date}>{formatDate(sms.receivedAt)}</Text>
+        <View style={styles.headerRight}>
+          <Text style={[styles.date, { color: theme.colors.textSecondary }]}>{formatDate(sms.receivedAt)}</Text>
+          <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={18} color={theme.colors.textSecondary} style={{ marginTop: 4 }} />
+        </View>
       </TouchableOpacity>
 
       <Animated.View style={expandedStyle}>
-        <View style={styles.expandedContent}>
+        <View style={[styles.expandedContent, { borderTopColor: theme.colors.border }]}>
           
-          <View style={styles.detailRow}>
-            <Text style={styles.label}>Classification</Text>
-            <View style={[styles.badge, { backgroundColor: color + '20' }]}>
-              <Text style={[styles.badgeText, { color }]}>{sms.classification.predictedClass}</Text>
-            </View>
+          {/* Full SMS Body Box */}
+          <View style={[styles.fullMessageBox, { backgroundColor: theme.colors.background, borderColor: theme.colors.border }]}>
+            <Text style={[styles.fullMessageTitle, { color: theme.colors.textSecondary }]}>FULL SMS TEXT</Text>
+            <Text style={[styles.fullMessageText, { color: theme.colors.textPrimary }]} selectable>
+              {sms.message}
+            </Text>
           </View>
-          
-          {sms.classification.confidence && (
-            <View style={styles.detailRow}>
-              <Text style={styles.label}>AI Confidence</Text>
-              <Text style={styles.value}>
-                {(sms.classification.confidence * 100).toFixed(0)}%
+
+          {/* Classification & Confidence Metadata */}
+          <View style={styles.metaGrid}>
+            <View style={[styles.metaItem, { backgroundColor: theme.colors.background, borderColor: theme.colors.border }]}>
+              <Text style={[styles.metaLabel, { color: theme.colors.textSecondary }]}>Category</Text>
+              <Text style={[styles.metaValue, { color }]}>{sms.classification.predictedClass}</Text>
+            </View>
+            <View style={[styles.metaItem, { backgroundColor: theme.colors.background, borderColor: theme.colors.border }]}>
+              <Text style={[styles.metaLabel, { color: theme.colors.textSecondary }]}>Confidence</Text>
+              <Text style={[styles.metaValue, { color: theme.colors.textPrimary }]}>
+                {((sms.confidence || 0.9) * 100).toFixed(0)}%
               </Text>
             </View>
-          )}
+          </View>
 
+          {/* Decision Reasons */}
           {sms.classification.reasons && sms.classification.reasons.length > 0 && (
-            <View style={styles.reasonsBox}>
-              <Text style={styles.reasonsTitle}>Why?</Text>
+            <View style={[styles.reasonsBox, { borderColor: theme.colors.border }]}>
+              <Text style={[styles.reasonsTitle, { color: theme.colors.textSecondary }]}>Classification Evidence</Text>
               {sms.classification.reasons.map((reason, idx) => (
                 <View key={idx} style={styles.reasonItem}>
-                  <Text style={styles.reasonBullet}>•</Text>
-                  <Text style={styles.reasonText}>{reason}</Text>
+                  <Text style={[styles.reasonBullet, { color }]}>•</Text>
+                  <Text style={[styles.reasonText, { color: theme.colors.textPrimary }]}>{reason}</Text>
                 </View>
               ))}
             </View>
           )}
 
+          {/* Linked Transaction Details */}
           {isLinked && sms.linkedTransaction && (
-            <View style={[styles.linkedBox, { borderColor: color + '30', backgroundColor: color + '05' }]}>
+            <View style={[styles.linkedBox, { borderColor: color + '40', backgroundColor: color + '08' }]}>
               <View style={styles.linkedHeader}>
-                <Icon name="check-circle" size={16} color={color} />
-                <Text style={[styles.linkedTitle, { color }]}> Transaction Created</Text>
+                <Icon name="check-decagram" size={18} color={color} />
+                <Text style={[styles.linkedTitle, { color }]}> Created Transaction</Text>
               </View>
               
               <View style={styles.detailRow}>
-                <Text style={styles.label}>Amount</Text>
-                <Text style={styles.value}>{sms.linkedTransaction.amount}</Text>
+                <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Amount</Text>
+                <Text style={[styles.value, { color: sms.linkedTransaction.type === 'Credit' ? theme.colors.income : theme.colors.textPrimary }]}>
+                  {sms.linkedTransaction.type === 'Credit' ? '+' : '-'}₹{sms.linkedTransaction.amount.toLocaleString('en-IN')}
+                </Text>
               </View>
               {sms.linkedTransaction.merchantId && (
                 <View style={styles.detailRow}>
-                  <Text style={styles.label}>Merchant</Text>
-                  <Text style={styles.value}>{sms.linkedTransaction.merchantId}</Text>
+                  <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Merchant / Payee</Text>
+                  <Text style={[styles.value, { color: theme.colors.textPrimary }]}>{sms.linkedTransaction.merchantId}</Text>
                 </View>
               )}
-              {sms.linkedTransaction.date && (
+              {sms.linkedTransaction.categoryName && (
                 <View style={styles.detailRow}>
-                  <Text style={styles.label}>Date</Text>
-                  <Text style={styles.value}>{formatDate(sms.linkedTransaction.date)}</Text>
+                  <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Category</Text>
+                  <Text style={[styles.value, { color: theme.colors.textPrimary }]}>{sms.linkedTransaction.categoryName}</Text>
+                </View>
+              )}
+              {sms.linkedTransaction.status && (
+                <View style={styles.detailRow}>
+                  <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Status</Text>
+                  <Text style={[styles.value, { color: sms.linkedTransaction.status === 'COMPLETED' ? theme.colors.income : theme.colors.expense }]}>
+                    {sms.linkedTransaction.status}
+                  </Text>
                 </View>
               )}
 
               <TouchableOpacity 
-                style={[styles.actionBtn, { backgroundColor: color + '20' }]}
+                style={[styles.actionBtn, { backgroundColor: color + '25' }]}
                 onPress={() => navigation.navigate('TransactionDetails', { transactionId: sms.linkedTransaction!.id })}
+                activeOpacity={0.7}
               >
-                <Text style={[styles.actionBtnText, { color }]}>View Transaction →</Text>
+                <Text style={[styles.actionBtnText, { color }]}>View Full Transaction Details →</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -148,138 +177,173 @@ export const SmsItemCard = ({ sms, theme }: Props) => {
 const createStyles = (theme: AppTheme) => StyleSheet.create({
   container: {
     borderWidth: 1,
-    borderRadius: 16,
-    marginBottom: 12,
+    borderRadius: 14,
+    marginBottom: 10,
     marginHorizontal: 16,
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
     overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 14,
   },
   headerLeft: {
     flexDirection: 'row',
     flex: 1,
-    marginRight: 12,
+    marginRight: 8,
+  },
+  headerRight: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
   },
   iconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 10,
   },
   iconText: {
-    fontSize: 18,
+    fontSize: 16,
   },
   headerTextCol: {
     flex: 1,
     justifyContent: 'center',
   },
+  senderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 3,
+  },
   sender: {
     fontSize: 14,
-    fontWeight: '600',
-    color: theme.colors.textPrimary,
-    marginBottom: 4,
+    fontWeight: '700',
+    marginRight: 6,
+  },
+  miniBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 6,
+  },
+  miniBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
   },
   preview: {
     fontSize: 13,
     lineHeight: 18,
-    color: theme.colors.textSecondary,
   },
   date: {
     fontSize: 11,
-    color: theme.colors.textMuted,
-    marginTop: 2,
   },
   expandedContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 8,
+    paddingHorizontal: 14,
+    paddingBottom: 14,
+    paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
+  },
+  fullMessageBox: {
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  fullMessageTitle: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  fullMessageText: {
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  metaGrid: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 10,
+  },
+  metaItem: {
+    flex: 1,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  metaLabel: {
+    fontSize: 11,
+    marginBottom: 2,
+  },
+  metaValue: {
+    fontSize: 13,
+    fontWeight: '700',
   },
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   label: {
-    fontSize: 13,
-    color: theme.colors.textSecondary,
+    fontSize: 12,
   },
   value: {
     fontSize: 13,
-    fontWeight: '500',
-    color: theme.colors.textPrimary,
-  },
-  badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  badgeText: {
-    fontSize: 11,
     fontWeight: '600',
   },
   linkedBox: {
-    marginTop: 12,
+    marginTop: 6,
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 10,
     borderWidth: 1,
   },
   linkedHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   linkedTitle: {
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '700',
+    marginLeft: 4,
   },
   actionBtn: {
     marginTop: 8,
-    paddingVertical: 10,
+    paddingVertical: 9,
     borderRadius: 8,
     alignItems: 'center',
   },
   actionBtnText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  reasonsBox: {
-    marginTop: 8,
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-  },
-  reasonsTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: theme.colors.textSecondary,
+  },
+  reasonsBox: {
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  reasonsTitle: {
+    fontSize: 11,
+    fontWeight: '700',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   reasonItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   reasonBullet: {
-    fontSize: 12,
-    color: theme.colors.textMuted,
+    fontSize: 14,
     marginRight: 6,
     lineHeight: 18,
   },
   reasonText: {
-    fontSize: 13,
-    color: theme.colors.textPrimary,
-    lineHeight: 18,
+    fontSize: 12,
+    lineHeight: 17,
     flex: 1,
   }
 });
+

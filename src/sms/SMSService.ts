@@ -55,12 +55,13 @@ export class SMSService {
       let finalConfidence = aiResult.confidence;
       let needsVerification = aiResult.needsVerification;
 
-      if (aiResult.merchant) {
-        const learnedCat = await MerchantCategoryRepository.getCategoryForMerchant(aiResult.merchant);
-        if (learnedCat) {
-          finalCategory = learnedCat;
-          finalConfidence = 1.0;
-          needsVerification = false;
+      const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, taskData.body);
+      if (learned) {
+        finalCategory = learned.category;
+        finalConfidence = 1.0;
+        needsVerification = false;
+        if (learned.matchedMerchant && (!aiResult.merchant || aiResult.merchant === 'Unknown Merchant')) {
+          aiResult.merchant = learned.matchedMerchant;
         }
       }
 

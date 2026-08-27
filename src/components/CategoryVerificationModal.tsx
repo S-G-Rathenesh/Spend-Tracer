@@ -29,13 +29,17 @@ export const CategoryVerificationModal: React.FC<Props> = ({ transaction, visibl
   const handleSelectCategory = async (category: string) => {
     try {
       // 1. Update Transaction
-      const updatedTxn = { ...transaction, categoryId: category, needsVerification: false };
+      const updatedTxn = { ...transaction, categoryId: category, userCategory: category, finalCategory: category, needsVerification: false };
       await TransactionRepository.update(updatedTxn);
 
-      // 2. Learn Merchant Mapping (Merchant Learning)
-      if (transaction.merchantId && transaction.merchantId !== 'Unknown Merchant') {
-        await MerchantCategoryRepository.learnMerchantCategory(transaction.merchantId, category);
-      }
+      // 2. Learn Mapping (Survives transaction deletion and SMS rebuild)
+      await MerchantCategoryRepository.learnCorrection(
+        transaction.merchantId,
+        category,
+        transaction.originalSms,
+        transaction.smsHash,
+        transaction.bank
+      );
 
       onSuccess();
     } catch (error) {

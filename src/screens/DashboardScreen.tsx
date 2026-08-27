@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppTheme, AppTheme } from '../theme/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { BlurView } from '@react-native-community/blur';
 import { PDFExportService } from '../utils/PDFExportService';
 import { AnimatedEmoji } from '../components/AnimatedEmoji';
 
@@ -204,26 +205,31 @@ export const DashboardScreen = () => {
         </View>
 
         {pendingVerificationTransactions.length > 0 && (
-          <TouchableOpacity 
-            style={[styles.pendingCard, { 
-              backgroundColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.05)' : theme.colors.primary + '10', 
-              borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.08)' : theme.colors.primary, 
-              borderWidth: 1,
-              elevation: 0,
-            }]}
-            onPress={() => navigation.navigate('PendingVerification' as any)}
-            activeOpacity={0.8}
-          >
-            <View style={{ flex: 1 }}>
+          <View style={styles.pendingCardShadow}>
+            <TouchableOpacity 
+              style={styles.pendingCard}
+              onPress={() => navigation.navigate('PendingVerification' as any)}
+              activeOpacity={0.8}
+            >
+              {theme.isDarkMode && (
+                <BlurView
+                  style={StyleSheet.absoluteFill}
+                  blurType="dark"
+                  blurAmount={12}
+                  reducedTransparencyFallbackColor="rgba(25, 20, 30, 0.9)"
+                />
+              )}
+              <View style={{ flex: 1, zIndex: 1 }}>
               <Text style={{ color: theme.colors.textPrimary, fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>
                 Spend Tracer needs your help identifying {pendingVerificationTransactions.length} transaction(s).
               </Text>
               <Text style={{ color: theme.colors.textSecondary, fontSize: 13 }}>Tap here to review and improve AI accuracy.</Text>
             </View>
-            <View style={{ backgroundColor: theme.colors.primary, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}>
-              <Text style={{ color: theme.colors.onPrimary, fontWeight: 'bold', fontSize: 12 }}>Review Now</Text>
-            </View>
-          </TouchableOpacity>
+              <View style={{ backgroundColor: theme.colors.primary, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, zIndex: 1 }}>
+                <Text style={{ color: theme.colors.onPrimary, fontWeight: 'bold', fontSize: 12 }}>Review Now</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         )}
 
         <SectionHeader 
@@ -352,12 +358,27 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     gap: theme.spacing.md,
     marginBottom: theme.spacing.md,
   },
+  pendingCardShadow: {
+    marginBottom: 16,
+    borderRadius: 12,
+    ...(theme.isDarkMode 
+      ? {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.25,
+          shadowRadius: 8,
+          elevation: 0 // Avoid opaque black artifacts
+        } 
+      : {}),
+  },
   pendingCard: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     borderWidth: 1,
     borderRadius: 12,
-    marginBottom: 16,
+    backgroundColor: theme.isDarkMode ? 'rgba(30, 20, 45, 0.7)' : theme.colors.primary + '10',
+    borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.15)' : theme.colors.primary,
+    overflow: 'hidden',
   }
 });

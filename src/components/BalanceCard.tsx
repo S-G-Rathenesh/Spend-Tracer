@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { BlurView } from '@react-native-community/blur';
 import { useAppTheme, AppTheme, rfs } from '../theme/theme';
 import { CurrencyUtils } from '../utils/CurrencyUtils';
 
@@ -32,52 +33,62 @@ export const BalanceCard: React.FC<Props> = ({ balance, income, expense }) => {
   if (balance > 0) {
     balanceColor = theme.colors.income;
     emoji = '📈';
-    emojiType = 'drop'; // drop/slide in
+    emojiType = 'drop'; 
     if (!formattedBalance.startsWith('+')) {
       formattedBalance = `+${formattedBalance}`;
     }
   } else if (balance < 0) {
     balanceColor = theme.colors.expense;
     emoji = '📉';
-    emojiType = 'pulse'; // subtle pulse
+    emojiType = 'pulse';
   }
 
   return (
-    <View style={styles.card}>
-      <View style={styles.topSection}>
-        <TouchableOpacity style={styles.titleRow} onPress={showInfo} activeOpacity={0.7}>
-          <Text style={styles.balanceLabel}>Net Cash Flow</Text>
-          <Icon name="information-outline" size={16} color={theme.isDarkMode ? 'rgba(255,255,255,0.7)' : theme.colors.textSecondary} style={{ marginLeft: 6 }} />
-        </TouchableOpacity>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.balanceAmount, { color: balanceColor }]}>{formattedBalance}</Text>
-          {emoji && <AnimatedEmoji emoji={emoji} type={emojiType as any} size={24} style={{ marginLeft: 8 }} />}
-        </View>
-      </View>
-
-      <View style={styles.divider} />
-
-      <View style={styles.bottomRow}>
-        <View style={styles.metric}>
-          <View style={styles.metricIconRow}>
-            <View style={[styles.metricDot, { backgroundColor: theme.colors.income }]} />
-            <Text style={styles.metricLabel}>Income</Text>
+    <View style={styles.cardShadow}>
+      <View style={styles.card}>
+        {theme.isDarkMode && (
+          <BlurView
+            style={StyleSheet.absoluteFill}
+            blurType="dark"
+            blurAmount={15}
+            reducedTransparencyFallbackColor="rgba(15, 15, 20, 0.9)"
+          />
+        )}
+        <View style={styles.topSection}>
+          <TouchableOpacity style={styles.titleRow} onPress={showInfo} activeOpacity={0.7}>
+            <Text style={styles.balanceLabel}>Net Cash Flow</Text>
+            <Icon name="information-outline" size={16} color={theme.isDarkMode ? 'rgba(255,255,255,0.7)' : theme.colors.textSecondary} style={{ marginLeft: 6 }} />
+          </TouchableOpacity>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={[styles.balanceAmount, { color: balanceColor }]}>{formattedBalance}</Text>
+            {emoji && <AnimatedEmoji emoji={emoji} type={emojiType as any} size={24} style={{ marginLeft: 8 }} />}
           </View>
-          <Text style={[styles.metricValue, { color: theme.colors.income }]}>
-            {CurrencyUtils.format(income)}
-          </Text>
         </View>
 
-        <View style={styles.verticalDivider} />
+        <View style={styles.divider} />
 
-        <View style={styles.metric}>
-          <View style={styles.metricIconRow}>
-            <View style={[styles.metricDot, { backgroundColor: theme.colors.expense }]} />
-            <Text style={styles.metricLabel}>Expense</Text>
+        <View style={styles.bottomRow}>
+          <View style={styles.metric}>
+            <View style={styles.metricIconRow}>
+              <View style={[styles.metricDot, { backgroundColor: theme.colors.income }]} />
+              <Text style={styles.metricLabel}>Income</Text>
+            </View>
+            <Text style={[styles.metricValue, { color: theme.colors.income }]}>
+              {CurrencyUtils.format(income)}
+            </Text>
           </View>
-          <Text style={[styles.metricValue, { color: theme.colors.expense }]}>
-            {CurrencyUtils.format(expense)}
-          </Text>
+
+          <View style={styles.verticalDivider} />
+
+          <View style={styles.metric}>
+            <View style={styles.metricIconRow}>
+              <View style={[styles.metricDot, { backgroundColor: theme.colors.expense }]} />
+              <Text style={styles.metricLabel}>Expense</Text>
+            </View>
+            <Text style={[styles.metricValue, { color: theme.colors.expense }]}>
+              {CurrencyUtils.format(expense)}
+            </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -85,13 +96,25 @@ export const BalanceCard: React.FC<Props> = ({ balance, income, expense }) => {
 };
 
 const makeStyles = (theme: AppTheme) => StyleSheet.create({
+  cardShadow: {
+    borderRadius: theme.borderRadius.xxl,
+    ...(theme.isDarkMode 
+      ? {
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 8 },
+          shadowOpacity: 0.3,
+          shadowRadius: 10,
+          elevation: 0 // NO elevation to avoid black artifacts on Android
+        } 
+      : theme.shadows.md),
+  },
   card: {
-    backgroundColor: theme.isDarkMode ? 'rgba(124, 58, 237, 0.15)' : theme.colors.surfaceElevated,
+    backgroundColor: theme.isDarkMode ? 'rgba(20, 15, 30, 0.75)' : theme.colors.surfaceElevated,
     borderRadius: theme.borderRadius.xxl,
     padding: theme.spacing.xxl,
     borderWidth: 1,
-    borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.15)' : theme.colors.border,
-    ...(theme.isDarkMode ? { shadowColor: 'rgba(124, 58, 237, 0.5)', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 15, elevation: 0 } : theme.shadows.md),
+    borderColor: theme.isDarkMode ? 'rgba(255, 255, 255, 0.12)' : theme.colors.border,
+    overflow: 'hidden',
   },
   topSection: {
     alignItems: 'center',
@@ -113,7 +136,7 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: theme.isDarkMode ? 'rgba(255,255,255,0.2)' : theme.colors.border,
+    backgroundColor: theme.isDarkMode ? 'rgba(255,255,255,0.1)' : theme.colors.border,
     marginBottom: theme.spacing.xl,
   },
   bottomRow: {
@@ -147,6 +170,6 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   verticalDivider: {
     width: 1,
     height: 36,
-    backgroundColor: theme.isDarkMode ? 'rgba(255,255,255,0.2)' : theme.colors.border,
+    backgroundColor: theme.isDarkMode ? 'rgba(255,255,255,0.1)' : theme.colors.border,
   }
 });

@@ -134,6 +134,10 @@ export class SpendTracerAI {
       smsText
     );
 
+    if (categoryResult.isLearned && categoryResult.learnedMerchant && (!entities.merchant || entities.merchant === 'Unknown Merchant')) {
+      entities.merchant = categoryResult.learnedMerchant;
+    }
+
     console.log(`[DATE_PIPELINE] 3. Normalized date in AI output: ${entities.date}`);
 
     // --- PROMOTION TRANSACTION VALIDATOR ---
@@ -175,7 +179,9 @@ export class SpendTracerAI {
       };
     }
 
-    const finalConfidence = Math.round((clsResult.confidence * categoryResult.confidence * promoConfidence) * 100) / 100;
+    let finalConfidence = categoryResult.isLearned 
+      ? 1.0 
+      : Math.round((clsResult.confidence * categoryResult.confidence * promoConfidence) * 100) / 100;
     
     let needsVerification = false;
     let finalStatus = StatusDetector.determineStatus(smsText);
@@ -183,8 +189,12 @@ export class SpendTracerAI {
     // If failed or reversed, it does not need manual category verification.
     if (finalStatus === 'FAILED' || finalStatus === 'REVERSED') {
       needsVerification = false;
+    } else if (categoryResult.isLearned || categoryResult.confidence === 1.0) {
+      // Confirmed user-learned category -> NEVER send to Pending Verification!
+      needsVerification = false;
+      finalConfidence = 1.0;
     } else {
-      // Apply confidence threshold for BOTH Live and Rebuild modes
+      // Apply confidence threshold for unlearned transactions
       if (
         finalConfidence < 0.80 || 
         categoryResult.category === 'Unknown' || 
