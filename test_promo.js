@@ -10,9 +10,16 @@ var examples = [
         expected: false
     },
     {
-        desc: 'Example 2: Valid Recharge',
+        desc: 'Example 2: Recharge Service Confirmation',
         sender: 'Jio',
         body: 'Recharge successful Amount Rs.39 Transaction ID XXXXX',
+        amount: 39,
+        expected: false
+    },
+    {
+        desc: 'Example 2b: Financial Debit for Recharge',
+        sender: 'HDFC',
+        body: 'Rs.39 debited from your account for Jio recharge',
         amount: 39,
         expected: true
     },
@@ -53,3 +60,6 @@ examples.forEach(function (ex) {
     console.log("Status: ".concat(pass ? '✅ PASS' : '❌ FAIL'));
 });
 console.log("\nTotal Passed: ".concat(passed, "/").concat(examples.length));
+if (passed !== examples.length) {
+    process.exit(1);
+}

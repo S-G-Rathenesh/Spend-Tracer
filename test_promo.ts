@@ -9,9 +9,16 @@ const examples = [
     expected: false
   },
   {
-    desc: 'Example 2: Valid Recharge',
+    desc: 'Example 2: Recharge Service Confirmation',
     sender: 'Jio',
     body: 'Recharge successful Amount Rs.39 Transaction ID XXXXX',
+    amount: 39,
+    expected: false
+  },
+  {
+    desc: 'Example 2b: Financial Debit for Recharge',
+    sender: 'HDFC',
+    body: 'Rs.39 debited from your account for Jio recharge',
     amount: 39,
     expected: true
   },
@@ -40,12 +47,10 @@ const examples = [
 
 console.log("=== Testing PromotionTransactionValidator ===");
 let passed = 0;
-
 examples.forEach(ex => {
   const result = PromotionTransactionValidator.validate(ex.body, ex.amount, ex.sender);
   const pass = result.isValid === ex.expected;
   if (pass) passed++;
-  
   console.log(`\nTest: ${ex.desc}`);
   console.log(`Sender: ${ex.sender} | Body: ${ex.body}`);
   console.log(`Result: ${result.isValid ? 'ACCEPTED' : 'REJECTED'} (Expected: ${ex.expected ? 'ACCEPTED' : 'REJECTED'})`);
@@ -55,3 +60,6 @@ examples.forEach(ex => {
 });
 
 console.log(`\nTotal Passed: ${passed}/${examples.length}`);
+if (passed !== examples.length) {
+  process.exit(1);
+}

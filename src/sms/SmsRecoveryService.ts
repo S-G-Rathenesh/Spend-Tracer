@@ -97,6 +97,7 @@ export class SmsRecoveryService {
       let existingKeys: Set<string>;
       if (mode === 'full') {
         await SMSRepository.clearAll();
+        await TransactionRepository.deleteAll();
         existingKeys = new Set<string>();
       } else {
         existingKeys = await SMSRepository.getAllKeys();
@@ -187,13 +188,13 @@ export class SmsRecoveryService {
               id: 'txn_' + Math.random().toString(36).substr(2, 9),
               amount: aiResult.amount || 0,
               merchantId: aiResult.merchant || 'Unknown Merchant',
-              bank: aiResult.bank || 'Bank',
+              bank: aiResult.bank || undefined,
               categoryId: finalCategory,
               type: aiResult.transactionType,
               date: aiResult.date || new Date(msg.timestamp).toISOString().split('T')[0],
               time: new Date(msg.timestamp).toTimeString().split(' ')[0],
               referenceNumber: aiResult.reference || undefined,
-              transactionType: aiResult.paymentMode || 'UPI',
+              transactionType: aiResult.paymentMode || undefined,
               notes: `Restored via SMS Rebuild (Confidence: ${(finalConfidence * 100).toFixed(0)}%)`,
               source: 'sms',
               smsHash: HashUtils.createCanonicalSmsIdentity(sender, msg.body, msg.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined),
@@ -324,13 +325,13 @@ export class SmsRecoveryService {
             id: 'txn_' + Math.random().toString(36).substr(2, 9),
             amount: aiResult.amount || 0,
             merchantId: aiResult.merchant || 'Unknown Merchant',
-            bank: aiResult.bank || 'Bank',
+            bank: aiResult.bank || undefined,
             categoryId: finalCategory,
             type: aiResult.transactionType,
             date: aiResult.date || new Date(msg.timestamp).toISOString().split('T')[0],
             time: new Date(msg.timestamp).toTimeString().split(' ')[0],
             referenceNumber: aiResult.reference || undefined,
-            transactionType: aiResult.paymentMode || 'UPI',
+            transactionType: aiResult.paymentMode || undefined,
             notes: `Restored via Quick Sync (Confidence: ${(finalConfidence * 100).toFixed(0)}%)`,
             source: 'sms',
             smsHash: HashUtils.createCanonicalSmsIdentity(sender, msg.body, msg.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined),

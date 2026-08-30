@@ -10,34 +10,51 @@ var PromotionTransactionValidator = /** @class */ (function () {
 
         // 1. Telecom Data Usage Alert Check (Non-Transaction)
         var isTelecomUsage = this.containsKeyword(text, this.TELECOM_USAGE_ALERT_KEYWORDS);
-        var hasMonetaryDebitPayment = /\b(debited|debited by|debited for|spent|withdrawn|transferred to|recharge successful)\b/i.test(text) &&
-                                     /(?:inr|rs\.?|₹)\s*[\d,]+/i.test(text);
+        var hasExplicitDebitAction = /\b(debited|debited by|debited with|debited for|debited from|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully|card charged|was charged|card was charged)\b/i.test(text) ||
+                                      /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                      /\b(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                      /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:debited|dr\.|dr)\b/i.test(text) ||
+                                      /\bupi payment of\b/i.test(text) ||
+                                      /\bpayment of (?:inr|rs\.?|₹)\s*[\d,]+.*(?:to|for|was successful|successful)/i.test(text) ||
+                                      /\bpaid (?:inr|rs\.?|₹)\s*[\d,]+/i.test(text) ||
+                                      /\bpaid via (?:upi|card|net banking|wallet|bank)\b/i.test(text) ||
+                                      /\bcard ending \d+ (?:was )?charged\b/i.test(text);
 
-        if (isTelecomUsage && !hasMonetaryDebitPayment) {
+        var isTelecomPackCredit = /\bcredited with\b.*\b(pack|days|validity|gb|mb|unlimited|welcome|benefit|trial|points|coupon|voucher)\b/i.test(text) ||
+                                   /\bcredited to your (?:airtel|jio|vi|bsnl|mobile|sim|number)\b/i.test(text) ||
+                                   /\brecharge of .* (?:credited|success)/i.test(text) ||
+                                   /\b(welcome back|porting out|stay on jio|5g unlimited pack|welcome back 5g|recharge offer)\b/i.test(text);
+
+        var hasExplicitCreditAction = (/\b(credited|credited to|credited with|was credited|has been credited|received from|deposited into|refund received|refund credited|cashback credited)\b/i.test(text) ||
+                                        /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                        /\b(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
+                                        /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:credited|cr\.|cr)\b/i.test(text)) &&
+                                        !isTelecomPackCredit;
+
+        if (isTelecomUsage && !hasExplicitDebitAction && !hasExplicitCreditAction) {
           return { isValid: false, reason: 'TELECOM_USAGE_ALERT', confidence: 0 };
         }
 
-        // 2. Telecom Benefit / Pack Credit Check (e.g. "credited with 7 days welcome back 5G pack")
-        var isTelecomPackCredit = /\bcredited with\b.*\b(pack|days|validity|gb|mb|unlimited|welcome|benefit|trial|points|coupon|voucher)\b/i.test(text) ||
-                                 /\b(welcome back|porting out|stay on jio|5g unlimited pack|welcome back 5g)\b/i.test(text);
+        // 2. Telecom Service Fulfillment / Confirmation Check (Recharge success without explicit payment debit)
+        var isTelecomServiceConfirm = this.containsKeyword(text, this.TELECOM_SERVICE_CONFIRM_KEYWORDS) ||
+                                      /\brecharge\b.*(?:successful|completed|done|activated|credited)/i.test(text) ||
+                                      /\b(airtel mobile|jio mobile|best recharges on)\b/i.test(text);
 
-        if (isTelecomPackCredit && !hasMonetaryDebitPayment) {
+        if (isTelecomServiceConfirm && !hasExplicitDebitAction && !hasExplicitCreditAction) {
+          return { isValid: false, reason: 'TELECOM_SERVICE_CONFIRMATION', confidence: 0 };
+        }
+
+        // 3. Telecom Benefit / Pack Credit & Promotional Offers Check
+        var isTelecomPromo = isTelecomPackCredit ||
+                             /\brecharge\b.*(?:\bget\b|\bunlimited\b|\boffer\b|\bbonus\b|\bdiscount\b|\bvalid till\b|\bfree\b)/i.test(text) ||
+                             /\b(with your recharge of|enjoy free access|unlock 12 months|claim 20\+ ott|watch now)\b/i.test(text);
+
+        if (isTelecomPromo && !hasExplicitDebitAction && !hasExplicitCreditAction) {
           return { isValid: false, reason: 'TELECOM_OFFER', confidence: 0 };
         }
 
-        // 3. Check Informational / Limit / Policy Notices
+        // 4. Check Informational / Limit / Policy Notices
         var hasInfoLimit = this.containsKeyword(text, this.INFORMATIONAL_LIMIT_KEYWORDS);
-        var hasExplicitDebitAction = /\b(debited|debited by|debited with|debited for|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully)\b/i.test(text) ||
-                                    /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
-                                    /\b(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
-                                    /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:debited|dr\.|dr)\b/i.test(text);
-
-        var hasExplicitCreditAction = (/\b(credited|credited to|credited with|was credited|has been credited|received from|deposited into|refund received|refund credited|cashback credited)\b/i.test(text) ||
-                                      /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
-                                      /\b(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(text) ||
-                                      /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:credited|cr\.|cr)\b/i.test(text)) &&
-                                      !isTelecomPackCredit;
-
         if (hasInfoLimit && !hasExplicitDebitAction && !hasExplicitCreditAction) {
             return { isValid: false, reason: 'INFORMATIONAL_LIMIT_NOTICE', confidence: 0 };
         }
@@ -46,32 +63,29 @@ var PromotionTransactionValidator = /** @class */ (function () {
         var hasCredit = (this.containsKeyword(text, this.CREDIT_INDICATORS) || hasExplicitCreditAction) && !isTelecomPackCredit;
         var hasReversed = this.containsKeyword(text, this.REVERSED_INDICATORS);
         var hasFailed = this.containsKeyword(text, this.FAILED_INDICATORS) && /\b(txn|transaction|payment|order|card)\b/i.test(text);
-        var hasRechargeConfirm = this.containsKeyword(text, this.RECHARGE_CONFIRMATION);
 
-        var hasTransactionEvidence = hasDebit || hasCredit || hasReversed || hasFailed || hasRechargeConfirm;
+        var hasTransactionEvidence = hasDebit || hasCredit || hasReversed || hasFailed;
 
-        // 4. Shopping Promotions
+        // 5. Shopping Promotions
         var isShoppingBrand = this.containsKeyword(text, this.SHOPPING_BRANDS) || this.containsKeyword(senderLower, this.SHOPPING_BRANDS);
         if (isShoppingBrand && !hasTransactionEvidence) {
             return { isValid: false, reason: 'ADVERTISEMENT', confidence: 0 };
         }
 
-        // 5. Telecom Promotional Detection
+        // 6. Telecom Promotional Detection
         var isTelecomSender = this.containsKeyword(senderLower, this.TELECOM_SENDERS) || this.containsKeyword(text, this.TELECOM_SENDERS);
-        var hasTelecomPromo = this.containsKeyword(text, this.TELECOM_KEYWORDS);
-        if (isTelecomSender && hasTelecomPromo) {
-            if (!hasTransactionEvidence && !hasRechargeConfirm) {
-                return { isValid: false, reason: 'TELECOM_OFFER', confidence: 0 };
-            }
+        var hasTelecomKeywords = this.containsKeyword(text, this.TELECOM_KEYWORDS);
+        if (isTelecomSender && hasTelecomKeywords && !hasTransactionEvidence) {
+            return { isValid: false, reason: 'TELECOM_OFFER', confidence: 0 };
         }
 
-        // 6. Reject Promotional Messages
+        // 7. Reject Promotional Messages
         var hasPromo = this.containsKeyword(text, this.PROMOTIONAL_KEYWORDS);
         if (hasPromo && !hasTransactionEvidence) {
             return { isValid: false, reason: 'PROMOTIONAL_SMS', confidence: 0 };
         }
 
-        // 7. Require Transaction Evidence (Monetary amount alone does not indicate a transaction)
+        // 8. Require Transaction Evidence (Monetary amount alone does not indicate a transaction)
         if (amount !== null && !hasTransactionEvidence) {
             return { isValid: false, reason: 'NO_TRANSACTION_EVIDENCE', confidence: 0 };
         }
@@ -85,8 +99,6 @@ var PromotionTransactionValidator = /** @class */ (function () {
             confidence += 0.4;
         if (hasFailed)
             confidence += 0.3;
-        if (hasRechargeConfirm)
-            confidence = 0.9;
 
         return { isValid: true, reason: '', confidence: Math.min(confidence, 1.0) };
     };
@@ -136,6 +148,11 @@ var PromotionTransactionValidator = /** @class */ (function () {
         '50% of your daily data', '90% of your daily data', '100% of your daily data',
         '50% of daily data', '90% of daily data', '100% of daily data'
     ];
+    PromotionTransactionValidator.TELECOM_SERVICE_CONFIRM_KEYWORDS = [
+        'recharge of inr', 'recharge of rs', 'recharge of ₹', 'recharge is successful',
+        'recharge was successful', 'recharge successful', 'recharge done', 'recharge completed',
+        'airtel mobile', 'jio mobile', 'best recharges on', 'plan activated', 'pack activated'
+    ];
     PromotionTransactionValidator.PROMOTIONAL_KEYWORDS = [
         'offer', 'offers', 'promo', 'promotion', 'discount',
         'cashback offer', 'save up to', 'buy now', 'recharge now',
@@ -154,9 +171,6 @@ var PromotionTransactionValidator = /** @class */ (function () {
     ];
     PromotionTransactionValidator.SHOPPING_BRANDS = [
         'amazon', 'flipkart', 'swiggy', 'zomato', 'myntra', 'ajio'
-    ];
-    PromotionTransactionValidator.RECHARGE_CONFIRMATION = [
-        'recharge successful', 'recharge of', 'recharge done'
     ];
     return PromotionTransactionValidator;
 }());

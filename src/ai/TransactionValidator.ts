@@ -31,10 +31,23 @@ export class TransactionValidator {
 
     // Rule 2: Informational / Limit check
     const hasInfoKeyword = this.INFORMATIONAL_KEYWORDS.some(kw => textLowerVal.includes(kw));
-    const hasExplicitAction = /\b(debited|debited by|debited with|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully|credited|received from|deposited into|refund received|refund credited|cashback credited|declined|failed|rejected)\b/i.test(textLowerVal);
+    const hasExplicitAction = /\b(debited|debited by|debited with|debited for|debited from|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully|card charged|was charged|credited|received from|deposited into|refund received|refund credited|cashback credited|declined|failed|rejected)\b/i.test(textLowerVal) ||
+                              /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(textLowerVal) ||
+                              /\b(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(textLowerVal) ||
+                              /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:debited|dr\.|dr)\b/i.test(textLowerVal) ||
+                              /\bupi payment of\b/i.test(textLowerVal) ||
+                              /\bpaid via (?:upi|card|net banking|wallet|bank)\b/i.test(textLowerVal) ||
+                              /\bcard ending \d+ (?:was )?charged\b/i.test(textLowerVal);
 
     if (hasInfoKeyword && !hasExplicitAction) {
       return { isValid: false, reason: 'Informational message or limit notification (no transaction occurred)' };
+    }
+
+    // Rule 2b: Telecom Service Confirmation check (recharge success without money debit)
+    const isTelecomServiceConfirm = /\b(recharge (?:of|is|was|done|completed|successful)|plan activated|pack activated)\b/i.test(textLowerVal) ||
+                                    /\b(airtel mobile|jio mobile|best recharges on)\b/i.test(textLowerVal);
+    if (isTelecomServiceConfirm && !hasExplicitAction) {
+      return { isValid: false, reason: 'Telecom service confirmation lacking explicit financial debit evidence' };
     }
 
     // Rule 3: Vague Transaction Check

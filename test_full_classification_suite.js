@@ -77,31 +77,19 @@ class MockSMSClassifier {
       return { predictedClass: 'Scam', confidence: 0.96, isTransaction: false, reasons };
     }
 
-    // 2. Telecom Usage & Data Quota Alert Check (Non-Transaction)
-    const isTelecomUsageAlert = this.telecomUsageAlertPatterns.some(kw => textLower.includes(kw));
-    const hasMonetaryDebitPayment = /\b(debited|debited by|debited for|spent|withdrawn|transferred to|recharge successful)\b/i.test(textLower) &&
-                                   /(?:inr|rs\.?|₹)\s*[\d,]+/i.test(textLower);
-
-    if (isTelecomUsageAlert && !hasMonetaryDebitPayment) {
-      reasons.push('Telecom data quota or service usage alert (no monetary movement)');
-      return { predictedClass: 'Personal', confidence: 0.96, isTransaction: false, reasons };
-    }
-
-    // 3. Telecom Benefit / Pack Credits Check
-    const isTelecomPackCredit = /\bcredited with\b.*\b(pack|days|validity|gb|mb|unlimited|welcome|benefit|trial|points|coupon|voucher)\b/i.test(textLower) ||
-                               /\b(welcome back|porting out|stay on jio|5g unlimited pack|welcome back 5g|recharge offer)\b/i.test(textLower);
-
-    if (isTelecomPackCredit && !hasMonetaryDebitPayment) {
-      reasons.push('Telecom promotional benefit or data pack credit (non-monetary)');
-      return { predictedClass: 'Promotion', confidence: 0.96, isTransaction: false, reasons };
-    }
-
-    // 4. Check for explicit completed financial events (including Indian banking abbreviations like "Dr. INR 450.00")
-    let hasDebitOrCreditEvent = false;
-    const hasExplicitDebit = /\b(debited|debited by|debited with|debited for|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully)\b/i.test(textLower) ||
+    // Explicit completed financial events (including Indian banking abbreviations like "Dr. INR 450.00")
+    const hasExplicitDebit = /\b(debited|debited by|debited with|debited for|debited from|was debited|has been debited|paid to|spent on|withdrawn from|deducted from|transferred to|transferred successfully|card charged|was charged|card was charged)\b/i.test(textLower) ||
                             /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(textLower) ||
                             /\b(?:dr|dr\.|dr:)\s*(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?/i.test(textLower) ||
-                            /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:debited|dr\.|dr)\b/i.test(textLower);
+                            /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:debited|dr\.|dr)\b/i.test(textLower) ||
+                            /\bupi payment of\b/i.test(textLower) ||
+                            /\bpayment of (?:inr|rs\.?|₹)\s*[\d,]+.*(?:to|for|was successful|successful)/i.test(textLower) ||
+                            /\bpaid (?:inr|rs\.?|₹)\s*[\d,]+/i.test(textLower) ||
+                            /\bpaid via (?:upi|card|net banking|wallet|bank)\b/i.test(textLower) ||
+                            /\bcard ending \d+ (?:was )?charged\b/i.test(textLower);
+
+    const isTelecomPackCredit = /\bcredited with\b.*\b(pack|days|validity|gb|mb|unlimited|welcome|benefit|trial|points|coupon|voucher)\b/i.test(textLower) ||
+                               /\b(welcome back|porting out|stay on jio|5g unlimited pack|welcome back 5g|recharge offer)\b/i.test(textLower);
 
     const hasExplicitCredit = (/\b(credited|credited to|credited with|was credited|has been credited|received from|deposited into|refund received|refund credited|cashback credited)\b/i.test(textLower) ||
                               /\b(?:acct|a\/c|card)?\s*(?:xxx\d*|\d+)?\s*(?:cr|cr\.|cr:)\s*(?:inr|rs\.?|₹)?\s*[\d,]+(?:\.\d{2})?/i.test(textLower) ||
@@ -109,11 +97,38 @@ class MockSMSClassifier {
                               /\b(?:inr|rs\.?|₹)\s*[\d,]+(?:\.\d{2})?\s*(?:credited|cr\.|cr)\b/i.test(textLower)) &&
                               !isTelecomPackCredit;
 
-    const hasRecharge = this.rechargeConfirmations.some(kw => textLower.includes(kw));
     const hasReversal = textLower.includes('reversed') || textLower.includes('refunded');
     const hasFailedAttempt = this.failureKeywords.some(kw => textLower.includes(kw)) && /\b(txn|transaction|payment|order|card)\b/i.test(textLower);
 
-    if (hasExplicitDebit || hasExplicitCredit || hasRecharge || hasReversal || hasFailedAttempt) {
+    // 2. Telecom Usage & Data Quota Alert Check (Non-Transaction)
+    const isTelecomUsageAlert = this.telecomUsageAlertPatterns.some(kw => textLower.includes(kw));
+    if (isTelecomUsageAlert && !hasExplicitDebit && !hasExplicitCredit) {
+      reasons.push('Telecom data quota or service usage alert (no monetary movement)');
+      return { predictedClass: 'Personal', confidence: 0.96, isTransaction: false, reasons };
+    }
+
+    // 3. Telecom Service Fulfillment / Confirmation Check
+    const isTelecomServiceConfirm = /\b(recharge of inr|recharge of rs|recharge of ₹|recharge is successful|recharge was successful|recharge successful|recharge done|recharge completed|plan activated|pack activated)\b/i.test(textLower) ||
+                                    /\brecharge\b.*(?:successful|completed|done|activated)/i.test(textLower) ||
+                                    /\b(airtel mobile|jio mobile|best recharges on)\b/i.test(textLower);
+
+    if (isTelecomServiceConfirm && !hasExplicitDebit && !hasExplicitCredit && !hasFailedAttempt) {
+      reasons.push('Telecom recharge or service fulfillment confirmation without explicit financial debit evidence');
+      return { predictedClass: 'Personal', confidence: 0.98, isTransaction: false, reasons };
+    }
+
+    // 4. Telecom Benefit / Pack Credits Check
+    const isTelecomPromo = isTelecomPackCredit ||
+                           /\brecharge\b.*(?:\bget\b|\bunlimited\b|\boffer\b|\bbonus\b|\bdiscount\b|\bvalid till\b|\bfree\b)/i.test(textLower);
+
+    if (isTelecomPromo && !hasExplicitDebit && !hasExplicitCredit) {
+      reasons.push('Telecom promotional benefit or data pack credit (non-monetary)');
+      return { predictedClass: 'Promotion', confidence: 0.96, isTransaction: false, reasons };
+    }
+
+    // 5. Check for explicit completed financial events
+    let hasDebitOrCreditEvent = false;
+    if (hasExplicitDebit || hasExplicitCredit || hasReversal || hasFailedAttempt) {
       hasDebitOrCreditEvent = true;
     } else {
       for (const kw of this.financialEvents) {
@@ -130,9 +145,9 @@ class MockSMSClassifier {
       }
     }
 
-    // 5. Informational Limit / Policy Check
+    // 6. Informational Limit / Policy Check
     const hasInfoPattern = this.informationalPatterns.some(kw => textLower.includes(kw));
-    if (hasInfoPattern && !hasExplicitDebit && !hasExplicitCredit && !hasRecharge) {
+    if (hasInfoPattern && !hasExplicitDebit && !hasExplicitCredit) {
       reasons.push('Informational banking notice or limit alert (no money moved)');
       return { predictedClass: 'Personal', confidence: 0.98, isTransaction: false, reasons };
     }
@@ -230,9 +245,9 @@ const testCases = [
     expectedStatus: 'COMPLETED'
   },
   {
-    name: '7. Recharge successful for ₹299',
+    name: '7. Recharge successful for ₹299 (Service Confirmation)',
     sms: 'Recharge successful for ₹299. Transaction ID 99238492. Enjoy unlimited calls.',
-    expectedClass: 'Transaction',
+    expectedClass: 'Personal',
     expectedStatus: 'COMPLETED'
   },
   {
