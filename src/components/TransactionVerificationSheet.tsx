@@ -9,11 +9,13 @@ import { useDashboardStore } from '../hooks/useDashboardStore';
 import { SettingsRepository } from '../repositories/SettingsRepository';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { DeviceEventEmitter } from 'react-native';
+import { useTransactionStore } from '../hooks/useTransactionStore';
+
 export const QUICK_CATEGORIES = [
-  'Food', 'Shopping', 'Travel', 'Bills', 'Fuel', 
-  'Healthcare', 'Education', 'Entertainment', 'Salary', 
-  'Investment', 'Transfer', 'Recharge', 'Subscription', 
-  'ATM Withdrawal', 'Other', 'Custom'
+  'Food', 'Shopping', 'Travel', 'Friend', 'Cashback', 'Bills', 'Fuel', 
+  'EMI', 'Investment', 'Transfer', 'Healthcare', 'Education', 'Entertainment', 
+  'Salary', 'Recharge', 'Subscription', 'ATM Withdrawal', 'Other', 'Custom'
 ];
 
 interface TransactionVerificationSheetProps {
@@ -72,6 +74,7 @@ export const TransactionVerificationSheet: React.FC<TransactionVerificationSheet
         categoryId: validCategory,
         userCategory: validCategory,
         finalCategory: validCategory,
+        aiConfidence: 1.0,
         needsVerification: false,
         updatedAt: new Date().toISOString()
       };
@@ -79,20 +82,34 @@ export const TransactionVerificationSheet: React.FC<TransactionVerificationSheet
       await TransactionRepository.update(updatedTx);
 
       // 2. Persist learned mapping independently (survives transaction deletion and SMS rebuild)
-      await MerchantCategoryRepository.learnCorrection(
+      const learned = await MerchantCategoryRepository.learnCorrection(
         finalMerchant,
         validCategory,
         transaction.originalSms,
         transaction.smsHash,
+        transaction.bank,
         transaction.bank
       );
 
-      // 3. Update AI Metrics
+      // 3. Auto-categorize all matching existing transactions representing the same account/recipient
+      await TransactionRepository.autoCategorizeMatchingTransactions({
+        category: validCategory,
+        upiId: learned.upiId,
+        accountIdentifier: learned.accountIdentifier,
+        normalizedName: learned.normalizedName,
+        merchantName: learned.merchantName,
+        smsHash: learned.smsHash,
+        excludeId: transaction.id
+      });
+
+      // 4. Update AI Metrics
       const prevCorrections = await SettingsRepository.get('ai_user_corrections') || '0';
       await SettingsRepository.set('ai_user_corrections', (parseInt(prevCorrections, 10) + 1).toString());
 
-      // 4. Refresh Dashboard
+      // 5. Refresh Stores & Emit Global Update Event
       await fetchDashboardData();
+      await useTransactionStore.getState().fetchTransactions();
+      DeviceEventEmitter.emit('TransactionUpdated');
       
       onVerified();
       onClose();
@@ -102,6 +119,7 @@ export const TransactionVerificationSheet: React.FC<TransactionVerificationSheet
       setIsSaving(false);
     }
   };
+
 
   const handleSkip = () => {
     onClose();

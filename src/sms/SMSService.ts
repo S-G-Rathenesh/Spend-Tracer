@@ -51,11 +51,11 @@ export class SMSService {
         return;
       }
       
-      let finalCategory = aiResult.category || 'Shopping';
+      let finalCategory = aiResult.category || 'Others';
       let finalConfidence = aiResult.confidence;
       let needsVerification = aiResult.needsVerification;
 
-      const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, taskData.body);
+      const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, taskData.body, undefined, taskData.sender, aiResult.bank);
       if (learned) {
         finalCategory = learned.category;
         finalConfidence = 1.0;
@@ -64,6 +64,7 @@ export class SMSService {
           aiResult.merchant = learned.matchedMerchant;
         }
       }
+
 
       // Push Candidate to Reconciliation Engine
       const candidate = {

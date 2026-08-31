@@ -6,6 +6,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TransactionRepository } from '../repositories/TransactionRepository';
 import { MerchantCategoryRepository } from '../repositories/MerchantCategoryRepository';
 
+import { DeviceEventEmitter } from 'react-native';
+import { useTransactionStore } from '../hooks/useTransactionStore';
+import { useDashboardStore } from '../hooks/useDashboardStore';
+
 interface Props {
   transaction: Transaction | null;
   visible: boolean;
@@ -14,10 +18,9 @@ interface Props {
 }
 
 const DEFAULT_CATEGORIES = [
-  'Food', 'Shopping', 'Travel', 'EMI', 'Investment', 'Bills', 
-  'Groceries', 'Fuel', 'Healthcare', 'Entertainment', 'Recharge', 
-  'Subscription', 'Education', 'Insurance', 'Salary', 'Transfer', 
-  'ATM Withdrawal', 'Other'
+  'Food', 'Shopping', 'Travel', 'Friend', 'Cashback', 'Investment', 'EMI', 'Bills', 
+  'Groceries', 'Fuel', 'Healthcare', 'Entertainment', 'Transfer', 'Recharge', 
+  'Subscription', 'Education', 'Insurance', 'Salary', 'ATM Withdrawal', 'Other'
 ];
 
 export const CategoryVerificationModal: React.FC<Props> = ({ transaction, visible, onClose, onSuccess }) => {
@@ -29,23 +32,49 @@ export const CategoryVerificationModal: React.FC<Props> = ({ transaction, visibl
   const handleSelectCategory = async (category: string) => {
     try {
       // 1. Update Transaction
-      const updatedTxn = { ...transaction, categoryId: category, userCategory: category, finalCategory: category, needsVerification: false };
+      const updatedTxn = { 
+        ...transaction, 
+        categoryId: category, 
+        userCategory: category, 
+        finalCategory: category, 
+        aiConfidence: 1.0,
+        needsVerification: false,
+        updatedAt: new Date().toISOString()
+      };
       await TransactionRepository.update(updatedTxn);
 
       // 2. Learn Mapping (Survives transaction deletion and SMS rebuild)
-      await MerchantCategoryRepository.learnCorrection(
+      const learned = await MerchantCategoryRepository.learnCorrection(
         transaction.merchantId,
         category,
         transaction.originalSms,
         transaction.smsHash,
+        transaction.bank,
         transaction.bank
       );
+
+      // 3. Auto-categorize all same-account / matching transactions
+      await TransactionRepository.autoCategorizeMatchingTransactions({
+        category,
+        upiId: learned.upiId,
+        accountIdentifier: learned.accountIdentifier,
+        normalizedName: learned.normalizedName,
+        merchantName: learned.merchantName,
+        smsHash: learned.smsHash,
+        excludeId: transaction.id
+      });
+
+      // 4. Refresh all stores & emit global update event
+      await useDashboardStore.getState().fetchDashboardData();
+      await useTransactionStore.getState().fetchTransactions();
+      DeviceEventEmitter.emit('TransactionUpdated');
 
       onSuccess();
     } catch (error) {
       console.error('Failed to verify category', error);
     }
   };
+
 
   return (
     <Modal visible={visible} transparent animationType="slide">

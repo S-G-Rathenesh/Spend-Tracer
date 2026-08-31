@@ -1,5 +1,6 @@
 import { DatabaseService } from '../database/DatabaseService';
 import { Transaction } from '../types/Transaction';
+import { MerchantCategoryRepository } from './MerchantCategoryRepository';
 
 export interface TransactionFilter {
   categoryId?: string;
@@ -23,7 +24,7 @@ export class TransactionRepository {
     let query = `
       SELECT t.*, c.name as categoryName, c.icon as categoryIcon, c.color as categoryColor
       FROM Transactions t
-      LEFT JOIN Categories c ON t.categoryId = c.id
+      LEFT JOIN Categories c ON (t.categoryId = c.id OR t.categoryId = c.name)
       WHERE 1=1
     `;
     const params: any[] = [];
@@ -122,7 +123,7 @@ export class TransactionRepository {
         tx.executeSql(
           `SELECT t.*, c.name as categoryName, c.icon as categoryIcon, c.color as categoryColor
            FROM Transactions t
-           LEFT JOIN Categories c ON t.categoryId = c.id
+           LEFT JOIN Categories c ON (t.categoryId = c.id OR t.categoryId = c.name)
            WHERE t.id = ?`,
           [id],
           (_, results) => {
@@ -299,6 +300,99 @@ export class TransactionRepository {
       });
     });
   }
+
+
+  /**
+   * Searches all existing transactions representing the same account/recipient identity
+   * and automatically updates them to the learned category with 100% confidence,
+   * removing them from the Pending Verification queue.
+   */
+  static async autoCategorizeMatchingTransactions(matching: {
+    category: string;
+    upiId?: string | null;
+    accountIdentifier?: string | null;
+    normalizedName?: string | null;
+    merchantName?: string | null;
+    smsHash?: string | null;
+    excludeId?: string | null;
+  }): Promise<{ updatedCount: number; updatedIds: string[] }> {
+    const db = DatabaseService.getDB();
+    const allTxns = await this.getTransactions({ status: 'ALL' });
+    const matchingIds: string[] = [];
+
+    const targetUpi = matching.upiId ? matching.upiId.toLowerCase().trim() : null;
+    const targetNorm = matching.normalizedName ? matching.normalizedName.toLowerCase().trim() : null;
+    const targetAcc = matching.accountIdentifier ? matching.accountIdentifier.toUpperCase().trim() : null;
+    const targetHash = matching.smsHash || null;
+    const targetCat = matching.category;
+
+    for (const tx of allTxns) {
+      if (matching.excludeId && tx.id === matching.excludeId) continue;
+
+      let isMatch = false;
+
+      // 1. Check UPI ID match (Strongest Priority)
+      if (targetUpi) {
+        const txUpi = MerchantCategoryRepository.extractUpiId(tx.originalSms, tx.merchantId);
+        if (txUpi && txUpi.toLowerCase().trim() === targetUpi) {
+          isMatch = true;
+        }
+      }
+
+      // 2. Check Normalized Merchant/Payee Name match (if not generic)
+      if (!isMatch && targetNorm && !MerchantCategoryRepository.isGenericName(targetNorm)) {
+        const txNorm = MerchantCategoryRepository.normalizeMerchantName(tx.merchantId || '');
+        if (txNorm && txNorm.toLowerCase().trim() === targetNorm) {
+          isMatch = true;
+        }
+      }
+
+      // 3. Check Account Identifier match
+      if (!isMatch && targetAcc) {
+        const txAcc = MerchantCategoryRepository.extractAccountIdentifier(tx.originalSms, tx.bank);
+        if (txAcc && txAcc.toUpperCase().trim() === targetAcc) {
+          isMatch = true;
+        }
+      }
+
+      // 4. Check SMS Hash match
+      if (!isMatch && targetHash && tx.smsHash && tx.smsHash === targetHash) {
+        isMatch = true;
+      }
+
+      if (isMatch) {
+        matchingIds.push(tx.id);
+      }
+    }
+
+    if (matchingIds.length === 0) {
+      return { updatedCount: 0, updatedIds: [] };
+    }
+
+    const now = new Date().toISOString();
+    await new Promise<void>((resolve, reject) => {
+      db.transaction(tx => {
+        const placeholders = matchingIds.map(() => '?').join(',');
+        tx.executeSql(
+          `UPDATE Transactions SET 
+            categoryId = ?, 
+            userCategory = ?, 
+            finalCategory = ?, 
+            aiConfidence = 1.0, 
+            needsVerification = 0, 
+            updatedAt = ? 
+           WHERE id IN (${placeholders})`,
+          [targetCat, targetCat, targetCat, now, ...matchingIds],
+          () => resolve(),
+          (error) => { reject(error); return false; }
+        );
+      });
+    });
+
+    console.log(`[AUTO_CATEGORIZE] Updated ${matchingIds.length} matching transactions to category "${targetCat}"`);
+    return { updatedCount: matchingIds.length, updatedIds: matchingIds };
+  }
+
 
   static async delete(id: string): Promise<void> {
     const db = DatabaseService.getDB();

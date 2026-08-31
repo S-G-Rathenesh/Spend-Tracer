@@ -55,6 +55,7 @@ yarn-error.log
 
 # Bundle artifact
 *.jsbundle
+android/app/src/main/assets/index.android.bundle
 
 # Ruby / CocoaPods
 **/Pods/
@@ -94,3 +95,7 @@ ai-training/checkpoints/
 # Temporary device test captures
 screen_*.png
 capture*.png
+
+# Test scripts (development/CI only, not production code)
+test_*.js
+test_*.ts

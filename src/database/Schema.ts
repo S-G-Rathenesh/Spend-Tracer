@@ -100,8 +100,11 @@ export const Schema = {
       merchant_name TEXT NOT NULL,
       normalized_name TEXT NOT NULL,
       category TEXT NOT NULL,
+      upi_id TEXT,
+      account_identifier TEXT,
       sms_hash TEXT,
       sender TEXT,
+      confidence REAL DEFAULT 1.0,
       createdAt TEXT NOT NULL,
       updatedAt TEXT NOT NULL
     );
@@ -116,5 +119,8 @@ export const Indexes = [
   `CREATE INDEX IF NOT EXISTS idx_transactions_merchant ON Transactions(merchantId);`,
   `CREATE INDEX IF NOT EXISTS idx_scamhistory_date ON ScamHistory(date);`,
   `CREATE INDEX IF NOT EXISTS idx_incomingsms_status ON IncomingSMS(processingStatus);`,
-  `CREATE INDEX IF NOT EXISTS idx_merchantmapping_norm ON MerchantCategoryMapping(normalized_name);`
+  `CREATE INDEX IF NOT EXISTS idx_merchantmapping_norm ON MerchantCategoryMapping(normalized_name);`,
+  `CREATE INDEX IF NOT EXISTS idx_merchantmapping_upi ON MerchantCategoryMapping(upi_id);`,
+  `CREATE INDEX IF NOT EXISTS idx_merchantmapping_smshash ON MerchantCategoryMapping(sms_hash);`
 ];
+

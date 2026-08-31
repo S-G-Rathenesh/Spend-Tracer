@@ -170,11 +170,11 @@ export class SmsRecoveryService {
           const aiResult = await ai.processSMS(msg.body, 'REBUILD' as any, sender);
           
           if (aiResult.isTransaction) {
-            let finalCategory = aiResult.category || 'Shopping';
+            let finalCategory = aiResult.category || 'Others';
             let finalConfidence = aiResult.confidence;
             let needsVerification = aiResult.needsVerification;
 
-            const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body);
+            const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body, undefined, sender, aiResult.bank);
             if (learned) {
               finalCategory = learned.category;
               finalConfidence = 1.0;
@@ -183,6 +183,7 @@ export class SmsRecoveryService {
                 aiResult.merchant = learned.matchedMerchant;
               }
             }
+
 
             const txnRecord: Transaction = {
               id: 'txn_' + Math.random().toString(36).substr(2, 9),
@@ -307,11 +308,11 @@ export class SmsRecoveryService {
         const aiResult = await ai.processSMS(msg.body, 'LIVE' as any, sender);
         
         if (aiResult.isTransaction) {
-          let finalCategory = aiResult.category || 'Shopping';
+          let finalCategory = aiResult.category || 'Others';
           let finalConfidence = aiResult.confidence;
           let needsVerification = aiResult.needsVerification;
 
-          const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body);
+          const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body, undefined, sender, aiResult.bank);
           if (learned) {
             finalCategory = learned.category;
             finalConfidence = 1.0;
@@ -320,6 +321,7 @@ export class SmsRecoveryService {
               aiResult.merchant = learned.matchedMerchant;
             }
           }
+
 
           const txnRecord: Transaction = {
             id: 'txn_' + Math.random().toString(36).substr(2, 9),

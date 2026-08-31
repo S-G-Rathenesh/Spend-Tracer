@@ -131,12 +131,16 @@ export class SpendTracerAI {
     const categoryResult: ExpenseCategoryResult = await ExpenseClassifier.classify(
       dummyPooled,
       entities.merchant,
-      smsText
+      smsText,
+      undefined,
+      sender,
+      entities.bank
     );
 
     if (categoryResult.isLearned && categoryResult.learnedMerchant && (!entities.merchant || entities.merchant === 'Unknown Merchant')) {
       entities.merchant = categoryResult.learnedMerchant;
     }
+
 
     console.log(`[DATE_PIPELINE] 3. Normalized date in AI output: ${entities.date}`);
 

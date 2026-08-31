@@ -5,6 +5,8 @@ import { useTransactionStore } from '../hooks/useTransactionStore';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CategoryRepository } from '../repositories/CategoryRepository';
+import { MerchantCategoryRepository } from '../repositories/MerchantCategoryRepository';
+import { TransactionRepository } from '../repositories/TransactionRepository';
 import { Category } from '../types/Category';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useAppTheme, AppTheme } from '../theme/theme';
@@ -88,10 +90,33 @@ export const AddTransactionScreen = () => {
           amount: Number(amount),
           merchantId: merchant,
           categoryId: selectedCategory,
+          userCategory: selectedCategory,
+          finalCategory: selectedCategory,
+          aiConfidence: 1.0,
+          needsVerification: false,
           type,
           notes,
           updatedAt: now.toISOString(),
         };
+
+        const learned = await MerchantCategoryRepository.learnCorrection(
+          merchant,
+          selectedCategory,
+          existingTx.originalSms,
+          existingTx.smsHash,
+          existingTx.bank,
+          existingTx.bank
+        );
+
+        await TransactionRepository.autoCategorizeMatchingTransactions({
+          category: selectedCategory,
+          upiId: learned.upiId,
+          accountIdentifier: learned.accountIdentifier,
+          normalizedName: learned.normalizedName,
+          merchantName: learned.merchantName,
+          smsHash: learned.smsHash,
+          excludeId: existingTx.id
+        });
       }
       await updateTransaction(txData);
     } else {
@@ -99,6 +124,7 @@ export const AddTransactionScreen = () => {
     }
     navigation.goBack();
   };
+
 
   const handleDelete = () => {
     Alert.alert('Delete', 'Are you sure you want to delete this transaction?', [

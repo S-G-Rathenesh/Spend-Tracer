@@ -46,13 +46,22 @@ const getCategoryEmoji = (name: string) => {
   if (lower.includes('food') || lower.includes('dining')) return '🍔';
   if (lower.includes('shop') || lower.includes('retail')) return '🛍️';
   if (lower.includes('transport') || lower.includes('travel') || lower.includes('taxi')) return '🚕';
+  if (lower.includes('friend') || lower.includes('person')) return '👥';
+  if (lower.includes('cashback') || lower.includes('reward')) return '💰';
+  if (lower.includes('investment') || lower.includes('stock')) return '📈';
+  if (lower.includes('emi') || lower.includes('loan')) return '🏦';
+  if (lower.includes('transfer')) return '🔁';
   if (lower.includes('grocer')) return '🛒';
+  if (lower.includes('fuel') || lower.includes('petrol')) return '⛽';
   if (lower.includes('health') || lower.includes('medical')) return '⚕️';
   if (lower.includes('utilit') || lower.includes('bill')) return '💡';
   if (lower.includes('entertainment') || lower.includes('movie')) return '🎬';
-  if (lower.includes('uncategorized')) return '🏷️';
+  if (lower.includes('education') || lower.includes('school')) return '🎓';
+  if (lower.includes('recharge') || lower.includes('phone')) return '📱';
+  if (lower.includes('uncategorized') || lower.includes('other')) return '🏷️';
   return '💳';
 };
+
 
 interface Props {
   data: { label: string, value: number, color: string }[];
