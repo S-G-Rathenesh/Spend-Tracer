@@ -32,7 +32,7 @@ export class PDFExportService {
       <html>
       <head>
         <meta charset="utf-8">
-        <title>Spendly Financial Report</title>
+        <title>Spend Tracer Financial Report</title>
         <style>
           body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 20px; color: #333; }
           .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #00E676; padding-bottom: 20px; }
@@ -63,8 +63,8 @@ export class PDFExportService {
       <body>
         <div class="header">
           <div class="logo-container">
-            <img src="data:image/png;base64,${SPENDLY_LOGO_BASE64}" class="logo-img" alt="Spendly Logo" />
-            <div class="logo">Spendly</div>
+            <img src="data:image/png;base64,${SPENDLY_LOGO_BASE64}" class="logo-img" alt="Spend Tracer Logo" />
+            <div class="logo">Spend Tracer</div>
           </div>
           <div class="report-title">Financial Report</div>
           <div class="date-range">${dateRangeStr}</div>
@@ -102,7 +102,7 @@ export class PDFExportService {
         </table>
 
         <div class="footer">
-          Generated securely by Spendly AI &bull; ${new Date().toLocaleString()}
+          Generated securely by Spend Tracer AI &bull; ${new Date().toLocaleString()}
         </div>
       </body>
       </html>
@@ -110,9 +110,10 @@ export class PDFExportService {
 
     const options = {
       html: htmlContent,
-      fileName: `Spendly_Report_${new Date().getTime()}`,
+      fileName: `SpendTracer_Report_${new Date().getTime()}`,
       directory: 'Documents',
     };
+
 
 
     try {
