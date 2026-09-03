@@ -2,6 +2,7 @@ import SQLite from 'react-native-sqlite-storage';
 import { Migration } from './Migration';
 import { Logger } from '../utils/Logger';
 import { TransactionRepository } from '../repositories/TransactionRepository';
+import { MerchantCategoryRepository } from '../repositories/MerchantCategoryRepository';
 
 SQLite.enablePromise(true);
 
@@ -24,9 +25,14 @@ export class DatabaseService {
       // Cleanup historical transactions (failed and informational false positives)
       await TransactionRepository.cleanupHistoricalFailedTransactions();
       await TransactionRepository.cleanupHistoricalInformationalTransactions();
-      Logger.info('DatabaseService', 'Historical transactions cleanup completed');
+      
+      // Cleanup faulty broad mappings and sanitize corrupted Cashback transactions
+      await MerchantCategoryRepository.cleanupFaultyMappings();
+      await TransactionRepository.sanitizeCorruptedCashbackTransactions();
+      Logger.info('DatabaseService', 'Historical transactions and mapping cleanup completed');
       
       return this.instance;
+
     } catch (error) {
       Logger.error('DatabaseService', 'Database initialization failed', error);
       throw error;

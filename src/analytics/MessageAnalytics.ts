@@ -2,6 +2,7 @@ import { DatabaseService } from '../database/DatabaseService';
 import { SMSClassifier, ClassificationResult } from '../ai/SMSClassifier';
 import { IncomingSMS } from '../sms/SMSModels';
 import { Transaction } from '../types/Transaction';
+import { DateRange } from './AnalyticsDateUtils';
 
 export interface MessageDistribution {
   transactions: number;
@@ -17,19 +18,15 @@ export interface EnrichedSMS extends IncomingSMS {
 }
 
 export class MessageAnalytics {
-  static async getMessageDistribution(month?: string, year?: string): Promise<MessageDistribution> {
+  static async getMessageDistribution(range: DateRange): Promise<MessageDistribution> {
     const db = DatabaseService.getDB();
     
     let query = `SELECT predictedClass FROM IncomingSMS`;
     const params: any[] = [];
     
-    if (year && month && month !== 'All Time') {
-      const mStr = month.padStart(2, '0');
-      query += ` WHERE receivedAt LIKE ?`;
-      params.push(`${year}-${mStr}%`);
-    } else if (year) {
-      query += ` WHERE receivedAt LIKE ?`;
-      params.push(`${year}%`);
+    if (range.startDate && range.endDate) {
+      query += ` WHERE substr(receivedAt, 1, 10) >= ? AND substr(receivedAt, 1, 10) <= ?`;
+      params.push(range.startDate, range.endDate);
     }
     
     return new Promise((resolve, reject) => {
@@ -73,8 +70,7 @@ export class MessageAnalytics {
 
   static async getDetailedMessagesByCategory(
     category: 'Transactions' | 'Non-Transactions' | 'Advertisements' | 'Spam' | 'All',
-    month?: string,
-    year?: string
+    range: DateRange
   ): Promise<EnrichedSMS[]> {
     const db = DatabaseService.getDB();
     
@@ -88,13 +84,9 @@ export class MessageAnalytics {
     let querySMS = `SELECT * FROM IncomingSMS`;
     const paramsSMS: any[] = [];
     
-    if (year && month && month !== 'All Time') {
-      const mStr = month.padStart(2, '0');
-      querySMS += ` WHERE receivedAt LIKE ?`;
-      paramsSMS.push(`${year}-${mStr}%`);
-    } else if (year) {
-      querySMS += ` WHERE receivedAt LIKE ?`;
-      paramsSMS.push(`${year}%`);
+    if (range.startDate && range.endDate) {
+      querySMS += ` WHERE substr(receivedAt, 1, 10) >= ? AND substr(receivedAt, 1, 10) <= ?`;
+      paramsSMS.push(range.startDate, range.endDate);
     }
     querySMS += ` ORDER BY receivedAt DESC`;
 
@@ -122,13 +114,9 @@ export class MessageAnalytics {
                    LEFT JOIN Categories c ON t.categoryId = c.id 
                    WHERE t.status = 'COMPLETED'`;
     const paramsTx: any[] = [];
-    if (year && month && month !== 'All Time') {
-      const mStr = month.padStart(2, '0');
-      queryTx += ` AND t.date LIKE ?`;
-      paramsTx.push(`${year}-${mStr}%`);
-    } else if (year) {
-      queryTx += ` AND t.date LIKE ?`;
-      paramsTx.push(`${year}%`);
+    if (range.startDate && range.endDate) {
+      queryTx += ` AND t.date >= ? AND t.date <= ?`;
+      paramsTx.push(range.startDate, range.endDate);
     }
 
     const transactions = await new Promise<Transaction[]>((resolve, reject) => {
@@ -148,7 +136,7 @@ export class MessageAnalytics {
       });
     });
 
-    // Build a map of Original SMS -> Transaction for O(1) linkage check
+    // Build map for O(1) linkage check
     const txMapByOriginalSMS = new Map<string, Transaction>();
     const txMapByHash = new Map<string, Transaction>();
     
@@ -186,7 +174,7 @@ export class MessageAnalytics {
         continue;
       }
 
-      let linkedTx = txMapByOriginalSMS.get(sms.message);
+      let linkedTx = txMapByOriginalSMS.get(sms.message) || (sms.id ? txMapByHash.get(sms.id) : undefined);
       
       enrichedMessages.push({
         ...sms,

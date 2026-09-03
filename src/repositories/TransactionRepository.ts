@@ -1,6 +1,7 @@
 import { DatabaseService } from '../database/DatabaseService';
 import { Transaction } from '../types/Transaction';
-import { MerchantCategoryRepository } from './MerchantCategoryRepository';
+import { MerchantCategoryRepository, MatchType } from './MerchantCategoryRepository';
+
 
 export interface TransactionFilter {
   categoryId?: string;
@@ -303,12 +304,18 @@ export class TransactionRepository {
 
 
   /**
-   * Searches all existing transactions representing the same account/recipient identity
+   * Searches existing transactions for the exact same account / payee identity
    * and automatically updates them to the learned category with 100% confidence,
-   * removing them from the Pending Verification queue.
+   * dropping them from the Pending Verification queue.
+   * 
+   * MATCH CONFIDENCE SAFETY:
+   * - Only performs bulk auto-categorization if matchType is EXACT_UPI, EXACT_PAYEE, or EXACT_MERCHANT.
+   * - If matchType is WEAK_MATCH or EXACT_SMS, NO OTHER transactions are touched.
+   * - NEVER matches on user bank account number, SMS sender, or generic words.
    */
   static async autoCategorizeMatchingTransactions(matching: {
     category: string;
+    matchType?: MatchType;
     upiId?: string | null;
     accountIdentifier?: string | null;
     normalizedName?: string | null;
@@ -316,22 +323,34 @@ export class TransactionRepository {
     smsHash?: string | null;
     excludeId?: string | null;
   }): Promise<{ updatedCount: number; updatedIds: string[] }> {
+    const { matchType = 'WEAK_MATCH', category: targetCat } = matching;
+
+    // Safety guard: Weak matches and single SMS matches NEVER bulk-update other transactions
+    if (matchType === 'WEAK_MATCH' || matchType === 'EXACT_SMS') {
+      console.log(`[AUTO_CATEGORIZE] Skipping bulk update: matchType is ${matchType}`);
+      return { updatedCount: 0, updatedIds: [] };
+    }
+
+    const targetUpi = matching.upiId ? matching.upiId.toLowerCase().trim() : null;
+    const targetNorm = (matching.normalizedName && !MerchantCategoryRepository.isGenericName(matching.normalizedName) && matching.normalizedName.length >= 3)
+      ? matching.normalizedName.toLowerCase().trim()
+      : null;
+
+    if (!targetUpi && !targetNorm) {
+      console.log(`[AUTO_CATEGORIZE] No strong UPI ID or Payee Name found for bulk categorization`);
+      return { updatedCount: 0, updatedIds: [] };
+    }
+
     const db = DatabaseService.getDB();
     const allTxns = await this.getTransactions({ status: 'ALL' });
     const matchingIds: string[] = [];
-
-    const targetUpi = matching.upiId ? matching.upiId.toLowerCase().trim() : null;
-    const targetNorm = matching.normalizedName ? matching.normalizedName.toLowerCase().trim() : null;
-    const targetAcc = matching.accountIdentifier ? matching.accountIdentifier.toUpperCase().trim() : null;
-    const targetHash = matching.smsHash || null;
-    const targetCat = matching.category;
 
     for (const tx of allTxns) {
       if (matching.excludeId && tx.id === matching.excludeId) continue;
 
       let isMatch = false;
 
-      // 1. Check UPI ID match (Strongest Priority)
+      // 1. Check EXACT UPI ID match (Highest Confidence)
       if (targetUpi) {
         const txUpi = MerchantCategoryRepository.extractUpiId(tx.originalSms, tx.merchantId);
         if (txUpi && txUpi.toLowerCase().trim() === targetUpi) {
@@ -339,25 +358,12 @@ export class TransactionRepository {
         }
       }
 
-      // 2. Check Normalized Merchant/Payee Name match (if not generic)
-      if (!isMatch && targetNorm && !MerchantCategoryRepository.isGenericName(targetNorm)) {
+      // 2. Check EXACT Normalized Payee / Merchant Name (Strict equality, Non-generic)
+      if (!isMatch && targetNorm) {
         const txNorm = MerchantCategoryRepository.normalizeMerchantName(tx.merchantId || '');
         if (txNorm && txNorm.toLowerCase().trim() === targetNorm) {
           isMatch = true;
         }
-      }
-
-      // 3. Check Account Identifier match
-      if (!isMatch && targetAcc) {
-        const txAcc = MerchantCategoryRepository.extractAccountIdentifier(tx.originalSms, tx.bank);
-        if (txAcc && txAcc.toUpperCase().trim() === targetAcc) {
-          isMatch = true;
-        }
-      }
-
-      // 4. Check SMS Hash match
-      if (!isMatch && targetHash && tx.smsHash && tx.smsHash === targetHash) {
-        isMatch = true;
       }
 
       if (isMatch) {
@@ -389,9 +395,59 @@ export class TransactionRepository {
       });
     });
 
-    console.log(`[AUTO_CATEGORIZE] Updated ${matchingIds.length} matching transactions to category "${targetCat}"`);
+    console.log(`[AUTO_CATEGORIZE] Updated ${matchingIds.length} matching same-account transactions to category "${targetCat}"`);
     return { updatedCount: matchingIds.length, updatedIds: matchingIds };
   }
+
+  /**
+   * Safely cleans up transactions that were incorrectly set to Cashback due to broad account matching.
+   * - A Debit transaction is NEVER Cashback.
+   * - A Credit transaction whose sender/SMS has no cashback indication and whose payee is an individual/unrelated entity is reverted to Needs Verification.
+   */
+  static async sanitizeCorruptedCashbackTransactions(): Promise<number> {
+    const db = DatabaseService.getDB();
+    const allTxns = await this.getTransactions({ status: 'ALL' });
+    const corruptedIds: string[] = [];
+
+    for (const tx of allTxns) {
+      if (tx.categoryId === 'Cashback' || tx.userCategory === 'Cashback' || tx.finalCategory === 'Cashback') {
+        const isDebit = tx.type === 'Debit';
+        const sms = (tx.originalSms || '').toLowerCase();
+        const hasExplicitCashback = sms.includes('cashback') || sms.includes('cash back') || sms.includes('reward');
+
+        // If it's a debit OR a credit with no cashback wording from person payees
+        if (isDebit || (!hasExplicitCashback && tx.merchantId && !tx.merchantId.toLowerCase().includes('google') && !tx.merchantId.toLowerCase().includes('cashback'))) {
+          corruptedIds.push(tx.id);
+        }
+      }
+    }
+
+    if (corruptedIds.length === 0) return 0;
+
+    const now = new Date().toISOString();
+    await new Promise<void>((resolve, reject) => {
+      db.transaction(tx => {
+        const placeholders = corruptedIds.map(() => '?').join(',');
+        tx.executeSql(
+          `UPDATE Transactions SET 
+            categoryId = 'Others', 
+            userCategory = NULL, 
+            finalCategory = 'Others', 
+            aiConfidence = 0.5, 
+            needsVerification = 1, 
+            updatedAt = ? 
+           WHERE id IN (${placeholders})`,
+          [now, ...corruptedIds],
+          () => resolve(),
+          (error) => { reject(error); return false; }
+        );
+      });
+    });
+
+    console.log(`[DATA_CLEANUP] Reverted ${corruptedIds.length} corrupted Cashback transactions to Pending Verification`);
+    return corruptedIds.length;
+  }
+
 
 
   static async delete(id: string): Promise<void> {

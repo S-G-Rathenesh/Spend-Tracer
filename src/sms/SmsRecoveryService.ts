@@ -170,11 +170,12 @@ export class SmsRecoveryService {
           const aiResult = await ai.processSMS(msg.body, 'REBUILD' as any, sender);
           
           if (aiResult.isTransaction) {
+            const smsHash = HashUtils.createCanonicalSmsIdentity(sender, msg.body, msg.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined);
             let finalCategory = aiResult.category || 'Others';
             let finalConfidence = aiResult.confidence;
             let needsVerification = aiResult.needsVerification;
 
-            const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body, undefined, sender, aiResult.bank);
+            const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body, smsHash, sender, aiResult.bank);
             if (learned) {
               finalCategory = learned.category;
               finalConfidence = 1.0;
@@ -183,7 +184,6 @@ export class SmsRecoveryService {
                 aiResult.merchant = learned.matchedMerchant;
               }
             }
-
 
             const txnRecord: Transaction = {
               id: 'txn_' + Math.random().toString(36).substr(2, 9),
@@ -198,7 +198,7 @@ export class SmsRecoveryService {
               transactionType: aiResult.paymentMode || undefined,
               notes: `Restored via SMS Rebuild (Confidence: ${(finalConfidence * 100).toFixed(0)}%)`,
               source: 'sms',
-              smsHash: HashUtils.createCanonicalSmsIdentity(sender, msg.body, msg.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined),
+              smsHash,
               originalSms: aiResult.originalSMS,
               needsVerification,
               aiCategory: aiResult.aiCategory || undefined,
@@ -207,6 +207,7 @@ export class SmsRecoveryService {
               updatedAt: new Date().toISOString(),
               status: aiResult.status || 'COMPLETED'
             };
+
 
             await TransactionRepository.insert(txnRecord);
             this.progressState.restoredTransactions++;
@@ -308,11 +309,12 @@ export class SmsRecoveryService {
         const aiResult = await ai.processSMS(msg.body, 'LIVE' as any, sender);
         
         if (aiResult.isTransaction) {
+          const smsHash = HashUtils.createCanonicalSmsIdentity(sender, msg.body, msg.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined);
           let finalCategory = aiResult.category || 'Others';
           let finalConfidence = aiResult.confidence;
           let needsVerification = aiResult.needsVerification;
 
-          const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body, undefined, sender, aiResult.bank);
+          const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, msg.body, smsHash, sender, aiResult.bank);
           if (learned) {
             finalCategory = learned.category;
             finalConfidence = 1.0;
@@ -321,7 +323,6 @@ export class SmsRecoveryService {
               aiResult.merchant = learned.matchedMerchant;
             }
           }
-
 
           const txnRecord: Transaction = {
             id: 'txn_' + Math.random().toString(36).substr(2, 9),
@@ -336,7 +337,7 @@ export class SmsRecoveryService {
             transactionType: aiResult.paymentMode || undefined,
             notes: `Restored via Quick Sync (Confidence: ${(finalConfidence * 100).toFixed(0)}%)`,
             source: 'sms',
-            smsHash: HashUtils.createCanonicalSmsIdentity(sender, msg.body, msg.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined),
+            smsHash,
             originalSms: aiResult.originalSMS,
             needsVerification,
             aiCategory: aiResult.aiCategory || undefined,
@@ -345,6 +346,7 @@ export class SmsRecoveryService {
             updatedAt: new Date().toISOString(),
             status: aiResult.status || 'COMPLETED'
           };
+
 
           await TransactionRepository.insert(txnRecord);
           addedCount++;

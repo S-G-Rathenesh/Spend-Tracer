@@ -4,6 +4,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAnalyticsStore } from '../hooks/useAnalyticsStore';
 import { useAppTheme, AppTheme } from '../theme/theme';
 import { EmptyStateCard } from '../components';
+import { AnalyticsDateUtils } from '../analytics/AnalyticsDateUtils';
 
 import { AnalyticsFilter } from '../components/analytics/AnalyticsFilter';
 import { FinancialSummary } from '../components/analytics/FinancialSummary';
@@ -23,10 +24,16 @@ export const AnalyticsScreen = () => {
     totalExpense, 
     messageDistribution,
     fetchAnalytics, 
+    period,
     selectedMonth, 
     selectedYear, 
+    typeFilter,
+    categoryFilter,
+    setPeriod,
     setSelectedMonth, 
-    setSelectedYear 
+    setSelectedYear,
+    setFilters,
+    resetFilters,
   } = useAnalyticsStore();
   
   const [refreshing, setRefreshing] = useState(false);
@@ -38,7 +45,7 @@ export const AnalyticsScreen = () => {
     fetchAnalytics();
     const txSub = DeviceEventEmitter.addListener('TransactionUpdated', fetchAnalytics);
     return () => txSub.remove();
-  }, [selectedMonth, selectedYear]);
+  }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -52,19 +59,22 @@ export const AnalyticsScreen = () => {
   const highestCategory = sortedCategories.length > 0 ? sortedCategories[0] : undefined;
   const topMerchant = topMerchants.length > 0 ? topMerchants[0] : undefined;
 
-  let periodLabel = 'this month';
-  if (selectedMonth === 'All Time') {
-    periodLabel = selectedYear ? `in ${selectedYear}` : 'overall';
-  }
+  const periodLabel = AnalyticsDateUtils.getPeriodLabel(period, selectedYear, selectedMonth);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <AnalyticsFilter 
         theme={theme}
+        period={period}
         selectedMonth={selectedMonth}
         selectedYear={selectedYear}
+        typeFilter={typeFilter}
+        categoryFilter={categoryFilter}
+        onPeriodChange={setPeriod}
         onMonthSelect={setSelectedMonth}
         onYearSelect={setSelectedYear}
+        onFilterApply={setFilters}
+        onFilterReset={resetFilters}
       />
       
       <ScrollView 
@@ -131,8 +141,6 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     paddingTop: theme.spacing.sm,
   },
   contentWrapper: {
-    // We removed paddingHorizontal here and moved it to the individual components (lg instead of xl)
-    // to give charts more room to breathe and reduce the "boxy" feel.
-    width: '100%',
+    flex: 1,
   }
 });

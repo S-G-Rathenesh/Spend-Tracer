@@ -99,3 +99,6 @@ capture*.png
 # Test scripts (development/CI only, not production code)
 test_*.js
 test_*.ts
+
+# Gemini metadata
+.gemini/

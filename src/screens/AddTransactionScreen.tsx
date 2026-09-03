@@ -110,13 +110,14 @@ export const AddTransactionScreen = () => {
 
         await TransactionRepository.autoCategorizeMatchingTransactions({
           category: selectedCategory,
+          matchType: learned.matchType,
           upiId: learned.upiId,
-          accountIdentifier: learned.accountIdentifier,
           normalizedName: learned.normalizedName,
           merchantName: learned.merchantName,
           smsHash: learned.smsHash,
           excludeId: existingTx.id
         });
+
       }
       await updateTransaction(txData);
     } else {

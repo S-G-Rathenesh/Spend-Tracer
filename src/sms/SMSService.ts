@@ -51,11 +51,12 @@ export class SMSService {
         return;
       }
       
+      const smsHash = HashUtils.createCanonicalSmsIdentity(taskData.sender, taskData.body, taskData.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined);
       let finalCategory = aiResult.category || 'Others';
       let finalConfidence = aiResult.confidence;
       let needsVerification = aiResult.needsVerification;
 
-      const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, taskData.body, undefined, taskData.sender, aiResult.bank);
+      const learned = await MerchantCategoryRepository.getLearnedCategory(aiResult.merchant, taskData.body, smsHash, taskData.sender, aiResult.bank);
       if (learned) {
         finalCategory = learned.category;
         finalConfidence = 1.0;
@@ -64,7 +65,6 @@ export class SMSService {
           aiResult.merchant = learned.matchedMerchant;
         }
       }
-
 
       // Push Candidate to Reconciliation Engine
       const candidate = {
@@ -79,11 +79,12 @@ export class SMSService {
         referenceNumber: aiResult.reference || undefined,
         transactionType: aiResult.paymentMode || undefined,
         notes: `Extracted via Spend Tracer AI (Confidence: ${(finalConfidence * 100).toFixed(0)}%)`,
-        smsHash: HashUtils.createCanonicalSmsIdentity(taskData.sender, taskData.body, taskData.timestamp, aiResult.amount || 0, aiResult.transactionType, aiResult.reference || undefined, aiResult.merchant || undefined),
+        smsHash,
         originalSms: aiResult.originalSMS,
         needsVerification: needsVerification,
         status: aiResult.status || 'COMPLETED'
       };
+
       
       console.log(`[SMS_DATE_PIPELINE]`);
       console.log(` - SMS body: ${taskData.body}`);

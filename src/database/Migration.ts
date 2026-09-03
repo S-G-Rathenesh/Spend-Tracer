@@ -45,7 +45,9 @@ export class Migration {
     await this.executeSqlSafe(db, 'ALTER TABLE MerchantCategoryMapping ADD COLUMN sender TEXT');
     await this.executeSqlSafe(db, 'ALTER TABLE MerchantCategoryMapping ADD COLUMN upi_id TEXT');
     await this.executeSqlSafe(db, 'ALTER TABLE MerchantCategoryMapping ADD COLUMN account_identifier TEXT');
+    await this.executeSqlSafe(db, 'ALTER TABLE MerchantCategoryMapping ADD COLUMN mapping_type TEXT');
     await this.executeSqlSafe(db, 'ALTER TABLE MerchantCategoryMapping ADD COLUMN confidence REAL DEFAULT 1.0');
+
 
     // 5. Create Indexes
     for (const indexSql of Indexes) {

@@ -56,13 +56,14 @@ export const CategoryVerificationModal: React.FC<Props> = ({ transaction, visibl
       // 3. Auto-categorize all same-account / matching transactions
       await TransactionRepository.autoCategorizeMatchingTransactions({
         category,
+        matchType: learned.matchType,
         upiId: learned.upiId,
-        accountIdentifier: learned.accountIdentifier,
         normalizedName: learned.normalizedName,
         merchantName: learned.merchantName,
         smsHash: learned.smsHash,
         excludeId: transaction.id
       });
+
 
       // 4. Refresh all stores & emit global update event
       await useDashboardStore.getState().fetchDashboardData();

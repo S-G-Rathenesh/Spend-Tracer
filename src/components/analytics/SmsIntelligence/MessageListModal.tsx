@@ -23,7 +23,7 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterType>('All');
   
-  const { selectedMonth, selectedYear } = useAnalyticsStore();
+  const { dateRange } = useAnalyticsStore();
 
   useEffect(() => {
     if (visible && category) {
@@ -33,14 +33,14 @@ export const MessageListModal = ({ visible, category, onClose, theme }: Props) =
       setMessages([]);
       setSearchQuery('');
     }
-  }, [visible, category, selectedMonth, selectedYear]);
+  }, [visible, category, dateRange]);
 
   const loadMessages = async () => {
     if (!category) return;
     setLoading(true);
     try {
       // Always load all messages for the selected time range so user can switch filter tabs seamlessly
-      const data = await MessageAnalytics.getDetailedMessagesByCategory('All', selectedMonth, selectedYear);
+      const data = await MessageAnalytics.getDetailedMessagesByCategory('All', dateRange);
       setMessages(data);
     } catch (error) {
       console.error('Failed to load SMS messages', error);

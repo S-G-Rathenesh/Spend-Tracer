@@ -94,13 +94,14 @@ export const TransactionVerificationSheet: React.FC<TransactionVerificationSheet
       // 3. Auto-categorize all matching existing transactions representing the same account/recipient
       await TransactionRepository.autoCategorizeMatchingTransactions({
         category: validCategory,
+        matchType: learned.matchType,
         upiId: learned.upiId,
-        accountIdentifier: learned.accountIdentifier,
         normalizedName: learned.normalizedName,
         merchantName: learned.merchantName,
         smsHash: learned.smsHash,
         excludeId: transaction.id
       });
+
 
       // 4. Update AI Metrics
       const prevCorrections = await SettingsRepository.get('ai_user_corrections') || '0';
