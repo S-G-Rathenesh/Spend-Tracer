@@ -245,6 +245,32 @@
       background: #DC2626;
     }
 
+    .action-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .action-pill-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .email-instructions {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
     table.data-table {
       width: 100%;
       border-collapse: collapse;
@@ -312,7 +338,7 @@
       <div class="hero-meta">
         <div>Application: <strong>Spend Tracer</strong> (<code>com.spendguard</code>)</div>
         <div>Developer: <strong>S G Rathenesh</strong></div>
-        <div>Dedicated Contact: <strong>sgrathenesh@gmail.com</strong></div>
+        <div>Dedicated Contact: <strong>ratheneshsg@gmail.com</strong></div>
       </div>
     </div>
 
@@ -339,7 +365,7 @@
       <p>If you have uninstalled Spend Tracer or no longer have access to your Android device, you can submit a deletion request directly to our developer team. We will delete your account from Firebase within <strong>7 business days</strong>.</p>
 
       <div class="form-container">
-        <form onsubmit="handleFormSubmit(event)">
+        <form id="deletionForm" onsubmit="handleFormSubmit(event)">
           <div class="form-group">
             <label for="userEmail">Your Registered Google / Account Email *</label>
             <input type="email" id="userEmail" required placeholder="e.g. user@gmail.com">
@@ -348,14 +374,46 @@
             <label for="reason">Reason / Additional Notes (Optional)</label>
             <textarea id="reason" rows="3" placeholder="I uninstalled the app and request permanent deletion of my account."></textarea>
           </div>
-          <button type="submit" class="submit-btn">
+          <p class="email-instructions" style="margin-bottom: 16px;">
+            ⚠️ <strong>Important:</strong> Clicking the button below generates a pre-addressed email draft in your email client. <strong>You must press &ldquo;Send&rdquo; in your email app</strong> to submit the deletion request.
+          </p>
+          <button type="submit" id="submitBtn" class="submit-btn">
             <span>✉️</span> Generate Deletion Request Email
           </button>
         </form>
+
+        <!-- Status confirmation banner & fallback actions -->
+        <div id="statusBox" style="display: none; margin-top: 22px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 8px; color: #10B981; font-weight: 700; font-size: 16px; margin-bottom: 8px;">
+            <span>✅</span> Email Draft Prepared!
+          </div>
+          <p style="font-size: 14px; color: #E6EDF3; margin-bottom: 12px; line-height: 1.6;">
+            A pre-filled email draft has been generated for <strong>ratheneshsg@gmail.com</strong>.
+            <br>
+            <strong style="color: #F87171;">⚠️ Final Step Required:</strong> Please check your opened email app and click <strong>&ldquo;Send&rdquo;</strong> to transmit your deletion request.
+          </p>
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Did your email client not open automatically? Use one of the direct options below:
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <a id="directMailtoLink" href="#" class="action-pill-btn" style="background: var(--danger); color: #FFFFFF;">
+              🚀 Open Email App
+            </a>
+            <a id="gmailWebLink" href="#" target="_blank" rel="noopener" class="action-pill-btn" style="background: #EA4335; color: #FFFFFF;">
+              🌐 Open in Gmail (Web)
+            </a>
+            <button type="button" onclick="copyDraftDetails()" id="copyBtn" class="action-pill-btn" style="background: #21262D; color: #F0F6FC; border: 1px solid #30363D;">
+              📋 Copy Draft Details
+            </button>
+          </div>
+          <div id="copyNotice" style="display: none; margin-top: 12px; font-size: 13px; color: #10B981; font-weight: 500;">
+            ✓ Draft text copied to clipboard! You can paste it into any email provider manually.
+          </div>
+        </div>
       </div>
 
       <div class="highlight-box" style="margin-top: 24px;">
-        <strong>Direct Support Email:</strong> You can also email us directly at <a href="mailto:sgrathenesh@gmail.com?subject=Spend%20Tracer%20Account%20Deletion%20Request" style="color: var(--primary-light);">sgrathenesh@gmail.com</a> with the subject line <code>Spend Tracer Account Deletion Request</code>, mentioning your registered account email.
+        <strong>Direct Support Email:</strong> You can also email us directly at <a href="mailto:ratheneshsg@gmail.com?subject=Spend%20Tracer%20Account%20Deletion%20Request" style="color: var(--primary-light);">ratheneshsg@gmail.com</a> with the subject line <code>Spend Tracer Account Deletion Request</code>, mentioning your registered account email.
       </div>
     </div>
 
@@ -410,19 +468,70 @@
   </footer>
 
   <script>
+    let currentDraftDetails = "";
+
     function handleFormSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('userEmail').value.trim();
       const reason = document.getElementById('reason').value.trim();
-      const subject = encodeURIComponent("Spend Tracer Account Deletion Request");
-      const body = encodeURIComponent(
-        "Hello Spend Tracer Support,\n\n" +
+      const toEmail = "ratheneshsg@gmail.com";
+      const subject = "Spend Tracer Account Deletion Request";
+      const body = "Hello Spend Tracer Support,\n\n" +
         "I request the permanent deletion of my Spend Tracer account and associated Firebase data.\n\n" +
         "Registered Account Email: " + email + "\n" +
         (reason ? "Reason / Notes: " + reason + "\n" : "") +
-        "\nPlease confirm when the account has been deleted.\n\nThank you."
-      );
-      window.location.href = "mailto:sgrathenesh@gmail.com?subject=" + subject + "&body=" + body;
+        "\nPlease confirm once my account has been deleted.\n\nThank you.";
+
+      currentDraftDetails = "To: " + toEmail + "\nSubject: " + subject + "\n\n" + body;
+
+      const encodedSubject = encodeURIComponent(subject);
+      const encodedBody = encodeURIComponent(body);
+      const mailtoUrl = "mailto:" + toEmail + "?subject=" + encodedSubject + "&body=" + encodedBody;
+      const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=" + toEmail + "&su=" + encodedSubject + "&body=" + encodedBody;
+
+      // Update links in status box
+      const directMailtoLink = document.getElementById('directMailtoLink');
+      const gmailWebLink = document.getElementById('gmailWebLink');
+      if (directMailtoLink) directMailtoLink.href = mailtoUrl;
+      if (gmailWebLink) gmailWebLink.href = gmailUrl;
+
+      // Display status box & scroll to it
+      const statusBox = document.getElementById('statusBox');
+      if (statusBox) {
+        statusBox.style.display = 'block';
+        statusBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Robustly trigger mailto in desktop browsers
+      try {
+        const link = document.createElement('a');
+        link.href = mailtoUrl;
+        link.target = '_self';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        console.warn('Anchor click error:', err);
+      }
+
+      setTimeout(function() {
+        window.location.href = mailtoUrl;
+      }, 100);
+    }
+
+    function copyDraftDetails() {
+      if (!currentDraftDetails) return;
+      navigator.clipboard.writeText(currentDraftDetails).then(function() {
+        const notice = document.getElementById('copyNotice');
+        if (notice) {
+          notice.style.display = 'block';
+          setTimeout(function() {
+            notice.style.display = 'none';
+          }, 4000);
+        }
+      }).catch(function(err) {
+        console.error('Failed to copy to clipboard', err);
+      });
     }
   </script>
 
