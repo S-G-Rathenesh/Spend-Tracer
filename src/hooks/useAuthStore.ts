@@ -14,6 +14,7 @@ interface AuthState {
   setUser: (user: User | null) => void;
   setLoading: (isLoading: boolean) => void;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<{ success: boolean; error?: string; code?: string }>;
   updateUserDisplayName: (name: string) => void;
 }
 
@@ -25,6 +26,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     await FirebaseAuthService.logout();
     set({ user: null });
+  },
+  deleteAccount: async () => {
+    const result = await FirebaseAuthService.deleteAccount();
+    if (result.success) {
+      set({ user: null });
+    }
+    return result;
   },
   updateUserDisplayName: (name: string) => set((state) => ({ 
     user: state.user ? { ...state.user, displayName: name } : null 

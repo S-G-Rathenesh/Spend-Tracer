@@ -33,7 +33,7 @@ export const SettingsScreen = () => {
   const { fetchTransactions } = useTransactionStore();
   const { fetchDashboardData } = useDashboardStore();
   const { fetchAnalytics } = useAnalyticsStore();
-  const { user, logout } = useAuthStore();
+  const { user, logout, deleteAccount, updateUserDisplayName } = useAuthStore();
   const theme = useAppTheme();
   const styles = useMemo(() => makeStyles(theme), [theme]);
 
@@ -41,9 +41,10 @@ export const SettingsScreen = () => {
   const [currencyModalVisible, setCurrencyModalVisible] = React.useState(false);
   const [nameModalVisible, setNameModalVisible] = React.useState(false);
   const [privacyModalVisible, setPrivacyModalVisible] = React.useState(false);
+  const [deleteAccountModalVisible, setDeleteAccountModalVisible] = React.useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = React.useState(false);
   const [showRecoveryProgress, setShowRecoveryProgress] = React.useState(false);
   const [editNickname, setEditNickname] = React.useState(user?.displayName || '');
-  const { updateUserDisplayName } = useAuthStore();
   
   const [appLockEnabled, setAppLockEnabled] = React.useState(false);
   const [lockTimeout, setLockTimeout] = React.useState('immediate');
@@ -179,6 +180,35 @@ export const SettingsScreen = () => {
           navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
       }}
     ]);
+  };
+
+  const handleConfirmDeleteAccount = async () => {
+    try {
+      setIsDeletingAccount(true);
+      const result = await deleteAccount();
+      if (result.success) {
+        setIsDeletingAccount(false);
+        setDeleteAccountModalVisible(false);
+        Alert.alert(
+          'Account Deleted',
+          'Your account and cloud credentials have been permanently deleted from Firebase.',
+          [
+            { 
+              text: 'OK', 
+              onPress: () => {
+                navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+              } 
+            }
+          ]
+        );
+      } else {
+        setIsDeletingAccount(false);
+        Alert.alert('Account Deletion Failed', result.error || 'Failed to delete account. Please try again.');
+      }
+    } catch (e: any) {
+      setIsDeletingAccount(false);
+      Alert.alert('Error', e.message || 'An unexpected error occurred during account deletion.');
+    }
   };
 
   const handleExportData = async () => {
@@ -573,6 +603,23 @@ export const SettingsScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Account Actions */}
+        <Text style={styles.sectionLabel}>ACCOUNT ACTIONS</Text>
+        <View style={styles.sectionGroup}>
+          <TouchableOpacity style={styles.row} onPress={() => setDeleteAccountModalVisible(true)}>
+            <View style={styles.rowLeft}>
+              <View style={[styles.iconBox, { backgroundColor: 'rgba(239, 68, 68, 0.12)' }]}>
+                <Icon name="account-remove-outline" size={20} color="#EF4444" />
+              </View>
+              <View>
+                <Text style={[styles.rowText, { color: '#EF4444' }]}>Delete Account</Text>
+                <Text style={styles.profileSubtitle}>Permanently delete account & cloud credentials</Text>
+              </View>
+            </View>
+            <Icon name="chevron-right" size={20} color={theme.colors.textDisabled} />
+          </TouchableOpacity>
+        </View>
+
         {/* About */}
         <Text style={styles.sectionLabel}>ABOUT</Text>
         <View style={styles.sectionGroup}>
@@ -731,6 +778,58 @@ export const SettingsScreen = () => {
             </ScrollView>
             <TouchableOpacity style={styles.modalCancelBtn} onPress={() => setPrivacyModalVisible(false)}>
               <Text style={[styles.modalCancelText, { color: theme.colors.primary }]}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Delete Account Confirmation Modal */}
+      <Modal
+        visible={deleteAccountModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => !isDeletingAccount && setDeleteAccountModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { borderColor: '#EF4444', borderWidth: 1 }]}>
+            <View style={{ alignItems: 'center', marginBottom: 16 }}>
+              <View style={[styles.iconBox, { backgroundColor: 'rgba(239, 68, 68, 0.15)', width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', marginBottom: 12 }]}>
+                <Icon name="alert-octagon" size={32} color="#EF4444" />
+              </View>
+              <Text style={[styles.modalTitle, { color: '#EF4444', marginBottom: 6 }]}>Delete Account?</Text>
+              <Text style={[styles.profileSubtitle, { textAlign: 'center', fontSize: 13, color: theme.colors.textSecondary }]}>
+                This action is permanent and cannot be undone.
+              </Text>
+            </View>
+
+            <View style={{ backgroundColor: theme.colors.surfaceLight, padding: 14, borderRadius: 10, marginBottom: 20 }}>
+              <Text style={{ color: theme.colors.text, fontSize: 13, lineHeight: 20, marginBottom: 8 }}>
+                • Your Firebase user account and profile will be permanently deleted.
+              </Text>
+              <Text style={{ color: theme.colors.text, fontSize: 13, lineHeight: 20, marginBottom: 8 }}>
+                • Cloud authentication credentials and Google Sign-In tokens will be revoked.
+              </Text>
+              <Text style={{ color: theme.colors.text, fontSize: 13, lineHeight: 20 }}>
+                • Local transactions stored on this device can be purged using "Delete All Transactions" or via Android App Storage.
+              </Text>
+            </View>
+
+            <TouchableOpacity 
+              style={[styles.saveBtn, { backgroundColor: '#EF4444', marginBottom: 10, opacity: isDeletingAccount ? 0.7 : 1 }]}
+              onPress={handleConfirmDeleteAccount}
+              disabled={isDeletingAccount}
+            >
+              <Text style={styles.saveBtnText}>
+                {isDeletingAccount ? 'Deleting Account...' : 'Permanently Delete Account'}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={styles.modalCancelBtn} 
+              onPress={() => setDeleteAccountModalVisible(false)}
+              disabled={isDeletingAccount}
+            >
+              <Text style={[styles.modalCancelText, { color: theme.colors.textSecondary }]}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>

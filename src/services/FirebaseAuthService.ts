@@ -65,4 +65,56 @@ export class FirebaseAuthService {
       return { success: false, error: error.message };
     }
   }
+
+  static async deleteAccount() {
+    try {
+      const currentUser = auth().currentUser;
+      if (!currentUser) {
+        return { success: false, error: 'No user is currently signed in.' };
+      }
+
+      // Revoke Google tokens if signed in with Google
+      try {
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+      } catch (googleError) {
+        console.warn('[FirebaseAuthService] Google revocation error:', googleError);
+      }
+
+      // Delete Firebase Auth User
+      await currentUser.delete();
+      return { success: true };
+    } catch (error: any) {
+      console.error('[FirebaseAuthService] deleteAccount error:', error);
+      if (error?.code === 'auth/requires-recent-login') {
+        // Attempt re-auth with Google if available
+        try {
+          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+          await GoogleSignin.signIn();
+          const { idToken, accessToken } = await GoogleSignin.getTokens();
+          if (idToken) {
+            const credential = auth.GoogleAuthProvider.credential(idToken, accessToken);
+            const user = auth().currentUser;
+            if (user) {
+              await user.reauthenticateWithCredential(credential);
+              await user.delete();
+              return { success: true };
+            }
+          }
+        } catch (reauthErr: any) {
+          console.warn('[FirebaseAuthService] reauth on delete failed:', reauthErr);
+          return {
+            success: false,
+            code: 'auth/requires-recent-login',
+            error: 'Security checkpoint: Please sign out and sign in again before deleting your account.'
+          };
+        }
+      }
+      return {
+        success: false,
+        error: error?.message || 'Failed to delete account.',
+        code: error?.code
+      };
+    }
+  }
 }
