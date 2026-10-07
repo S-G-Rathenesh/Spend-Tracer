@@ -1,15 +1,16 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+// Placeholder for StorageUtils if needed in future
 export class StorageUtils {
+  private static memoryStore = new Map<string, string>();
+
   static async setItem(key: string, value: string): Promise<void> {
-    await AsyncStorage.setItem(key, value);
+    this.memoryStore.set(key, value);
   }
 
   static async getItem(key: string): Promise<string | null> {
-    return await AsyncStorage.getItem(key);
+    return this.memoryStore.get(key) || null;
   }
 
   static async removeItem(key: string): Promise<void> {
-    await AsyncStorage.removeItem(key);
+    this.memoryStore.delete(key);
   }
 }

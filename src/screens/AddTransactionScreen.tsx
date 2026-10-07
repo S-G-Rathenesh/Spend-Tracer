@@ -36,28 +36,31 @@ export const AddTransactionScreen = () => {
   const [type, setType] = useState<'Debit'|'Credit'>('Debit');
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [existingTx, setExistingTx] = useState<any>(null);
+  const [isLoadingTx, setIsLoadingTx] = useState(isEditing);
 
   useEffect(() => {
-    loadCategories();
-    if (isEditing) {
-      const tx = transactions.find(t => t.id === transactionId);
-      if (tx) {
-        setAmount(tx.amount.toString());
-        setMerchant(tx.merchantId || tx.bank || '');
-        setNotes(tx.notes || '');
-        setType(tx.type);
-        setSelectedCategory(tx.categoryId || '');
+    const initEdit = async () => {
+      const cats = await CategoryRepository.getAll();
+      setCategories(cats);
+      
+      if (isEditing) {
+        const tx = await TransactionRepository.getById(transactionId);
+        if (tx) {
+          setExistingTx(tx);
+          setAmount(tx.amount.toString());
+          setMerchant(tx.merchantId || tx.bank || '');
+          setNotes(tx.notes || '');
+          setType(tx.type);
+          setSelectedCategory(tx.categoryId || '');
+        }
+        setIsLoadingTx(false);
+      } else if (cats.length > 0) {
+        setSelectedCategory(cats[0].id);
       }
-    }
-  }, []);
-
-  const loadCategories = async () => {
-    const cats = await CategoryRepository.getAll();
-    setCategories(cats);
-    if (!isEditing && cats.length > 0) {
-      setSelectedCategory(cats[0].id);
-    }
-  };
+    };
+    initEdit();
+  }, [isEditing, transactionId]);
 
   const handleSave = async () => {
     if (!amount || isNaN(Number(amount))) {
@@ -65,27 +68,13 @@ export const AddTransactionScreen = () => {
       return;
     }
     
+    if (isLoadingTx) return;
+
     const now = new Date();
     
-    let txData: any = {
-      id: Math.random().toString(36).substr(2, 9),
-      amount: Number(amount),
-      merchantId: merchant, 
-      bank: null,
-      categoryId: selectedCategory,
-      type,
-      date: now.toISOString().split('T')[0],
-      time: now.toISOString().split('T')[1].substring(0, 8),
-      notes,
-      source: 'manual' as const,
-      createdAt: now.toISOString(),
-      updatedAt: now.toISOString(),
-    };
-
     if (isEditing) {
-      const existingTx = transactions.find(t => t.id === transactionId);
       if (existingTx) {
-        txData = {
+        const txData = {
           ...existingTx,
           amount: Number(amount),
           merchantId: merchant,
@@ -118,9 +107,23 @@ export const AddTransactionScreen = () => {
           excludeId: existingTx.id
         });
 
+        await updateTransaction(txData);
       }
-      await updateTransaction(txData);
     } else {
+      const txData = {
+        id: Math.random().toString(36).substr(2, 9),
+        amount: Number(amount),
+        merchantId: merchant, 
+        bank: null,
+        categoryId: selectedCategory,
+        type,
+        date: now.toISOString().split('T')[0],
+        time: now.toISOString().split('T')[1].substring(0, 8),
+        notes,
+        source: 'manual' as const,
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString(),
+      };
       await addTransaction(txData);
     }
     navigation.goBack();

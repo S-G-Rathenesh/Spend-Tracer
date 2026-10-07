@@ -11,6 +11,7 @@ import { useAuthStore } from '../hooks/useAuthStore';
 import { SMSPermission } from '../sms/SMSPermission';
 import { SMSRepository } from '../sms/SMSRepository';
 import { SettingsRepository } from '../repositories/SettingsRepository';
+import { AppLockService } from '../services/AppLockService';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SmsRecoveryService } from '../sms/SmsRecoveryService';
@@ -43,11 +44,23 @@ export const SettingsScreen = () => {
   const [showRecoveryProgress, setShowRecoveryProgress] = React.useState(false);
   const [editNickname, setEditNickname] = React.useState(user?.displayName || '');
   const { updateUserDisplayName } = useAuthStore();
+  
+  const [appLockEnabled, setAppLockEnabled] = React.useState(false);
+  const [lockTimeout, setLockTimeout] = React.useState('immediate');
+  const [timeoutModalVisible, setTimeoutModalVisible] = React.useState(false);
 
   useEffect(() => {
     loadSettings();
     checkSmsPermission();
+    loadAppLockSettings();
   }, []);
+
+  const loadAppLockSettings = async () => {
+    const enabled = await AppLockService.isAppLockEnabled();
+    const timeout = await AppLockService.getLockTimeoutSetting();
+    setAppLockEnabled(enabled);
+    setLockTimeout(timeout);
+  };
 
   const handleRebuildClose = async (status: string) => {
     setShowRecoveryProgress(false);
@@ -88,6 +101,34 @@ export const SettingsScreen = () => {
       setSmsEnabled(false);
       await SettingsRepository.set('smsMonitoringEnabled', 'false');
     }
+  };
+
+  const handleToggleAppLock = async (val: boolean) => {
+    if (val) {
+      // Trying to enable
+      const success = await AppLockService.authenticate('Enable App Lock');
+      if (success) {
+        setAppLockEnabled(true);
+        await AppLockService.setAppLockEnabled(true);
+      } else {
+        setAppLockEnabled(false);
+      }
+    } else {
+      // Trying to disable
+      const success = await AppLockService.authenticate('Disable App Lock');
+      if (success) {
+        setAppLockEnabled(false);
+        await AppLockService.setAppLockEnabled(false);
+      } else {
+        setAppLockEnabled(true);
+      }
+    }
+  };
+
+  const handleUpdateTimeout = async (val: string) => {
+    setLockTimeout(val);
+    await AppLockService.setLockTimeout(val);
+    setTimeoutModalVisible(false);
   };
 
   const handleClearSmsCache = () => {
@@ -389,6 +430,48 @@ export const SettingsScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Security & Privacy */}
+        <Text style={styles.sectionLabel}>SECURITY & PRIVACY</Text>
+        <View style={styles.sectionGroup}>
+          <View style={styles.row}>
+            <View style={styles.rowLeft}>
+              <View style={[styles.iconBox, { backgroundColor: 'rgba(139, 92, 246, 0.1)' }]}>
+                <Icon name="shield-lock" size={20} color="#8B5CF6" />
+              </View>
+              <View>
+                <Text style={styles.rowText}>App Lock</Text>
+                <Text style={styles.profileSubtitle}>Protect your financial information</Text>
+              </View>
+            </View>
+            <Switch 
+              value={appLockEnabled} 
+              onValueChange={handleToggleAppLock}
+              trackColor={{ false: theme.colors.surfaceLight, true: theme.colors.accent }}
+              thumbColor={theme.colors.white}
+            />
+          </View>
+          
+          {appLockEnabled && (
+            <>
+              <View style={styles.divider} />
+              <TouchableOpacity style={styles.row} onPress={() => setTimeoutModalVisible(true)}>
+                <View style={styles.rowLeft}>
+                  <View style={[styles.iconBox, { backgroundColor: theme.colors.surfaceLight }]}>
+                    <Icon name="timer-outline" size={20} color={theme.colors.textSecondary} />
+                  </View>
+                  <Text style={styles.rowText}>Lock Timeout</Text>
+                </View>
+                <View style={styles.rowRight}>
+                  <Text style={styles.valueText}>
+                    {lockTimeout === 'immediate' ? 'Immediately' : lockTimeout === '1m' ? 'After 1 minute' : lockTimeout === '5m' ? 'After 5 minutes' : 'After 15 minutes'}
+                  </Text>
+                  <Icon name="chevron-right" size={20} color={theme.colors.textDisabled} />
+                </View>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+
         {/* AI & Automation */}
         <Text style={styles.sectionLabel}>AI & AUTOMATION</Text>
         <View style={styles.sectionGroup}>
@@ -545,6 +628,40 @@ export const SettingsScreen = () => {
               </TouchableOpacity>
             ))}
             <TouchableOpacity style={styles.modalCancelBtn} onPress={() => setCurrencyModalVisible(false)}>
+              <Text style={styles.modalCancelText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Timeout Modal */}
+      <Modal
+        visible={timeoutModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setTimeoutModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>App Lock Timeout</Text>
+            {[
+              { id: 'immediate', label: 'Immediately' },
+              { id: '1m', label: 'After 1 minute' },
+              { id: '5m', label: 'After 5 minutes' },
+              { id: '15m', label: 'After 15 minutes' }
+            ].map(opt => (
+              <TouchableOpacity
+                key={opt.id}
+                style={styles.modalOption}
+                onPress={() => handleUpdateTimeout(opt.id)}
+              >
+                <Text style={[styles.modalOptionText, lockTimeout === opt.id && styles.modalOptionTextSelected]}>
+                  {opt.label}
+                </Text>
+                {lockTimeout === opt.id && <Icon name="check" size={20} color={theme.colors.accent} />}
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.modalCancelBtn} onPress={() => setTimeoutModalVisible(false)}>
               <Text style={styles.modalCancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>

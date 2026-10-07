@@ -13,6 +13,7 @@ GoogleSignin.configure({
 import { StatusBar } from 'react-native';
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { useAppTheme } from './src/theme/theme';
+import { AppLockGate } from './src/components/AppLockGate';
 
 const App = () => {
   const { setUser, setLoading } = useAuthStore();
@@ -51,7 +52,9 @@ const App = () => {
         backgroundColor={theme.colors.background} 
       />
       <NavigationContainer theme={navigationTheme}>
-        <AppNavigator />
+        <AppLockGate>
+          <AppNavigator />
+        </AppLockGate>
       </NavigationContainer>
     </SafeAreaProvider>
   );

@@ -21,6 +21,7 @@ public class SpendGuardPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new SmsReaderModule(reactContext));
         modules.add(new FileExportModule(reactContext));
+        modules.add(new PrivacyScreenModule(reactContext));
         return modules;
     }
 }
